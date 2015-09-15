@@ -16,15 +16,19 @@ void yyerror(const char* s);
 }
 
 %token<ival> T_INT
-%token<fval> T_FLOAT
-%token TDIV TMUL TMINUS TPLUS TRBRACE TLBRACE T_LEFT T_RIGHT
-%token T_NEWLINE T_QUIT START
+%token BOOLEAN CALLOUT
+%token TPLUS TMINUS TMUL TDIV RBRACE LBRACE 
+%token T_NEWLINE T_QUIT START TLSQUARE TRSQUARE 
+%token FALSE TRUE STRING_LITERAL
 
-%start expression
+%start program 
 %%
-expression: |expression line
+program: T_NEWLINE | START statements
 
-line: T_NEWLINE
+statements: T_NEWLINE | line
+//| expression line
+line: T_NEWLINE | 
+
 %%
 
 main() {

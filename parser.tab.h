@@ -46,18 +46,22 @@ extern int yydebug;
   enum yytokentype
   {
     T_INT = 258,
-    T_FLOAT = 259,
-    TDIV = 260,
-    TMUL = 261,
+    BOOLEAN = 259,
+    CALLOUT = 260,
+    TPLUS = 261,
     TMINUS = 262,
-    TPLUS = 263,
-    TRBRACE = 264,
-    TLBRACE = 265,
-    T_LEFT = 266,
-    T_RIGHT = 267,
-    T_NEWLINE = 268,
-    T_QUIT = 269,
-    START = 270
+    TMUL = 263,
+    TDIV = 264,
+    RBRACE = 265,
+    LBRACE = 266,
+    T_NEWLINE = 267,
+    T_QUIT = 268,
+    START = 269,
+    TLSQUARE = 270,
+    TRSQUARE = 271,
+    FALSE = 272,
+    TRUE = 273,
+    STRING_LITERAL = 274
   };
 #endif
 
@@ -71,7 +75,7 @@ union YYSTYPE
 	int ival;
 	float fval;
 
-#line 75 "parser.tab.h" /* yacc.c:1909  */
+#line 79 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
