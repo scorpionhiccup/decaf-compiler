@@ -12,14 +12,13 @@ void yyerror(const char* s);
 
 %union {
 	int ival;
-	float fval;
 }
 
 %token<ival> T_INT
 %token BOOLEAN CALLOUT
 %token TPLUS TMINUS TMUL TDIV RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLSQUARE TRSQUARE 
-%token FALSE TRUE STRING_LITERAL
+%token FALSE TRUE STRING_LITERAL IDENTIFIER
 
 %start program 
 %%

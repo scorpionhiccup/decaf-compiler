@@ -61,7 +61,8 @@ extern int yydebug;
     TRSQUARE = 271,
     FALSE = 272,
     TRUE = 273,
-    STRING_LITERAL = 274
+    STRING_LITERAL = 274,
+    IDENTIFIER = 275
   };
 #endif
 
@@ -75,7 +76,7 @@ union YYSTYPE
 	int ival;
 	float fval;
 
-#line 79 "parser.tab.h" /* yacc.c:1909  */
+#line 80 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

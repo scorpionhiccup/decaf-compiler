@@ -125,7 +125,8 @@ extern int yydebug;
     TRSQUARE = 271,
     FALSE = 272,
     TRUE = 273,
-    STRING_LITERAL = 274
+    STRING_LITERAL = 274,
+    IDENTIFIER = 275
   };
 #endif
 
@@ -139,7 +140,7 @@ union YYSTYPE
 	int ival;
 	float fval;
 
-#line 143 "parser.tab.c" /* yacc.c:355  */
+#line 144 "parser.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -154,7 +155,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 158 "parser.tab.c" /* yacc.c:358  */
+#line 159 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -399,7 +400,7 @@ union yyalloc
 #define YYLAST   3
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  20
+#define YYNTOKENS  21
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
@@ -410,7 +411,7 @@ union yyalloc
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   274
+#define YYMAXUTOK   275
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -446,7 +447,7 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19
+      15,    16,    17,    18,    19,    20
 };
 
 #if YYDEBUG
@@ -465,7 +466,7 @@ static const char *const yytname[] =
   "$end", "error", "$undefined", "T_INT", "BOOLEAN", "CALLOUT", "TPLUS",
   "TMINUS", "TMUL", "TDIV", "RBRACE", "LBRACE", "T_NEWLINE", "T_QUIT",
   "START", "TLSQUARE", "TRSQUARE", "FALSE", "TRUE", "STRING_LITERAL",
-  "$accept", "program", "statements", "line", YY_NULLPTR
+  "IDENTIFIER", "$accept", "program", "statements", "line", YY_NULLPTR
 };
 #endif
 
@@ -475,7 +476,8 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271,   272,   273,   274
+     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
+     275
 };
 # endif
 
@@ -533,13 +535,13 @@ static const yytype_uint8 yycheck[] =
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    12,    14,    21,    12,    22,    23,     0
+       0,    12,    14,    22,    12,    23,    24,     0
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    20,    21,    21,    22,    22,    23,    23
+       0,    21,    22,    22,    23,    23,    24,    24
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -1222,7 +1224,7 @@ yyreduce:
   switch (yyn)
     {
       
-#line 1226 "parser.tab.c" /* yacc.c:1646  */
+#line 1228 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

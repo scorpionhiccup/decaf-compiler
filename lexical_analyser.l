@@ -1,5 +1,3 @@
-L			[a-zA-Z_]
-
 %{
 #include <stdio.h>
 
@@ -24,5 +22,6 @@ L			[a-zA-Z_]
 "*"                     {return TMUL;}
 "/"                     {return TDIV;}
 [0-9]+					{yylval.ival = atoi(yytext); return T_INT; }
-L?\"(\\.|[^\\"])*\"	    {return STRING_LITERAL;}
+\"(\\.|[^"])*\"		    {return STRING_LITERAL;}
+[a-zA-Z][A-Za-z_0-9]+   { return IDENTIFIER; }
 %%
