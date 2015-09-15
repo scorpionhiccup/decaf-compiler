@@ -1,13 +1,13 @@
-all: calc
+all: compiler
 
-calc.tab.c calc.tab.h:	calc.y
-	bison -d calc.y
+parser.tab.c parser.tab.h:	parser.y
+	bison -d parser.y
 
-lex.yy.c: calc.l calc.tab.h
-	flex calc.l
+lex.yy.c: lexical_analyser.l parser.tab.h
+	flex lexical_analyser.l
 
-calc: lex.yy.c calc.tab.c calc.tab.h
-	gcc -o calc calc.tab.c lex.yy.c -lfl
+compiler: lex.yy.c parser.tab.c parser.tab.h
+	gcc -o compiler parser.tab.c lex.yy.c -lfl
 
 clean:
-	rm calc calc.tab.c lex.yy.c calc.tab.h
+	rm compiler parser.tab.c lex.yy.c parser.tab.h

@@ -2,18 +2,17 @@
 #include <stdio.h>
 
 #define YY_DECL int yylex()
-#define YY_DECL extern "C" int yylex()
-
+#include "parser.tab.h"
 %}
 
 %%
 [ \t]	; // ignore all whitespace
-"class Program" 		{}
+"class Program" 		{return START;}
 \n 						{return T_NEWLINE;}
-"{"                     return TOKEN(TLBRACE);
-"}"                     return TOKEN(TRBRACE);
-"+"                     return TOKEN(TPLUS);
-"-"                     return TOKEN(TMINUS);
-"*"                     return TOKEN(TMUL);
-"/"                     return TOKEN(TDIV);
+"{"                     {return TLBRACE;}
+"}"                     {return TRBRACE;}
+"+"                     {return TPLUS;}
+"-"                     {return TMINUS;}
+"*"                     {return TMUL;}
+"/"                     {return TDIV;}
 %%
