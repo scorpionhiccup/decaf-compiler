@@ -18,7 +18,7 @@ int stackv[200];
 int i=0;
 char op;
 int opv;
-int unary;
+int unary=0, bool=0;
 %}
 
 %union {
@@ -43,6 +43,8 @@ int unary;
 %type<string> Statement
 %type<number> InExpression
 %type<character> Op
+%type<number> Bool
+
 
 %start Program 
 %%
@@ -61,6 +63,7 @@ Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 	} | IDENTIFIER {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
 	}
+
 Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 		while(i--) {
 			operatorOutput(stack[i]);
@@ -85,7 +88,17 @@ Expression:
 	| Expression Operator Expression 
 
 Expression_Right:
-	Location |  
+	Location |
+	Bool {
+		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
+		if(unary==2) 
+			fprintf(bison_fp, "!");
+		unary=0;
+		if ($1 == 1)
+			fprintf(bison_fp, "true\n");
+		else
+			fprintf(bison_fp, "false\n");
+	} | 
     T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERD=");
 		if(unary==1)
@@ -98,9 +111,11 @@ Expression_Right:
 	| Unary_Op Expression_Right 
 	| Expression_Right Operator Expression_Right 
 
+Bool: TRUE {$$=1;}| FALSE{$$=0;}
+
 Statements: Statement SEMI_COLON Statements | 
 
-Statement: Location TEQUAL {unary=0; } Expression_Right {
+Statement: Location TEQUAL Expression_Right {
 		while(i--) {
 			operatorOutput(stack[i]);
 		}
@@ -162,10 +177,9 @@ Type: INT {
 	} | BOOLEAN {
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
-
+  
 Literals: CHAR_LITERAL 
 	| STRING_LITERAL 
-	| TRUE | FALSE
 
 %%
 

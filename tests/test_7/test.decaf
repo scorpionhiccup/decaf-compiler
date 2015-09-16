@@ -1,5 +1,5 @@
 class Program {
-	int A;
+	boolean A;
 
-	A=$5;
+	A=!true;
 }
