@@ -1,0 +1,23 @@
+// Nth Fibonacci number
+
+class Program {
+	void main() {
+		int N,;
+		N=callout("read_integer"); //scanf variant
+		if(N==0) {
+			callout("printf","0");
+		}
+		if(N==1) {
+			callout("printf","1");
+		}
+		int a,b,c,i,;
+		a=0;
+		b=1;
+		for i=1,N {
+			c=a+b;
+			a=b;
+			b=c;
+		}
+		callout("printf","%d",c);
+	}
+}

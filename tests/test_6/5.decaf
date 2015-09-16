@@ -1,0 +1,15 @@
+class Program {
+	void main() {
+		int A,B,;
+		A=callout("read_integer");//scanf variant
+		B=callout("read_integer");//scanf variant
+		int i,;
+		for i=2,B {
+			A=A*A;
+		}
+		callout("printf","%d\n",A);
+	}
+}
+
+
+
