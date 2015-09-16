@@ -13,12 +13,12 @@ FILE* bison_fp;
 void yyerror(const char* s);
 void operatorOutput(char op);
 
-char stack[200];
+char stack[200]; 
 int stackv[200];
 int i=0;
 char op;
 int opv;
-int unary=0, bool=0;
+int unary=0;
 %}
 
 %union {
@@ -27,7 +27,6 @@ int unary=0, bool=0;
 	char character;
 	char string[100];
 }
-
 
 %token<number> T_INT
 %token<string> IDENTIFIER
@@ -41,18 +40,21 @@ int unary=0, bool=0;
 %token TLESS TGREAT SEMI_COLON TCOMMA
 
 %type<string> Statement
-%type<number> InExpression
+%type<number> Expression
+%type<number> InExpression Def
 %type<character> Op
 %type<number> Bool
 
+%left TPLUS TMINUS TMUL TDIV MOD
+%right TEQUAL
 
 %start Program 
 %%
 Program: START PROG_ID LBRACE Main RBRACE {	
-	fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
+		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 	}
 
-Main: Field_Declarations Statements | 
+Main: Field_Declarations Statements
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations | 
 
@@ -80,11 +82,10 @@ InExpression:
 	} 
 
 Expression:
-	Def |  
+	Def | 
     T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERD=%d\n", $1);
-	} 
-	| TRUE | FALSE | Unary_Op Expression 
+	}  
 	| Expression Operator Expression 
 
 Expression_Right:
@@ -98,8 +99,7 @@ Expression_Right:
 			fprintf(bison_fp, "true\n");
 		else
 			fprintf(bison_fp, "false\n");
-	} | 
-    T_INT{
+	} | T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERD=");
 		if(unary==1)
 			fprintf(bison_fp, "-");
@@ -121,8 +121,7 @@ Statement: Location TEQUAL Expression_Right {
 		}
 		i=0;
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");	
-	}
-	| CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND {
+	} | CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
 	}
 
@@ -140,10 +139,7 @@ Operator: Op {
 }
 
 Op: 
-	NOT {
-		op='!';
-		opv=3;
-	} | TDIV {
+	TDIV {
 		op='/';
 		opv=2;
 	} | TMUL {
@@ -178,8 +174,7 @@ Type: INT {
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
   
-Literals: CHAR_LITERAL 
-	| STRING_LITERAL 
+Literals: CHAR_LITERAL | STRING_LITERAL 
 
 %%
 
@@ -214,14 +209,14 @@ int main(int argc, char* argv[]) {
 	}	
 
 	clock_t start, end;
-	start = clock();
+	//start = clock();
 	
 	do { 
 		yyparse();
 	} while(!feof(yyin));
 	
-	end = clock();
-	printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+	//end = clock();
+	//printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
 
 	fprintf(stdout, "Success\n");
 	
@@ -231,7 +226,7 @@ int main(int argc, char* argv[]) {
 
 void yyerror(const char* s) {
 	fprintf(stdout, "Syntax Error\n");
-	fprintf(stderr, "Line: %d, Parse error: %s\n", line_num, s);
+	//fprintf(stderr, "Line: %d, Parse error: %s\n", line_num, s);
 	exit(1);
 }
 
