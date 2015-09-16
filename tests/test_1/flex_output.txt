@@ -40,4 +40,5 @@ INT: 3
 ID: A
 CALLOUT
 STRING: "printf"
+STRING: "%d"
 ID: A

@@ -32,6 +32,7 @@ int opv;
 %token<number> T_INT
 %token<string> IDENTIFIER
 %token<string> STRING_LITERAL PROG_ID
+
 %token BOOLEAN CALLOUT INT
 %token TEQUAL TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START 
@@ -40,10 +41,8 @@ int opv;
 %token TLESS TGREAT SEMI_COLON TCOMMA
 
 %type<string> Statement
-%type<number> Expression
 %type<number> InExpression
 %type<character> Op
-
 
 %start Program 
 %%
@@ -90,8 +89,7 @@ Expression_Right:
     T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERD=%d\n", $1);
 	} 
-	| TRUE | FALSE | 
-	Unary_Op Expression_Right 
+	| Unary_Op Expression_Right 
 	| Expression_Right Operator Expression_Right 
 
 
@@ -154,17 +152,29 @@ Type: INT {fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");}
 
 Literals: CHAR_LITERAL 
 	| STRING_LITERAL 
-	| T_INT {fprintf(bison_fp, "%i\n", $1);} 
 	| TRUE | FALSE
 
 %%
 
 int main(int argc, char* argv[]) {
-	yyin = stdin;
+	char infile[100] = "stdin";
 	char *outfile = "flex_output.txt";
 	char *bison_outfile = "bison_output.txt";
+
+	if (argc>=2){
+		yyin = fopen( argv[1], "r");
+		strcpy(infile, argv[1]);
+	}else{
+		yyin = stdin;
+	}
+
 	yyout = fopen(outfile, "w");
 	bison_fp = fopen(bison_outfile, "w");
+
+	if(!yyin){
+		printf("Error in opening '%s' for reading!", infile);
+		exit(0);
+	}
 
 	if(!yyout){
 		printf("Error in opening '%s' for writing!", outfile);
