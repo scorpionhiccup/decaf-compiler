@@ -5,8 +5,8 @@ Terminals unused in grammar
 
 
 State 3 conflicts: 1 reduce/reduce
-State 50 conflicts: 7 shift/reduce
-State 54 conflicts: 7 shift/reduce
+State 45 conflicts: 7 shift/reduce
+State 55 conflicts: 7 shift/reduce
 
 
 Grammar
@@ -26,77 +26,79 @@ Grammar
     7 Def: IDENTIFIER
     8    | IDENTIFIER TLSQUARE Expression TRSQUARE
 
-    9 Expression: Op1 Expression
+    9 Expression: Unary_Op Expression
    10           | Expression Op Expression
    11           | T_INT
    12           | TRUE
    13           | FALSE
+   14           | IDENTIFIER
 
-   14 Statements: %empty
-   15           | SEMI_COLON
-   16           | Def TEQUAL Expression SEMI_COLON
-   17           | CALLOUT TLROUND STRING_LITERAL Callout_Arg TRROUND SEMI_COLON
+   15 Statements: Statement SEMI_COLON Statements
+   16           | %empty
 
-   18 Callout_Arg: Arguments
-   19            | Arguments TCOMMA Callout_Arg
+   17 Statement: Def TEQUAL Expression
+   18          | CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
 
-   20 Arguments: Literals
-   21          | IDENTIFIER
+   19 Callout_Arg: Arguments
+   20            | Arguments TCOMMA Callout_Arg
 
-   22 Op: TPLUS
-   23   | TMINUS
-   24   | TMUL
-   25   | TDIV
-   26   | MOD
-   27   | TGREAT
-   28   | TLESS
+   21 Arguments: Literals
+   22          | IDENTIFIER
 
-   29 Op1: NOT
-   30    | TMINUS
+   23 Op: TPLUS
+   24   | TMINUS
+   25   | TMUL
+   26   | TDIV
+   27   | MOD
+   28   | TGREAT
+   29   | TLESS
 
-   31 Type: INT
-   32     | BOOLEAN
+   30 Unary_Op: NOT
+   31         | TMINUS
 
-   33 Literals: CHAR_LITERAL
-   34         | STRING_LITERAL
-   35         | T_INT
-   36         | TRUE
-   37         | FALSE
+   32 Type: INT
+   33     | BOOLEAN
+
+   34 Literals: CHAR_LITERAL
+   35         | STRING_LITERAL
+   36         | T_INT
+   37         | TRUE
+   38         | FALSE
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-T_INT (258) 11 35
-BOOLEAN (259) 32
-CALLOUT (260) 17
-INT (261) 31
-TEQUAL (262) 16
-TPLUS (263) 22
-TMINUS (264) 23 30
-TMUL (265) 24
-TDIV (266) 25
-NOT (267) 29
-MOD (268) 26
+T_INT (258) 11 36
+BOOLEAN (259) 33
+CALLOUT (260) 18
+INT (261) 32
+TEQUAL (262) 17
+TPLUS (263) 23
+TMINUS (264) 24 31
+TMUL (265) 25
+TDIV (266) 26
+NOT (267) 30
+MOD (268) 27
 RBRACE (269) 1
 LBRACE (270) 1
 T_NEWLINE (271)
 T_QUIT (272)
 START (273) 1
-TLROUND (274) 17
-TRROUND (275) 17
+TLROUND (274) 18
+TRROUND (275) 18
 TLSQUARE (276) 8
 TRSQUARE (277) 8
-FALSE (278) 13 37
-TRUE (279) 12 36
-STRING_LITERAL (280) 17 34
-IDENTIFIER (281) 7 8 21
-CHAR_LITERAL (282) 33
-TLESS (283) 28
-TGREAT (284) 27
-SEMI_COLON (285) 4 15 16 17
-TCOMMA (286) 19
+FALSE (278) 13 38
+TRUE (279) 12 37
+STRING_LITERAL (280) 18 35
+IDENTIFIER (281) 7 8 14 22
+CHAR_LITERAL (282) 34
+TLESS (283) 29
+TGREAT (284) 28
+SEMI_COLON (285) 4 15
+TCOMMA (286) 18 20
 
 
 Nonterminals, with rules where they appear
@@ -112,23 +114,25 @@ Field_Declarations (35)
 Field_Declaration (36)
     on left: 6, on right: 4
 Def (37)
-    on left: 7 8, on right: 6 16
+    on left: 7 8, on right: 6 17
 Expression (38)
-    on left: 9 10 11 12 13, on right: 8 9 10 16
+    on left: 9 10 11 12 13 14, on right: 8 9 10 17
 Statements (39)
-    on left: 14 15 16 17, on right: 2
-Callout_Arg (40)
-    on left: 18 19, on right: 17 19
-Arguments (41)
-    on left: 20 21, on right: 18 19
-Op (42)
-    on left: 22 23 24 25 26 27 28, on right: 10
-Op1 (43)
-    on left: 29 30, on right: 9
-Type (44)
-    on left: 31 32, on right: 6
-Literals (45)
-    on left: 33 34 35 36 37, on right: 20
+    on left: 15 16, on right: 2 15
+Statement (40)
+    on left: 17 18, on right: 15
+Callout_Arg (41)
+    on left: 19 20, on right: 18 20
+Arguments (42)
+    on left: 21 22, on right: 19 20
+Op (43)
+    on left: 23 24 25 26 27 28 29, on right: 10
+Unary_Op (44)
+    on left: 30 31, on right: 9
+Type (45)
+    on left: 32 33, on right: 6
+Literals (46)
+    on left: 34 35 36 37 38, on right: 21
 
 
 State 0
@@ -180,16 +184,16 @@ State 4
 
 State 5
 
-   32 Type: BOOLEAN .
+   33 Type: BOOLEAN .
 
-    $default  reduce using rule 32 (Type)
+    $default  reduce using rule 33 (Type)
 
 
 State 6
 
-   31 Type: INT .
+   32 Type: INT .
 
-    $default  reduce using rule 31 (Type)
+    $default  reduce using rule 32 (Type)
 
 
 State 7
@@ -205,12 +209,12 @@ State 8
 
     CALLOUT     shift, and go to state 12
     IDENTIFIER  shift, and go to state 13
-    SEMI_COLON  shift, and go to state 14
 
-    $default  reduce using rule 14 (Statements)
+    $default  reduce using rule 16 (Statements)
 
-    Def         go to state 15
-    Statements  go to state 16
+    Def         go to state 14
+    Statements  go to state 15
+    Statement   go to state 16
 
 
 State 9
@@ -238,7 +242,7 @@ State 11
 
 State 12
 
-   17 Statements: CALLOUT . TLROUND STRING_LITERAL Callout_Arg TRROUND SEMI_COLON
+   18 Statement: CALLOUT . TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
 
     TLROUND  shift, and go to state 19
 
@@ -255,23 +259,23 @@ State 13
 
 State 14
 
-   15 Statements: SEMI_COLON .
-
-    $default  reduce using rule 15 (Statements)
-
-
-State 15
-
-   16 Statements: Def . TEQUAL Expression SEMI_COLON
+   17 Statement: Def . TEQUAL Expression
 
     TEQUAL  shift, and go to state 21
 
 
-State 16
+State 15
 
     2 Main: Field_Declarations Statements .
 
     $default  reduce using rule 2 (Main)
+
+
+State 16
+
+   15 Statements: Statement . SEMI_COLON Statements
+
+    SEMI_COLON  shift, and go to state 22
 
 
 State 17
@@ -283,7 +287,7 @@ State 17
 
     $default  reduce using rule 5 (Field_Declarations)
 
-    Field_Declarations  go to state 22
+    Field_Declarations  go to state 23
     Field_Declaration   go to state 9
     Type                go to state 10
 
@@ -297,293 +301,267 @@ State 18
 
 State 19
 
-   17 Statements: CALLOUT TLROUND . STRING_LITERAL Callout_Arg TRROUND SEMI_COLON
+   18 Statement: CALLOUT TLROUND . STRING_LITERAL TCOMMA Callout_Arg TRROUND
 
-    STRING_LITERAL  shift, and go to state 23
+    STRING_LITERAL  shift, and go to state 24
 
 
 State 20
 
     8 Def: IDENTIFIER TLSQUARE . Expression TRSQUARE
 
-    T_INT   shift, and go to state 24
-    TMINUS  shift, and go to state 25
-    NOT     shift, and go to state 26
-    FALSE   shift, and go to state 27
-    TRUE    shift, and go to state 28
+    T_INT       shift, and go to state 25
+    TMINUS      shift, and go to state 26
+    NOT         shift, and go to state 27
+    FALSE       shift, and go to state 28
+    TRUE        shift, and go to state 29
+    IDENTIFIER  shift, and go to state 30
 
-    Expression  go to state 29
-    Op1         go to state 30
+    Expression  go to state 31
+    Unary_Op    go to state 32
 
 
 State 21
 
-   16 Statements: Def TEQUAL . Expression SEMI_COLON
+   17 Statement: Def TEQUAL . Expression
 
-    T_INT   shift, and go to state 24
-    TMINUS  shift, and go to state 25
-    NOT     shift, and go to state 26
-    FALSE   shift, and go to state 27
-    TRUE    shift, and go to state 28
+    T_INT       shift, and go to state 25
+    TMINUS      shift, and go to state 26
+    NOT         shift, and go to state 27
+    FALSE       shift, and go to state 28
+    TRUE        shift, and go to state 29
+    IDENTIFIER  shift, and go to state 30
 
-    Expression  go to state 31
-    Op1         go to state 30
+    Expression  go to state 33
+    Unary_Op    go to state 32
 
 
 State 22
+
+   15 Statements: Statement SEMI_COLON . Statements
+
+    CALLOUT     shift, and go to state 12
+    IDENTIFIER  shift, and go to state 13
+
+    $default  reduce using rule 16 (Statements)
+
+    Def         go to state 14
+    Statements  go to state 34
+    Statement   go to state 16
+
+
+State 23
 
     4 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations .
 
     $default  reduce using rule 4 (Field_Declarations)
 
 
-State 23
-
-   17 Statements: CALLOUT TLROUND STRING_LITERAL . Callout_Arg TRROUND SEMI_COLON
-
-    T_INT           shift, and go to state 32
-    FALSE           shift, and go to state 33
-    TRUE            shift, and go to state 34
-    STRING_LITERAL  shift, and go to state 35
-    IDENTIFIER      shift, and go to state 36
-    CHAR_LITERAL    shift, and go to state 37
-
-    Callout_Arg  go to state 38
-    Arguments    go to state 39
-    Literals     go to state 40
-
-
 State 24
+
+   18 Statement: CALLOUT TLROUND STRING_LITERAL . TCOMMA Callout_Arg TRROUND
+
+    TCOMMA  shift, and go to state 35
+
+
+State 25
 
    11 Expression: T_INT .
 
     $default  reduce using rule 11 (Expression)
 
 
-State 25
-
-   30 Op1: TMINUS .
-
-    $default  reduce using rule 30 (Op1)
-
-
 State 26
 
-   29 Op1: NOT .
+   31 Unary_Op: TMINUS .
 
-    $default  reduce using rule 29 (Op1)
+    $default  reduce using rule 31 (Unary_Op)
 
 
 State 27
+
+   30 Unary_Op: NOT .
+
+    $default  reduce using rule 30 (Unary_Op)
+
+
+State 28
 
    13 Expression: FALSE .
 
     $default  reduce using rule 13 (Expression)
 
 
-State 28
+State 29
 
    12 Expression: TRUE .
 
     $default  reduce using rule 12 (Expression)
 
 
-State 29
-
-    8 Def: IDENTIFIER TLSQUARE Expression . TRSQUARE
-   10 Expression: Expression . Op Expression
-
-    TPLUS     shift, and go to state 41
-    TMINUS    shift, and go to state 42
-    TMUL      shift, and go to state 43
-    TDIV      shift, and go to state 44
-    MOD       shift, and go to state 45
-    TRSQUARE  shift, and go to state 46
-    TLESS     shift, and go to state 47
-    TGREAT    shift, and go to state 48
-
-    Op  go to state 49
-
-
 State 30
 
-    9 Expression: Op1 . Expression
+   14 Expression: IDENTIFIER .
 
-    T_INT   shift, and go to state 24
-    TMINUS  shift, and go to state 25
-    NOT     shift, and go to state 26
-    FALSE   shift, and go to state 27
-    TRUE    shift, and go to state 28
-
-    Expression  go to state 50
-    Op1         go to state 30
+    $default  reduce using rule 14 (Expression)
 
 
 State 31
 
+    8 Def: IDENTIFIER TLSQUARE Expression . TRSQUARE
    10 Expression: Expression . Op Expression
-   16 Statements: Def TEQUAL Expression . SEMI_COLON
 
-    TPLUS       shift, and go to state 41
-    TMINUS      shift, and go to state 42
-    TMUL        shift, and go to state 43
-    TDIV        shift, and go to state 44
-    MOD         shift, and go to state 45
-    TLESS       shift, and go to state 47
-    TGREAT      shift, and go to state 48
-    SEMI_COLON  shift, and go to state 51
+    TPLUS     shift, and go to state 36
+    TMINUS    shift, and go to state 37
+    TMUL      shift, and go to state 38
+    TDIV      shift, and go to state 39
+    MOD       shift, and go to state 40
+    TRSQUARE  shift, and go to state 41
+    TLESS     shift, and go to state 42
+    TGREAT    shift, and go to state 43
 
-    Op  go to state 49
+    Op  go to state 44
 
 
 State 32
 
-   35 Literals: T_INT .
+    9 Expression: Unary_Op . Expression
 
-    $default  reduce using rule 35 (Literals)
+    T_INT       shift, and go to state 25
+    TMINUS      shift, and go to state 26
+    NOT         shift, and go to state 27
+    FALSE       shift, and go to state 28
+    TRUE        shift, and go to state 29
+    IDENTIFIER  shift, and go to state 30
+
+    Expression  go to state 45
+    Unary_Op    go to state 32
 
 
 State 33
 
-   37 Literals: FALSE .
+   10 Expression: Expression . Op Expression
+   17 Statement: Def TEQUAL Expression .
 
-    $default  reduce using rule 37 (Literals)
+    TPLUS   shift, and go to state 36
+    TMINUS  shift, and go to state 37
+    TMUL    shift, and go to state 38
+    TDIV    shift, and go to state 39
+    MOD     shift, and go to state 40
+    TLESS   shift, and go to state 42
+    TGREAT  shift, and go to state 43
+
+    $default  reduce using rule 17 (Statement)
+
+    Op  go to state 44
 
 
 State 34
 
-   36 Literals: TRUE .
+   15 Statements: Statement SEMI_COLON Statements .
 
-    $default  reduce using rule 36 (Literals)
+    $default  reduce using rule 15 (Statements)
 
 
 State 35
 
-   34 Literals: STRING_LITERAL .
+   18 Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA . Callout_Arg TRROUND
 
-    $default  reduce using rule 34 (Literals)
+    T_INT           shift, and go to state 46
+    FALSE           shift, and go to state 47
+    TRUE            shift, and go to state 48
+    STRING_LITERAL  shift, and go to state 49
+    IDENTIFIER      shift, and go to state 50
+    CHAR_LITERAL    shift, and go to state 51
+
+    Callout_Arg  go to state 52
+    Arguments    go to state 53
+    Literals     go to state 54
 
 
 State 36
 
-   21 Arguments: IDENTIFIER .
-
-    $default  reduce using rule 21 (Arguments)
-
-
-State 37
-
-   33 Literals: CHAR_LITERAL .
-
-    $default  reduce using rule 33 (Literals)
-
-
-State 38
-
-   17 Statements: CALLOUT TLROUND STRING_LITERAL Callout_Arg . TRROUND SEMI_COLON
-
-    TRROUND  shift, and go to state 52
-
-
-State 39
-
-   18 Callout_Arg: Arguments .
-   19            | Arguments . TCOMMA Callout_Arg
-
-    TCOMMA  shift, and go to state 53
-
-    $default  reduce using rule 18 (Callout_Arg)
-
-
-State 40
-
-   20 Arguments: Literals .
-
-    $default  reduce using rule 20 (Arguments)
-
-
-State 41
-
-   22 Op: TPLUS .
-
-    $default  reduce using rule 22 (Op)
-
-
-State 42
-
-   23 Op: TMINUS .
+   23 Op: TPLUS .
 
     $default  reduce using rule 23 (Op)
 
 
-State 43
+State 37
 
-   24 Op: TMUL .
+   24 Op: TMINUS .
 
     $default  reduce using rule 24 (Op)
 
 
-State 44
+State 38
 
-   25 Op: TDIV .
+   25 Op: TMUL .
 
     $default  reduce using rule 25 (Op)
 
 
-State 45
+State 39
 
-   26 Op: MOD .
+   26 Op: TDIV .
 
     $default  reduce using rule 26 (Op)
 
 
-State 46
+State 40
+
+   27 Op: MOD .
+
+    $default  reduce using rule 27 (Op)
+
+
+State 41
 
     8 Def: IDENTIFIER TLSQUARE Expression TRSQUARE .
 
     $default  reduce using rule 8 (Def)
 
 
-State 47
+State 42
 
-   28 Op: TLESS .
+   29 Op: TLESS .
+
+    $default  reduce using rule 29 (Op)
+
+
+State 43
+
+   28 Op: TGREAT .
 
     $default  reduce using rule 28 (Op)
 
 
-State 48
-
-   27 Op: TGREAT .
-
-    $default  reduce using rule 27 (Op)
-
-
-State 49
+State 44
 
    10 Expression: Expression Op . Expression
 
-    T_INT   shift, and go to state 24
-    TMINUS  shift, and go to state 25
-    NOT     shift, and go to state 26
-    FALSE   shift, and go to state 27
-    TRUE    shift, and go to state 28
+    T_INT       shift, and go to state 25
+    TMINUS      shift, and go to state 26
+    NOT         shift, and go to state 27
+    FALSE       shift, and go to state 28
+    TRUE        shift, and go to state 29
+    IDENTIFIER  shift, and go to state 30
 
-    Expression  go to state 54
-    Op1         go to state 30
+    Expression  go to state 55
+    Unary_Op    go to state 32
 
 
-State 50
+State 45
 
-    9 Expression: Op1 Expression .
+    9 Expression: Unary_Op Expression .
    10           | Expression . Op Expression
 
-    TPLUS   shift, and go to state 41
-    TMINUS  shift, and go to state 42
-    TMUL    shift, and go to state 43
-    TDIV    shift, and go to state 44
-    MOD     shift, and go to state 45
-    TLESS   shift, and go to state 47
-    TGREAT  shift, and go to state 48
+    TPLUS   shift, and go to state 36
+    TMINUS  shift, and go to state 37
+    TMUL    shift, and go to state 38
+    TDIV    shift, and go to state 39
+    MOD     shift, and go to state 40
+    TLESS   shift, and go to state 42
+    TGREAT  shift, and go to state 43
 
     TPLUS     [reduce using rule 9 (Expression)]
     TMINUS    [reduce using rule 9 (Expression)]
@@ -594,51 +572,87 @@ State 50
     TGREAT    [reduce using rule 9 (Expression)]
     $default  reduce using rule 9 (Expression)
 
-    Op  go to state 49
+    Op  go to state 44
+
+
+State 46
+
+   36 Literals: T_INT .
+
+    $default  reduce using rule 36 (Literals)
+
+
+State 47
+
+   38 Literals: FALSE .
+
+    $default  reduce using rule 38 (Literals)
+
+
+State 48
+
+   37 Literals: TRUE .
+
+    $default  reduce using rule 37 (Literals)
+
+
+State 49
+
+   35 Literals: STRING_LITERAL .
+
+    $default  reduce using rule 35 (Literals)
+
+
+State 50
+
+   22 Arguments: IDENTIFIER .
+
+    $default  reduce using rule 22 (Arguments)
 
 
 State 51
 
-   16 Statements: Def TEQUAL Expression SEMI_COLON .
+   34 Literals: CHAR_LITERAL .
 
-    $default  reduce using rule 16 (Statements)
+    $default  reduce using rule 34 (Literals)
 
 
 State 52
 
-   17 Statements: CALLOUT TLROUND STRING_LITERAL Callout_Arg TRROUND . SEMI_COLON
+   18 Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg . TRROUND
 
-    SEMI_COLON  shift, and go to state 55
+    TRROUND  shift, and go to state 56
 
 
 State 53
 
-   19 Callout_Arg: Arguments TCOMMA . Callout_Arg
+   19 Callout_Arg: Arguments .
+   20            | Arguments . TCOMMA Callout_Arg
 
-    T_INT           shift, and go to state 32
-    FALSE           shift, and go to state 33
-    TRUE            shift, and go to state 34
-    STRING_LITERAL  shift, and go to state 35
-    IDENTIFIER      shift, and go to state 36
-    CHAR_LITERAL    shift, and go to state 37
+    TCOMMA  shift, and go to state 57
 
-    Callout_Arg  go to state 56
-    Arguments    go to state 39
-    Literals     go to state 40
+    $default  reduce using rule 19 (Callout_Arg)
 
 
 State 54
 
+   21 Arguments: Literals .
+
+    $default  reduce using rule 21 (Arguments)
+
+
+State 55
+
    10 Expression: Expression . Op Expression
    10           | Expression Op Expression .
 
-    TPLUS   shift, and go to state 41
-    TMINUS  shift, and go to state 42
-    TMUL    shift, and go to state 43
-    TDIV    shift, and go to state 44
-    MOD     shift, and go to state 45
-    TLESS   shift, and go to state 47
-    TGREAT  shift, and go to state 48
+    TPLUS   shift, and go to state 36
+    TMINUS  shift, and go to state 37
+    TMUL    shift, and go to state 38
+    TDIV    shift, and go to state 39
+    MOD     shift, and go to state 40
+    TLESS   shift, and go to state 42
+    TGREAT  shift, and go to state 43
 
     TPLUS     [reduce using rule 10 (Expression)]
     TMINUS    [reduce using rule 10 (Expression)]
@@ -649,18 +663,34 @@ State 54
     TGREAT    [reduce using rule 10 (Expression)]
     $default  reduce using rule 10 (Expression)
 
-    Op  go to state 49
-
-
-State 55
-
-   17 Statements: CALLOUT TLROUND STRING_LITERAL Callout_Arg TRROUND SEMI_COLON .
-
-    $default  reduce using rule 17 (Statements)
+    Op  go to state 44
 
 
 State 56
 
-   19 Callout_Arg: Arguments TCOMMA Callout_Arg .
+   18 Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND .
 
-    $default  reduce using rule 19 (Callout_Arg)
+    $default  reduce using rule 18 (Statement)
+
+
+State 57
+
+   20 Callout_Arg: Arguments TCOMMA . Callout_Arg
+
+    T_INT           shift, and go to state 46
+    FALSE           shift, and go to state 47
+    TRUE            shift, and go to state 48
+    STRING_LITERAL  shift, and go to state 49
+    IDENTIFIER      shift, and go to state 50
+    CHAR_LITERAL    shift, and go to state 51
+
+    Callout_Arg  go to state 58
+    Arguments    go to state 53
+    Literals     go to state 54
+
+
+State 58
+
+   20 Callout_Arg: Arguments TCOMMA Callout_Arg .
+
+    $default  reduce using rule 20 (Callout_Arg)

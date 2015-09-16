@@ -12,10 +12,11 @@ void yyerror(const char* s);
 %}
 
 %union {
-	int ival;
+	int number;
+	char character;
 }
 
-%token<ival> T_INT
+%token<number> T_INT
 %token BOOLEAN CALLOUT INT
 %token TEQUAL TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START 
@@ -35,9 +36,11 @@ Field_Declaration: Type Def
 
 Def: IDENTIFIER | IDENTIFIER TLSQUARE Expression TRSQUARE
 
-Expression: Op1 Expression | Expression Op Expression | T_INT | TRUE | FALSE 
+Expression: Unary_Op Expression | Expression Op Expression | T_INT | TRUE | FALSE | IDENTIFIER
 
-Statements: | SEMI_COLON | Def TEQUAL Expression SEMI_COLON | CALLOUT TLROUND STRING_LITERAL Callout_Arg TRROUND SEMI_COLON
+Statements: Statement SEMI_COLON Statements | 
+
+Statement: Def TEQUAL Expression | CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND 
 
 Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
 
@@ -45,7 +48,7 @@ Arguments: Literals | IDENTIFIER
 
 Op: TPLUS | TMINUS | TMUL | TDIV | MOD | TGREAT | TLESS
 
-Op1: NOT | TMINUS
+Unary_Op: NOT | TMINUS
 
 Type: INT | BOOLEAN 
 

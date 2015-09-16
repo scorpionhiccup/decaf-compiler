@@ -84,9 +84,10 @@ union YYSTYPE
 {
 #line 14 "parser.y" /* yacc.c:1909  */
 
-	int ival;
+	int number;
+	char character;
 
-#line 90 "parser.tab.h" /* yacc.c:1909  */
+#line 91 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

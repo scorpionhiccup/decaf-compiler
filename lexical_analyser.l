@@ -8,7 +8,7 @@ int line_num = 1;
 
 LETTER            [a-zA-Z_]
 DIGIT             [0-9]
-LETTERDIGIT       [a-zA-Z0-9_]
+ALPHANUMERICAL       [a-zA-Z0-9_]
 
 %%
 [\n]	{++line_num;} 
@@ -36,9 +36,9 @@ LETTERDIGIT       [a-zA-Z0-9_]
 "%"						{return MOD;}
 ">"						{return TGREAT;}
 "<"						{return TLESS;}
-[DIGIT]+				{printf("%s\n", "INT_DECLARATION");yylval.ival = atoi(yytext); return T_INT; }
-\"(\\.|[^"])\"		   	{return CHAR_LITERAL;}
-\"(\\.|[^"])*\"		    {return STRING_LITERAL;}
-{LETTER}{LETTERDIGIT}*  {printf("ID: %s\n", yytext); return IDENTIFIER; }
+{DIGIT}+				{printf("INT: %s\n", yytext);yylval.number = atoi(yytext); return T_INT; }
+\"(\\.|[^"])\"		   	{printf("CHARACTER: %s\n", yytext); return CHAR_LITERAL;}
+\"(\\.|[^"])*\"		    {printf("STRING: %s\n", yytext); return STRING_LITERAL;}
+{LETTER}{ALPHANUMERICAL}*  {printf("ID: %s\n", yytext); return IDENTIFIER; }
 
 %%
