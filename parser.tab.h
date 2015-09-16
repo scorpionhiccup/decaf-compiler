@@ -48,21 +48,32 @@ extern int yydebug;
     T_INT = 258,
     BOOLEAN = 259,
     CALLOUT = 260,
-    TPLUS = 261,
-    TMINUS = 262,
-    TMUL = 263,
-    TDIV = 264,
-    RBRACE = 265,
-    LBRACE = 266,
-    T_NEWLINE = 267,
-    T_QUIT = 268,
-    START = 269,
-    TLSQUARE = 270,
-    TRSQUARE = 271,
-    FALSE = 272,
-    TRUE = 273,
-    STRING_LITERAL = 274,
-    IDENTIFIER = 275
+    INT = 261,
+    TEQUAL = 262,
+    TPLUS = 263,
+    TMINUS = 264,
+    TMUL = 265,
+    TDIV = 266,
+    NOT = 267,
+    MOD = 268,
+    RBRACE = 269,
+    LBRACE = 270,
+    T_NEWLINE = 271,
+    T_QUIT = 272,
+    START = 273,
+    TLROUND = 274,
+    TRROUND = 275,
+    TLSQUARE = 276,
+    TRSQUARE = 277,
+    FALSE = 278,
+    TRUE = 279,
+    STRING_LITERAL = 280,
+    IDENTIFIER = 281,
+    CHAR_LITERAL = 282,
+    TLESS = 283,
+    TGREAT = 284,
+    SEMI_COLON = 285,
+    TCOMMA = 286
   };
 #endif
 
@@ -71,12 +82,11 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 13 "parser.y" /* yacc.c:1909  */
+#line 14 "parser.y" /* yacc.c:1909  */
 
 	int ival;
-	float fval;
 
-#line 80 "parser.tab.h" /* yacc.c:1909  */
+#line 90 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

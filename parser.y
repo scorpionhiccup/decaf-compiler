@@ -6,6 +6,7 @@
 extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
+extern int line_num;
 
 void yyerror(const char* s);
 %}
@@ -15,18 +16,40 @@ void yyerror(const char* s);
 }
 
 %token<ival> T_INT
-%token BOOLEAN CALLOUT
-%token TPLUS TMINUS TMUL TDIV RBRACE LBRACE 
-%token T_NEWLINE T_QUIT START TLSQUARE TRSQUARE 
-%token FALSE TRUE STRING_LITERAL IDENTIFIER
+%token BOOLEAN CALLOUT INT
+%token TEQUAL TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
+%token T_NEWLINE T_QUIT START 
+%token TLROUND TRROUND TLSQUARE TRSQUARE 
+%token FALSE TRUE STRING_LITERAL IDENTIFIER CHAR_LITERAL 
+%token TLESS TGREAT SEMI_COLON TCOMMA
 
-%start program 
+%start Program 
 %%
-program: T_NEWLINE | START statements
+Program: START LBRACE Main RBRACE
 
-statements: T_NEWLINE | line
-//| expression line
-line: T_NEWLINE | 
+Main: Field_Declarations Statements | 
+
+Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations | 
+
+Field_Declaration: Type Def
+
+Def: IDENTIFIER | IDENTIFIER TLSQUARE Expression TRSQUARE
+
+Expression: Op1 Expression | Expression Op Expression | T_INT | TRUE | FALSE 
+
+Statements: | SEMI_COLON | Def TEQUAL Expression SEMI_COLON | CALLOUT TLROUND STRING_LITERAL Callout_Arg TRROUND SEMI_COLON
+
+Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
+
+Arguments: Literals | IDENTIFIER
+
+Op: TPLUS | TMINUS | TMUL | TDIV | MOD | TGREAT | TLESS
+
+Op1: NOT | TMINUS
+
+Type: INT | BOOLEAN 
+
+Literals: CHAR_LITERAL | STRING_LITERAL | T_INT | TRUE | FALSE
 
 %%
 
@@ -39,6 +62,6 @@ main() {
 }
 
 void yyerror(const char* s) {
-	fprintf(stderr, "Parse error: %s\n", s);
+	fprintf(stderr, "Line: %d, Parse error: %s\n", line_num, s);
 	exit(1);
 }
