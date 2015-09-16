@@ -9,14 +9,14 @@
 int line_num = 1;
 %}
 
-LETTER            	[a-zA-Z_]
-DIGIT             	[0-9]
-ALPHANUMERICAL       [a-zA-Z0-9_]
+LETTER            		[a-zA-Z_]
+DIGIT             		[0-9]
+ALPHANUMERICAL       	[a-zA-Z0-9_]
 
 %%
 [\n]	{++line_num;} 
-[ \t]	; // ignore all whitespace
-"class" 		{fprintf(yyout,"%s\n", "CLASS");return START;}
+[ \t]+	; // ignore all whitespace
+"class" 				{fprintf(yyout,"%s\n", "CLASS");return START;}
 ";"						{return SEMI_COLON;}
 "{"                     {return LBRACE;}
 "}"                     {return RBRACE;}
@@ -43,6 +43,6 @@ ALPHANUMERICAL       [a-zA-Z0-9_]
 \"(\\.|[^"])\"		   	{fprintf(yyout,"CHARACTER: %s\n", yytext); return CHAR_LITERAL;}
 \"(\\.|[^"])*\"		    {fprintf(yyout,"STRING: %s\n", yytext); strcpy(yylval.string, yytext); return STRING_LITERAL;}
 "Program"				{fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return PROG_ID; }
-{LETTER}{ALPHANUMERICAL}*  {fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return IDENTIFIER; }
-
+{LETTER}{ALPHANUMERICAL}*  {fprintf(yyout, "ID: %s\n", yytext); strcpy(yylval.string, yytext); return IDENTIFIER; }
+. 						{ fprintf(stdout, "Syntax Error\n"); exit(1);} 
 %%

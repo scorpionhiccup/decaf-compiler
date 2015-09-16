@@ -1,0 +1,6 @@
+CLASS
+ID: Program
+INT_DECLARATION
+ID: A
+ID: A
+INT: 5

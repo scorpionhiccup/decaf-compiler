@@ -13,12 +13,12 @@ FILE* bison_fp;
 void yyerror(const char* s);
 void operatorOutput(char op);
 
-int a;
 char stack[200];
 int stackv[200];
 int i=0;
 char op;
 int opv;
+int unary;
 %}
 
 %union {
@@ -87,16 +87,20 @@ Expression:
 Expression_Right:
 	Location |  
     T_INT{
-		fprintf(bison_fp, "INT ENCOUNTERD=%d\n", $1);
+		fprintf(bison_fp, "INT ENCOUNTERD=");
+		if(unary==1)
+			fprintf(bison_fp, "-");
+		else if(unary==2) 
+			fprintf(bison_fp, "!");
+		fprintf(bison_fp, "%d\n",$1);
+		unary=0;
 	} 
 	| Unary_Op Expression_Right 
 	| Expression_Right Operator Expression_Right 
 
-
-
 Statements: Statement SEMI_COLON Statements | 
 
-Statement: Location TEQUAL Expression_Right {
+Statement: Location TEQUAL {unary=0; } Expression_Right {
 		while(i--) {
 			operatorOutput(stack[i]);
 		}
@@ -104,7 +108,6 @@ Statement: Location TEQUAL Expression_Right {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");	
 	}
 	| CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND {
-
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
 	}
 
@@ -112,7 +115,7 @@ Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
 
 Arguments: Literals | Expression_Right
 
-Operator : Op {
+Operator: Op {
 	if( i>0 && opv<=stackv[i-1] ) {
 		operatorOutput(stack[i-1]);
 		i--;
@@ -122,7 +125,10 @@ Operator : Op {
 }
 
 Op: 
-	TDIV {
+	NOT {
+		op='!';
+		opv=3;
+	} | TDIV {
 		op='/';
 		opv=2;
 	} | TMUL {
@@ -145,10 +151,17 @@ Op:
 		opv=0;
 	}
 
-Unary_Op: NOT | TMINUS
+Unary_Op: NOT {
+		unary=2;
+	} | TMINUS{
+		unary=1;
+	} 
 
-Type: INT {fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");}
-	| BOOLEAN {fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");}
+Type: INT {
+		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
+	} | BOOLEAN {
+		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
+	}
 
 Literals: CHAR_LITERAL 
 	| STRING_LITERAL 
@@ -196,14 +209,14 @@ int main(int argc, char* argv[]) {
 	end = clock();
 	printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
 
-	fprintf(stderr, "Success\n");
+	fprintf(stdout, "Success\n");
 	
 	fclose(bison_fp);
 	fclose(yyout);
 }
 
 void yyerror(const char* s) {
-	//fprintf(stderr, "Syntax Error\n");
+	fprintf(stdout, "Syntax Error\n");
 	fprintf(stderr, "Line: %d, Parse error: %s\n", line_num, s);
 	exit(1);
 }
