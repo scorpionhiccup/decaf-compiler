@@ -67,15 +67,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 extern int yylex();
 extern int yyparse();
-extern FILE* yyin;
+extern FILE* yyin, *yyout;
 extern int line_num;
-
+FILE* bison_fp;
 void yyerror(const char* s);
 
-#line 79 "parser.tab.c" /* yacc.c:339  */
+#line 80 "parser.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -147,12 +148,13 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 14 "parser.y" /* yacc.c:355  */
+#line 15 "parser.y" /* yacc.c:355  */
 
 	int number;
 	char character;
+	char string[100];
 
-#line 156 "parser.tab.c" /* yacc.c:355  */
+#line 158 "parser.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -167,7 +169,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 171 "parser.tab.c" /* yacc.c:358  */
+#line 173 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -467,10 +469,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    29,    29,    31,    31,    33,    33,    35,    37,    37,
-      39,    39,    39,    39,    39,    39,    41,    41,    43,    43,
-      45,    45,    47,    47,    49,    49,    49,    49,    49,    49,
-      49,    51,    51,    53,    53,    55,    55,    55,    55,    55
+       0,    33,    33,    35,    35,    37,    37,    39,    41,    44,
+      46,    47,    48,    51,    51,    51,    53,    53,    55,    58,
+      60,    60,    62,    62,    64,    66,    68,    70,    72,    74,
+      74,    76,    76,    78,    79,    81,    82,    83,    84,    84
 };
 #endif
 
@@ -1277,8 +1279,90 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
-#line 1282 "parser.tab.c" /* yacc.c:1646  */
+        case 8:
+#line 41 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp, "ID=%s\n", (yyvsp[0].string));
+	}
+#line 1288 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 12:
+#line 48 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp, "INT ENCOUNTERD=\n");
+	}
+#line 1296 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 18:
+#line 55 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
+	}
+#line 1304 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 64 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp ,"ADDITION ENCOUNTERED\n");
+	}
+#line 1312 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 66 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp ,"SUBTRACTION ENCOUNTERED\n");
+	}
+#line 1320 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 68 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp ,"MULTIPLICATION ENCOUNTERED\n");
+	}
+#line 1328 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 27:
+#line 70 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp ,"DIVISION ENCOUNTERED\n");
+	}
+#line 1336 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 28:
+#line 72 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp ,"MODULUS ENCOUNTERED\n");
+	}
+#line 1344 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 33:
+#line 78 "parser.y" /* yacc.c:1646  */
+    {fprintf(bison_fp, "INT DECLARATION ENCOUNTERED.\n");}
+#line 1350 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 34:
+#line 79 "parser.y" /* yacc.c:1646  */
+    {fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED.\n");}
+#line 1356 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 37:
+#line 83 "parser.y" /* yacc.c:1646  */
+    {fprintf(bison_fp, "%i\n", (yyvsp[0].number));}
+#line 1362 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+
+#line 1366 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1506,18 +1590,44 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 57 "parser.y" /* yacc.c:1906  */
+#line 86 "parser.y" /* yacc.c:1906  */
 
 
-main() {
+int main(int argc, char* argv[]) {
 	yyin = stdin;
+	char *outfile = "flex_output.txt";
+	char *bison_outfile = "bison_output.txt";
+	yyout = fopen(outfile, "w");
+	bison_fp = fopen(bison_outfile, "w");
 
+	if(!yyout){
+		printf("Error in opening '%s' for writing!", outfile);
+		exit(0);
+	}
+
+	if(!bison_fp){
+		printf("Error in opening '%s' for writing!", bison_outfile);
+		exit(0);
+	}	
+
+	clock_t start, end;
+	start = clock();
+	
 	do { 
 		yyparse();
 	} while(!feof(yyin));
+	
+	end = clock();
+	printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+
+	fprintf(stderr, "Success\n");
+	
+	fclose(bison_fp);
+	fclose(yyout);
 }
 
 void yyerror(const char* s) {
+	//fprintf(stderr, "Syntax Error\n");
 	fprintf(stderr, "Line: %d, Parse error: %s\n", line_num, s);
 	exit(1);
 }
