@@ -28,8 +28,8 @@ ALPHANUMERICAL       [a-zA-Z0-9_]
 "callout"               {fprintf(yyout, "%s\n", "CALLOUT");return CALLOUT;}
 "int"					{fprintf(yyout,"%s\n", "INT_DECLARATION");return INT;}
 "boolean"				{fprintf(yyout,"%s\n", "BOOLEAN_DECLARATION");return BOOLEAN;}
-"false"					{fprintf(yyout,"%s\n", "BOOLEAN: false");return FALSE;}
-"true"					{fprintf(yyout,"%s\n", "BOOLEAN: true");return TRUE;}
+"false"					{fprintf(yyout,"%s\n", "BOOLEAN: false");yylval.bval=0;return FALSE;}
+"true"					{fprintf(yyout,"%s\n", "BOOLEAN: true");yylval.bval=1;return TRUE;}
 "="                     {return TEQUAL;}
 "*"                     {return TMUL;}
 "/"                     {return TDIV;}
@@ -42,6 +42,6 @@ ALPHANUMERICAL       [a-zA-Z0-9_]
 {DIGIT}+				{fprintf(yyout,"INT: %s\n", yytext);yylval.number = atoi(yytext); return T_INT; }
 \"(\\.|[^"])\"		   	{fprintf(yyout,"CHARACTER: %s\n", yytext); return CHAR_LITERAL;}
 \"(\\.|[^"])*\"		    {fprintf(yyout,"STRING: %s\n", yytext); strcpy(yylval.string, yytext); return STRING_LITERAL;}
-{LETTER}{ALPHANUMERICAL}*  {fprintf(yyout,"ID: %s\n", yytext); return IDENTIFIER; }
+{LETTER}{ALPHANUMERICAL}*  {fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return IDENTIFIER; }
 
 %%

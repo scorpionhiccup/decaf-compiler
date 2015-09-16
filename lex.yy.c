@@ -1050,12 +1050,12 @@ YY_RULE_SETUP
 case 15:
 YY_RULE_SETUP
 #line 31 "lexical_analyser.l"
-{fprintf(yyout,"%s\n", "BOOLEAN: false");return FALSE;}
+{fprintf(yyout,"%s\n", "BOOLEAN: false");yylval.bval=0;return FALSE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 32 "lexical_analyser.l"
-{fprintf(yyout,"%s\n", "BOOLEAN: true");return TRUE;}
+{fprintf(yyout,"%s\n", "BOOLEAN: true");yylval.bval=1;return TRUE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
@@ -1122,7 +1122,7 @@ YY_RULE_SETUP
 case 29:
 YY_RULE_SETUP
 #line 45 "lexical_analyser.l"
-{fprintf(yyout,"ID: %s\n", yytext); return IDENTIFIER; }
+{fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return IDENTIFIER; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP

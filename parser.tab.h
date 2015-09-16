@@ -46,29 +46,29 @@ extern int yydebug;
   enum yytokentype
   {
     T_INT = 258,
-    BOOLEAN = 259,
-    CALLOUT = 260,
-    INT = 261,
-    TEQUAL = 262,
-    TPLUS = 263,
-    TMINUS = 264,
-    TMUL = 265,
-    TDIV = 266,
-    NOT = 267,
-    MOD = 268,
-    RBRACE = 269,
-    LBRACE = 270,
-    T_NEWLINE = 271,
-    T_QUIT = 272,
-    START = 273,
-    TLROUND = 274,
-    TRROUND = 275,
-    TLSQUARE = 276,
-    TRSQUARE = 277,
-    FALSE = 278,
-    TRUE = 279,
-    STRING_LITERAL = 280,
-    IDENTIFIER = 281,
+    IDENTIFIER = 259,
+    BOOLEAN = 260,
+    CALLOUT = 261,
+    INT = 262,
+    TEQUAL = 263,
+    TPLUS = 264,
+    TMINUS = 265,
+    TMUL = 266,
+    TDIV = 267,
+    NOT = 268,
+    MOD = 269,
+    RBRACE = 270,
+    LBRACE = 271,
+    T_NEWLINE = 272,
+    T_QUIT = 273,
+    START = 274,
+    TLROUND = 275,
+    TRROUND = 276,
+    TLSQUARE = 277,
+    TRSQUARE = 278,
+    FALSE = 279,
+    TRUE = 280,
+    STRING_LITERAL = 281,
     CHAR_LITERAL = 282,
     TLESS = 283,
     TGREAT = 284,
@@ -82,13 +82,14 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 15 "parser.y" /* yacc.c:1909  */
+#line 23 "parser.y" /* yacc.c:1909  */
 
 	int number;
+	int bval;
 	char character;
 	char string[100];
 
-#line 92 "parser.tab.h" /* yacc.c:1909  */
+#line 93 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
