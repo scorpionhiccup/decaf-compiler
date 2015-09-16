@@ -48,32 +48,33 @@ extern int yydebug;
     T_INT = 258,
     IDENTIFIER = 259,
     STRING_LITERAL = 260,
-    BOOLEAN = 261,
-    CALLOUT = 262,
-    INT = 263,
-    TEQUAL = 264,
-    TPLUS = 265,
-    TMINUS = 266,
-    TMUL = 267,
-    TDIV = 268,
-    NOT = 269,
-    MOD = 270,
-    RBRACE = 271,
-    LBRACE = 272,
-    T_NEWLINE = 273,
-    T_QUIT = 274,
-    START = 275,
-    TLROUND = 276,
-    TRROUND = 277,
-    TLSQUARE = 278,
-    TRSQUARE = 279,
-    FALSE = 280,
-    TRUE = 281,
-    CHAR_LITERAL = 282,
-    TLESS = 283,
-    TGREAT = 284,
-    SEMI_COLON = 285,
-    TCOMMA = 286
+    PROG_ID = 261,
+    BOOLEAN = 262,
+    CALLOUT = 263,
+    INT = 264,
+    TEQUAL = 265,
+    TPLUS = 266,
+    TMINUS = 267,
+    TMUL = 268,
+    TDIV = 269,
+    NOT = 270,
+    MOD = 271,
+    RBRACE = 272,
+    LBRACE = 273,
+    T_NEWLINE = 274,
+    T_QUIT = 275,
+    START = 276,
+    TLROUND = 277,
+    TRROUND = 278,
+    TLSQUARE = 279,
+    TRSQUARE = 280,
+    FALSE = 281,
+    TRUE = 282,
+    CHAR_LITERAL = 283,
+    TLESS = 284,
+    TGREAT = 285,
+    SEMI_COLON = 286,
+    TCOMMA = 287
   };
 #endif
 
@@ -82,14 +83,14 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 41 "parser.y" /* yacc.c:1909  */
+#line 24 "parser.y" /* yacc.c:1909  */
 
 	int number;
 	int bval;
 	char character;
 	char string[100];
 
-#line 93 "parser.tab.h" /* yacc.c:1909  */
+#line 94 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

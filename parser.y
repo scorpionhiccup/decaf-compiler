@@ -11,24 +11,7 @@ extern FILE* yyin, *yyout;
 extern int line_num;
 FILE* bison_fp;
 void yyerror(const char* s);
-
-void operatorOutput(char op) {
-	if(op=='/')
-		fprintf(bison_fp, "DIVISION ENCOUNTERED\n");
-	if(op=='*')
-		fprintf(bison_fp, "MULTIPLICATION ENCOUNTERED\n");
-	if(op=='%')
-		fprintf(bison_fp, "MOD ENCOUNTERED\n");
-	if(op=='+')
-		fprintf(bison_fp, "ADDITION ENCOUNTERED\n");
-	if(op=='-')
-		fprintf(bison_fp, "SUBTRACTION ENCOUNTERED\n");
-	if(op=='>')
-		fprintf(bison_fp, "GREATER THAN ENCOUNTERED\n");
-	if(op=='<')
-		fprintf(bison_fp, "LESS THAN ENCOUNTERED\n");
-
-}
+void operatorOutput(char op);
 
 int a;
 char stack[200];
@@ -48,7 +31,7 @@ int opv;
 
 %token<number> T_INT
 %token<string> IDENTIFIER
-%token<string> STRING_LITERAL
+%token<string> STRING_LITERAL PROG_ID
 %token BOOLEAN CALLOUT INT
 %token TEQUAL TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START 
@@ -58,13 +41,13 @@ int opv;
 
 %type<string> Statement
 %type<number> Expression
+%type<number> InExpression
 %type<character> Op
-
 
 
 %start Program 
 %%
-Program: START LBRACE Main RBRACE {	
+Program: START PROG_ID LBRACE Main RBRACE {	
 	fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 	}
 
@@ -75,7 +58,7 @@ Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations |
 Field_Declaration: Type Def
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
-		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, a);
+		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
 	}
@@ -91,18 +74,15 @@ Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 
 InExpression:
     T_INT{
-		a=$1;
-	
+		$$=$1;
 	} 
-
 
 Expression:
 	Def |  
     T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERD=%d\n", $1);
 	} 
-	| TRUE | FALSE | 
-	Unary_Op Expression 
+	| TRUE | FALSE | Unary_Op Expression 
 	| Expression Operator Expression 
 
 Expression_Right:
@@ -123,8 +103,7 @@ Statement: Location TEQUAL Expression_Right {
 			operatorOutput(stack[i]);
 		}
 		i=0;
-		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
-		
+		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");	
 	}
 	| CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND {
 
@@ -137,25 +116,21 @@ Arguments: Literals | Expression_Right
 
 Operator : Op {
 	if( i>0 && opv<=stackv[i-1] ) {
-
 		operatorOutput(stack[i-1]);
 		i--;
 	}
 	stackv[i]=opv;
 	stack[i++]=op;
-
 }
 
 Op: 
-	 TDIV {
+	TDIV {
 		op='/';
 		opv=2;
-	} | 
-	TMUL {
+	} | TMUL {
 		op='*';
 		opv=2;
-	} |
-	MOD {
+	} | MOD {
 		op='%';
 		opv=2;
 	} | TPLUS {
@@ -164,7 +139,13 @@ Op:
 	} | TMINUS  {
 		op='-';
 		opv=1;
-	} | TGREAT {op='>';opv=0;} | TLESS {op='<';opv=0;}
+	} | TGREAT {
+		op='>';
+		opv=0;
+	} | TLESS {
+		op='<';
+		opv=0;
+	}
 
 Unary_Op: NOT | TMINUS
 
@@ -217,3 +198,31 @@ void yyerror(const char* s) {
 	exit(1);
 }
 
+void operatorOutput(char op) {
+	switch(op){
+		case '/': 
+				fprintf(bison_fp, "DIVISION ENCOUNTERED\n");
+				break;
+		case '*': 
+				fprintf(bison_fp, "MULTIPLICATION ENCOUNTERED\n");
+				break;
+		case '%': 
+				fprintf(bison_fp, "MOD ENCOUNTERED\n");
+				break;
+		case '+': 
+				fprintf(bison_fp, "ADDITION ENCOUNTERED\n");
+				break;
+		case '-': 
+				fprintf(bison_fp, "SUBTRACTION ENCOUNTERED\n");
+				break;
+		case '>': 
+				fprintf(bison_fp, "GREATER THAN ENCOUNTERED\n");
+				break;
+		case '<': 
+				fprintf(bison_fp, "LESS THAN ENCOUNTERED\n");
+				break;
+		default:
+				fprintf(bison_fp, "OPERATOR ENCOUNTERED\n");
+				break;		
+	}
+}

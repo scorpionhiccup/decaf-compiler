@@ -16,7 +16,7 @@ ALPHANUMERICAL       [a-zA-Z0-9_]
 %%
 [\n]	{++line_num;} 
 [ \t]	; // ignore all whitespace
-"class Program" 		{fprintf(yyout,"%s\n", "CLASS");return START;}
+"class" 		{fprintf(yyout,"%s\n", "CLASS");return START;}
 ";"						{return SEMI_COLON;}
 "{"                     {return LBRACE;}
 "}"                     {return RBRACE;}
@@ -42,6 +42,7 @@ ALPHANUMERICAL       [a-zA-Z0-9_]
 {DIGIT}+				{fprintf(yyout,"INT: %s\n", yytext);yylval.number = atoi(yytext); return T_INT; }
 \"(\\.|[^"])\"		   	{fprintf(yyout,"CHARACTER: %s\n", yytext); return CHAR_LITERAL;}
 \"(\\.|[^"])*\"		    {fprintf(yyout,"STRING: %s\n", yytext); strcpy(yylval.string, yytext); return STRING_LITERAL;}
+"Program"				{fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return PROG_ID; }
 {LETTER}{ALPHANUMERICAL}*  {fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return IDENTIFIER; }
 
 %%
