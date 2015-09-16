@@ -29,7 +29,7 @@ INT: 2
 INT: 1
 INT: 9
 ID: A
-INT: 6
+INT: 5
 INT: 10
 INT: 20
 INT: 10

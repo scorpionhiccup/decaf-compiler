@@ -12,6 +12,24 @@ extern int line_num;
 FILE* bison_fp;
 void yyerror(const char* s);
 
+void operatorOutput(char op) {
+	if(op=='/')
+		fprintf(bison_fp, "DIVISION ENCOUNTERED\n");
+	if(op=='*')
+		fprintf(bison_fp, "MULTIPLICATION ENCOUNTERED\n");
+	if(op=='%')
+		fprintf(bison_fp, "MOD ENCOUNTERED\n");
+	if(op=='+')
+		fprintf(bison_fp, "ADDITION ENCOUNTERED\n");
+	if(op=='-')
+		fprintf(bison_fp, "SUBTRACTION ENCOUNTERED\n");
+	if(op=='>')
+		fprintf(bison_fp, "GREATER THAN ENCOUNTERED\n");
+	if(op=='<')
+		fprintf(bison_fp, "LESS THAN ENCOUNTERED\n");
+
+}
+
 int a;
 char stack[200];
 int stackv[200];
@@ -30,11 +48,12 @@ int opv;
 
 %token<number> T_INT
 %token<string> IDENTIFIER
+%token<string> STRING_LITERAL
 %token BOOLEAN CALLOUT INT
 %token TEQUAL TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
-%token FALSE TRUE STRING_LITERAL CHAR_LITERAL 
+%token FALSE TRUE CHAR_LITERAL 
 %token TLESS TGREAT SEMI_COLON TCOMMA
 
 %type<string> Statement
@@ -61,9 +80,8 @@ Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
 	}
 Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
-		fprintf(bison_fp, "i= %d\n", i);
 		while(i--) {
-			fprintf(bison_fp, "%c\n", stack[i]);
+			operatorOutput(stack[i]);
 		}
 		i=0;
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
@@ -72,14 +90,10 @@ Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 	}
 
 InExpression:
-	Def |  
     T_INT{
 		a=$1;
 	
 	} 
-	| TRUE | FALSE | 
-	Unary_Op InExpression 
-	| InExpression Op InExpression 
 
 
 Expression:
@@ -89,36 +103,48 @@ Expression:
 	} 
 	| TRUE | FALSE | 
 	Unary_Op Expression 
-	| Expression Op Expression {
+	| Expression Operator Expression 
 
-	fprintf(bison_fp, "operator= %c ***\n", op);
+Expression_Right:
+	Location |  
+    T_INT{
+		fprintf(bison_fp, "INT ENCOUNTERD=%d\n", $1);
+	} 
+	| TRUE | FALSE | 
+	Unary_Op Expression_Right 
+	| Expression_Right Operator Expression_Right 
 
-	if( i>0 && opv>=stackv[i-1] ) {
-	fprintf(bison_fp, "%c\n", stack[i-1]);
-	i--;
-	}
-	stackv[i]=opv;
-	stack[i++]=op;
-	}
-	
+
 
 Statements: Statement SEMI_COLON Statements | 
 
-Statement: Location TEQUAL Expression {
-		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
-		fprintf(bison_fp, "i= %d\n", i);
+Statement: Location TEQUAL Expression_Right {
 		while(i--) {
-			fprintf(bison_fp, "%c\n", stack[i]);
+			operatorOutput(stack[i]);
 		}
 		i=0;
+		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
+		
 	}
 	| CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND {
-		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", "");	
+
+		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
 	}
 
 Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
 
-Arguments: Literals | IDENTIFIER
+Arguments: Literals | Expression_Right
+
+Operator : Op {
+	if( i>0 && opv<=stackv[i-1] ) {
+
+		operatorOutput(stack[i-1]);
+		i--;
+	}
+	stackv[i]=opv;
+	stack[i++]=op;
+
+}
 
 Op: 
 	 TDIV {
@@ -190,3 +216,4 @@ void yyerror(const char* s) {
 	fprintf(stderr, "Line: %d, Parse error: %s\n", line_num, s);
 	exit(1);
 }
+
