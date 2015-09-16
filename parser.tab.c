@@ -469,10 +469,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    33,    33,    35,    35,    37,    37,    39,    41,    44,
-      46,    47,    48,    51,    51,    51,    53,    53,    55,    58,
-      60,    60,    62,    62,    64,    66,    68,    70,    72,    74,
-      74,    76,    76,    78,    79,    81,    82,    83,    84,    84
+       0,    34,    34,    38,    38,    40,    40,    42,    44,    47,
+      49,    50,    51,    54,    54,    54,    56,    56,    58,    61,
+      65,    65,    67,    67,    69,    71,    73,    75,    77,    79,
+      79,    81,    81,    83,    84,    86,    87,    88,    89,    89
 };
 #endif
 
@@ -1279,90 +1279,106 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 8:
-#line 41 "parser.y" /* yacc.c:1646  */
-    {
-		fprintf(bison_fp, "ID=%s\n", (yyvsp[0].string));
+        case 2:
+#line 34 "parser.y" /* yacc.c:1646  */
+    {	
+	fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 	}
 #line 1288 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 12:
-#line 48 "parser.y" /* yacc.c:1646  */
+  case 8:
+#line 44 "parser.y" /* yacc.c:1646  */
     {
-		fprintf(bison_fp, "INT ENCOUNTERD=\n");
+		fprintf(bison_fp, "ID=%s\n", (yyvsp[0].string));
 	}
 #line 1296 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 18:
-#line 55 "parser.y" /* yacc.c:1646  */
+  case 12:
+#line 51 "parser.y" /* yacc.c:1646  */
     {
-		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
+		fprintf(bison_fp, "INT ENCOUNTERD=%d\n", (yyvsp[0].number));
 	}
 #line 1304 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 24:
-#line 64 "parser.y" /* yacc.c:1646  */
+  case 18:
+#line 58 "parser.y" /* yacc.c:1646  */
     {
-		fprintf(bison_fp ,"ADDITION ENCOUNTERED\n");
+		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
 	}
 #line 1312 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 25:
-#line 66 "parser.y" /* yacc.c:1646  */
+  case 19:
+#line 61 "parser.y" /* yacc.c:1646  */
     {
-		fprintf(bison_fp ,"SUBTRACTION ENCOUNTERED\n");
+		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", "");	
 	}
 #line 1320 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 26:
-#line 68 "parser.y" /* yacc.c:1646  */
+  case 24:
+#line 69 "parser.y" /* yacc.c:1646  */
     {
-		fprintf(bison_fp ,"MULTIPLICATION ENCOUNTERED\n");
+		fprintf(bison_fp ,"ADDITION ENCOUNTERED\n");
 	}
 #line 1328 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 27:
-#line 70 "parser.y" /* yacc.c:1646  */
+  case 25:
+#line 71 "parser.y" /* yacc.c:1646  */
     {
-		fprintf(bison_fp ,"DIVISION ENCOUNTERED\n");
+		fprintf(bison_fp ,"SUBTRACTION ENCOUNTERED\n");
 	}
 #line 1336 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 28:
-#line 72 "parser.y" /* yacc.c:1646  */
+  case 26:
+#line 73 "parser.y" /* yacc.c:1646  */
     {
-		fprintf(bison_fp ,"MODULUS ENCOUNTERED\n");
+		fprintf(bison_fp ,"MULTIPLICATION ENCOUNTERED\n");
 	}
 #line 1344 "parser.tab.c" /* yacc.c:1646  */
     break;
 
+  case 27:
+#line 75 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp ,"DIVISION ENCOUNTERED\n");
+	}
+#line 1352 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 28:
+#line 77 "parser.y" /* yacc.c:1646  */
+    {
+		fprintf(bison_fp ,"MODULUS ENCOUNTERED\n");
+	}
+#line 1360 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
   case 33:
-#line 78 "parser.y" /* yacc.c:1646  */
+#line 83 "parser.y" /* yacc.c:1646  */
     {fprintf(bison_fp, "INT DECLARATION ENCOUNTERED.\n");}
-#line 1350 "parser.tab.c" /* yacc.c:1646  */
+#line 1366 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 79 "parser.y" /* yacc.c:1646  */
+#line 84 "parser.y" /* yacc.c:1646  */
     {fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED.\n");}
-#line 1356 "parser.tab.c" /* yacc.c:1646  */
+#line 1372 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 83 "parser.y" /* yacc.c:1646  */
+#line 88 "parser.y" /* yacc.c:1646  */
     {fprintf(bison_fp, "%i\n", (yyvsp[0].number));}
-#line 1362 "parser.tab.c" /* yacc.c:1646  */
+#line 1378 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1366 "parser.tab.c" /* yacc.c:1646  */
+#line 1382 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1590,7 +1606,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 86 "parser.y" /* yacc.c:1906  */
+#line 91 "parser.y" /* yacc.c:1906  */
 
 
 int main(int argc, char* argv[]) {

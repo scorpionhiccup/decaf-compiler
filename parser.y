@@ -27,10 +27,13 @@ void yyerror(const char* s);
 %token TLESS TGREAT SEMI_COLON TCOMMA
 
 %type<string> IDENTIFIER 
+%type<string> Statement
 
 %start Program 
 %%
-Program: START LBRACE Main RBRACE
+Program: START LBRACE Main RBRACE {	
+	fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
+	}
 
 Main: Field_Declarations Statements | 
 
@@ -46,7 +49,7 @@ Def: IDENTIFIER {
 Expression: Unary_Op Expression 
 	| Expression Op Expression 
 	| T_INT{
-		fprintf(bison_fp, "INT ENCOUNTERD=\n");
+		fprintf(bison_fp, "INT ENCOUNTERD=%d\n", $1);
 	} 
 	| TRUE | FALSE | IDENTIFIER
 
@@ -55,7 +58,9 @@ Statements: Statement SEMI_COLON Statements |
 Statement: Def TEQUAL Expression {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
 	}
-	| CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND 
+	| CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND {
+		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", "");	
+	}
 
 Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
 
