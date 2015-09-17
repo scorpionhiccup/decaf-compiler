@@ -15,8 +15,8 @@ void yyerror(const char* s);
 void operatorOutput(char op);
 void addToStack(char op, int opv);
 
-char stack[3]; 
-int stackv[3];
+char stack[4]; 
+int stackv[4];
 int i=0;
 char op;
 int opv;
@@ -108,11 +108,13 @@ Expression:
 	} 
 
 Expression_Right:
-	NOT Expression_Right {
+	NOT  {
 		unary=2;
-	} | TMINUS Expression_Right {
-		unary=1;
-	} | Expression_Right TPLUS {
+	}   Expression_Right 
+	|   TMINUS {
+		  unary=1;
+	}   Expression_Right 
+    |   Expression_Right TPLUS {
 		addToStack('+', 1);
 	}   Expression_Right 
 	|   Expression_Right TMINUS {
@@ -259,7 +261,7 @@ void operatorOutput(char op) {
 
 
 void addToStack(char op, int opv){
-	if( i>0 && opv<=stackv[i-1] ) {
+	while( i>0 && opv<=stackv[i-1] ) {
 		operatorOutput(stack[i-1]);
 		i--;
 	}
