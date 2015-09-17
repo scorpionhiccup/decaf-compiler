@@ -476,11 +476,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    52,    52,    56,    58,    58,    60,    62,    64,    68,
-      70,    75,    80,    83,    86,    89,    92,    95,    96,   101,
-     101,   104,   104,   107,   110,   113,   116,   119,   122,   123,
-     133,   143,   143,   145,   145,   147,   149,   153,   153,   155,
-     155,   157,   159,   163,   163
+       0,    53,    53,    57,    59,    59,    61,    63,    65,    69,
+      71,    76,    81,    84,    87,    90,    93,    96,    97,   102,
+     102,   105,   105,   108,   111,   114,   117,   120,   123,   124,
+     134,   144,   144,   146,   146,   148,   150,   154,   154,   156,
+     156,   158,   160,   164,   164
 };
 #endif
 
@@ -1301,7 +1301,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 52 "parser.y" /* yacc.c:1646  */
+#line 53 "parser.y" /* yacc.c:1646  */
     {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 	}
@@ -1309,7 +1309,7 @@ yyreduce:
     break;
 
   case 7:
-#line 62 "parser.y" /* yacc.c:1646  */
+#line 63 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", (yyvsp[-3].string), (yyvsp[-1].number));
 	}
@@ -1317,7 +1317,7 @@ yyreduce:
     break;
 
   case 8:
-#line 64 "parser.y" /* yacc.c:1646  */
+#line 65 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
 	}
@@ -1325,7 +1325,7 @@ yyreduce:
     break;
 
   case 9:
-#line 68 "parser.y" /* yacc.c:1646  */
+#line 69 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", (yyvsp[-3].string));
 	}
@@ -1333,7 +1333,7 @@ yyreduce:
     break;
 
   case 10:
-#line 70 "parser.y" /* yacc.c:1646  */
+#line 71 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", yylval.string);
 	}
@@ -1341,7 +1341,7 @@ yyreduce:
     break;
 
   case 11:
-#line 75 "parser.y" /* yacc.c:1646  */
+#line 76 "parser.y" /* yacc.c:1646  */
     {
 		(yyval.number)=(yyvsp[0].number);
 	}
@@ -1349,7 +1349,7 @@ yyreduce:
     break;
 
   case 12:
-#line 80 "parser.y" /* yacc.c:1646  */
+#line 81 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('+');
 	}
@@ -1357,7 +1357,7 @@ yyreduce:
     break;
 
   case 13:
-#line 83 "parser.y" /* yacc.c:1646  */
+#line 84 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('-');
 	}
@@ -1365,7 +1365,7 @@ yyreduce:
     break;
 
   case 14:
-#line 86 "parser.y" /* yacc.c:1646  */
+#line 87 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('*');
 	}
@@ -1373,7 +1373,7 @@ yyreduce:
     break;
 
   case 15:
-#line 89 "parser.y" /* yacc.c:1646  */
+#line 90 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('/');
 	}
@@ -1381,7 +1381,7 @@ yyreduce:
     break;
 
   case 16:
-#line 92 "parser.y" /* yacc.c:1646  */
+#line 93 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('%');
 	}
@@ -1389,7 +1389,7 @@ yyreduce:
     break;
 
   case 18:
-#line 96 "parser.y" /* yacc.c:1646  */
+#line 97 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "INT ENCOUNTERED=%d\n", (yyvsp[0].number));
 	}
@@ -1397,7 +1397,7 @@ yyreduce:
     break;
 
   case 19:
-#line 101 "parser.y" /* yacc.c:1646  */
+#line 102 "parser.y" /* yacc.c:1646  */
     {
 		unary=2;
 	}
@@ -1405,7 +1405,7 @@ yyreduce:
     break;
 
   case 21:
-#line 104 "parser.y" /* yacc.c:1646  */
+#line 105 "parser.y" /* yacc.c:1646  */
     {
 		unary=1;
 	}
@@ -1413,7 +1413,7 @@ yyreduce:
     break;
 
   case 23:
-#line 107 "parser.y" /* yacc.c:1646  */
+#line 108 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('+');
 	}
@@ -1421,7 +1421,7 @@ yyreduce:
     break;
 
   case 24:
-#line 110 "parser.y" /* yacc.c:1646  */
+#line 111 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('-');
 	}
@@ -1429,7 +1429,7 @@ yyreduce:
     break;
 
   case 25:
-#line 113 "parser.y" /* yacc.c:1646  */
+#line 114 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('*');
 	}
@@ -1437,7 +1437,7 @@ yyreduce:
     break;
 
   case 26:
-#line 116 "parser.y" /* yacc.c:1646  */
+#line 117 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('/');
 	}
@@ -1445,7 +1445,7 @@ yyreduce:
     break;
 
   case 27:
-#line 119 "parser.y" /* yacc.c:1646  */
+#line 120 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('%');
 	}
@@ -1453,7 +1453,7 @@ yyreduce:
     break;
 
   case 29:
-#line 123 "parser.y" /* yacc.c:1646  */
+#line 124 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
 		if(unary==2) 
@@ -1468,7 +1468,7 @@ yyreduce:
     break;
 
   case 30:
-#line 133 "parser.y" /* yacc.c:1646  */
+#line 134 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "INT ENCOUNTERED=");
 		if(unary==1)
@@ -1482,19 +1482,19 @@ yyreduce:
     break;
 
   case 31:
-#line 143 "parser.y" /* yacc.c:1646  */
+#line 144 "parser.y" /* yacc.c:1646  */
     {(yyval.number)=1;}
 #line 1488 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 143 "parser.y" /* yacc.c:1646  */
+#line 144 "parser.y" /* yacc.c:1646  */
     {(yyval.number)=0;}
 #line 1494 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 147 "parser.y" /* yacc.c:1646  */
+#line 148 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");	
 	}
@@ -1502,7 +1502,7 @@ yyreduce:
     break;
 
   case 36:
-#line 149 "parser.y" /* yacc.c:1646  */
+#line 150 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", (yyvsp[-3].string));	
 	}
@@ -1510,7 +1510,7 @@ yyreduce:
     break;
 
   case 41:
-#line 157 "parser.y" /* yacc.c:1646  */
+#line 158 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
 	}
@@ -1518,7 +1518,7 @@ yyreduce:
     break;
 
   case 42:
-#line 159 "parser.y" /* yacc.c:1646  */
+#line 160 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
@@ -1754,7 +1754,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 165 "parser.y" /* yacc.c:1906  */
+#line 166 "parser.y" /* yacc.c:1906  */
 
 
 int main(int argc, char* argv[]) {

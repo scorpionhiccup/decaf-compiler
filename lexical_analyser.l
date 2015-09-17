@@ -40,7 +40,7 @@ ALPHANUMERICAL       	[a-zA-Z0-9_]
 ">"						{return TGREAT;}
 "<"						{return TLESS;}
 {DIGIT}+				{fprintf(yyout,"INT: %s\n", yytext);yylval.number = atoi(yytext); return T_INT; }
-\"(\\.|[^"])\"		   	{fprintf(yyout,"CHARACTER: %s\n", yytext); return CHAR_LITERAL;}
+\'(\\.|[^'])*\'		   	{fprintf(yyout,"CHARACTER: %s\n", yytext); return CHAR_LITERAL;}
 \"(\\.|[^"])*\"		    {fprintf(yyout,"STRING: %s\n", yytext); strcpy(yylval.string, yytext); return STRING_LITERAL;}
 "Program"				{fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return PROG_ID; }
 {LETTER}{ALPHANUMERICAL}*  {fprintf(yyout, "ID: %s\n", yytext); strcpy(yylval.string, yytext); return IDENTIFIER; }

@@ -46,6 +46,7 @@ int unary=0;
 %left TPLUS TMINUS  
 %left TMUL TDIV MOD
 %left NOT
+%left TLROUND TRROUND
 
 %start Program 
 %%
@@ -98,6 +99,7 @@ Expression:
 	} 
 
 Expression_Right:
+	
 	NOT  {
 		unary=2;
 	}  Expression_Right 
