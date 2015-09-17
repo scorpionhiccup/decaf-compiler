@@ -10,11 +10,13 @@ extern int yyparse();
 extern FILE* yyin, *yyout;
 extern int line_num;
 FILE* bison_fp;
+
 void yyerror(const char* s);
 void operatorOutput(char op);
+void addToStack(char op, int opv);
 
-char stack[200]; 
-int stackv[200];
+char stack[3]; 
+int stackv[3];
 int i=0;
 char op;
 int opv;
@@ -31,8 +33,9 @@ int unary=0;
 %token<number> T_INT
 %token<string> IDENTIFIER
 %token<string> STRING_LITERAL PROG_ID
+%token<number> BOOLEAN
 
-%token BOOLEAN CALLOUT INT
+%token CALLOUT INT
 %token TEQUAL TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
@@ -42,11 +45,13 @@ int unary=0;
 %type<string> Statement
 %type<number> Expression
 %type<number> InExpression Def
-%type<character> Op
 %type<number> Bool
 
-%left TPLUS TMINUS TMUL TDIV MOD
-%right TEQUAL
+%left TEQUAL
+%left TGREAT TLESS
+%left TPLUS TMINUS  
+%left TMUL TDIV MOD
+%left NOT
 
 %start Program 
 %%
@@ -84,11 +89,43 @@ InExpression:
 Expression:
 	Def | 
     T_INT{
-		fprintf(bison_fp, "INT ENCOUNTERD=%d\n", $1);
-	}  
-	| Expression Operator Expression 
+		fprintf(bison_fp, "INT ENCOUNTERED=%d\n", $1);
+	} | Expression TPLUS Expression {
+		addToStack('+', 1);
+	} | 
+	Expression TMINUS Expression {
+		addToStack('-', 1);
+	} | 
+	Expression TMUL Expression {
+		addToStack('*', 2);
+	} | 
+	Expression TDIV Expression {
+		addToStack('/', 2);
+	} | 
+	Expression MOD Expression {
+		addToStack('%', 2);
+	} 
 
 Expression_Right:
+	NOT Expression_Right {
+		unary=2;
+	} | TMINUS Expression_Right {
+		unary=1;
+	} | Expression_Right TPLUS Expression_Right {
+		addToStack('+', 1);
+	} | 
+	Expression_Right TMINUS Expression_Right {
+		addToStack('-', 1);
+	} | 
+	Expression_Right TMUL Expression_Right {
+		addToStack('*', 2);
+	} | 
+	Expression_Right TDIV Expression_Right {
+		addToStack('/', 2);
+	} | 
+	Expression_Right MOD Expression_Right {
+		addToStack('%', 2);
+	} | 
 	Location |
 	Bool {
 		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
@@ -100,7 +137,7 @@ Expression_Right:
 		else
 			fprintf(bison_fp, "false\n");
 	} | T_INT{
-		fprintf(bison_fp, "INT ENCOUNTERD=");
+		fprintf(bison_fp, "INT ENCOUNTERED=");
 		if(unary==1)
 			fprintf(bison_fp, "-");
 		else if(unary==2) 
@@ -108,8 +145,6 @@ Expression_Right:
 		fprintf(bison_fp, "%d\n",$1);
 		unary=0;
 	} 
-	| Unary_Op Expression_Right 
-	| Expression_Right Operator Expression_Right 
 
 Bool: TRUE {$$=1;}| FALSE{$$=0;}
 
@@ -128,45 +163,6 @@ Statement: Location TEQUAL Expression_Right {
 Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
 
 Arguments: Literals | Expression_Right
-
-Operator: Op {
-	if( i>0 && opv<=stackv[i-1] ) {
-		operatorOutput(stack[i-1]);
-		i--;
-	}
-	stackv[i]=opv;
-	stack[i++]=op;
-}
-
-Op: 
-	TDIV {
-		op='/';
-		opv=2;
-	} | TMUL {
-		op='*';
-		opv=2;
-	} | MOD {
-		op='%';
-		opv=2;
-	} | TPLUS {
-		op='+';
-		opv=1;
-	} | TMINUS  {
-		op='-';
-		opv=1;
-	} | TGREAT {
-		op='>';
-		opv=0;
-	} | TLESS {
-		op='<';
-		opv=0;
-	}
-
-Unary_Op: NOT {
-		unary=2;
-	} | TMINUS{
-		unary=1;
-	} 
 
 Type: INT {
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
@@ -257,4 +253,14 @@ void operatorOutput(char op) {
 				fprintf(bison_fp, "OPERATOR ENCOUNTERED\n");
 				break;		
 	}
+}
+
+
+void addToStack(char op, int opv){
+	if( i>0 && opv<=stackv[i-1] ) {
+		operatorOutput(stack[i-1]);
+		i--;
+	}
+	stackv[i]=opv;
+	stack[i++]=op;
 }
