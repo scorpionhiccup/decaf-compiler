@@ -26,14 +26,15 @@ int unary=0;
 
 %token<number> T_INT
 %token<string> IDENTIFIER
-%token<string> STRING_LITERAL PROG_ID
+%token<string> STRING_LITERAL PROG_ID 
+%token<string> CHAR_LITERAL
 %token<number> BOOLEAN
 
-%token CALLOUT INT
-%token TEQUAL TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
+%token<string> CALLOUT 
+%token TEQUAL  INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
-%token FALSE TRUE CHAR_LITERAL 
+%token FALSE TRUE  
 %token TLESS TGREAT SEMI_COLON TCOMMA
 
 %type<string> Statement
@@ -148,9 +149,9 @@ Statements: Statement SEMI_COLON Statements |
 
 Statement: Location TEQUAL Expression_Right {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");	
-	} | CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND {
+	} | CALLOUT TLROUND STRING_LITERAL  {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
-	}
+	} TCOMMA Callout_Arg TRROUND
 
 Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
 
@@ -162,7 +163,9 @@ Type: INT {
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
   
-Literals: CHAR_LITERAL | STRING_LITERAL 
+Literals: CHAR_LITERAL  {
+	fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", $1);
+} | STRING_LITERAL
 
 %%
 

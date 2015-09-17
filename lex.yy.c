@@ -1112,7 +1112,7 @@ case 27:
 /* rule 27 can match eol */
 YY_RULE_SETUP
 #line 43 "lexical_analyser.l"
-{fprintf(yyout,"CHARACTER: %s\n", yytext); return CHAR_LITERAL;}
+{fprintf(yyout,"CHARACTER: %s\n", yytext); strcpy(yylval.string, yytext); return CHAR_LITERAL;}
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
