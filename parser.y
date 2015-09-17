@@ -87,23 +87,24 @@ InExpression:
 	} 
 
 Expression:
+	Expression TPLUS {
+		addToStack('+', 1);
+	} Expression  | 
+	Expression TMINUS {
+		addToStack('-', 1);
+	} Expression  | 
+	Expression TMUL {
+		addToStack('*', 2);
+	} Expression  | 
+	Expression TDIV {
+		addToStack('/', 2);
+	} Expression  | 
+	Expression MOD {
+		addToStack('%', 2);
+	} Expression  |
 	Def | 
     T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERED=%d\n", $1);
-	} | Expression TPLUS Expression {
-		addToStack('+', 1);
-	} | 
-	Expression TMINUS Expression {
-		addToStack('-', 1);
-	} | 
-	Expression TMUL Expression {
-		addToStack('*', 2);
-	} | 
-	Expression TDIV Expression {
-		addToStack('/', 2);
-	} | 
-	Expression MOD Expression {
-		addToStack('%', 2);
 	} 
 
 Expression_Right:
@@ -111,23 +112,23 @@ Expression_Right:
 		unary=2;
 	} | TMINUS Expression_Right {
 		unary=1;
-	} | Expression_Right TPLUS Expression_Right {
+	} | Expression_Right TPLUS {
 		addToStack('+', 1);
-	} | 
-	Expression_Right TMINUS Expression_Right {
+	}   Expression_Right 
+	|   Expression_Right TMINUS {
 		addToStack('-', 1);
-	} | 
-	Expression_Right TMUL Expression_Right {
+	}   Expression_Right  | 
+		Expression_Right TMUL {
 		addToStack('*', 2);
-	} | 
-	Expression_Right TDIV Expression_Right {
+	}   Expression_Right  | 
+	    Expression_Right TDIV {
 		addToStack('/', 2);
-	} | 
-	Expression_Right MOD Expression_Right {
+	}   Expression_Right 
+	|   Expression_Right MOD {
 		addToStack('%', 2);
-	} | 
-	Location |
-	Bool {
+	}   Expression_Right 
+	|   Location 
+	|   Bool {
 		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
 		if(unary==2) 
 			fprintf(bison_fp, "!");
@@ -136,7 +137,8 @@ Expression_Right:
 			fprintf(bison_fp, "true\n");
 		else
 			fprintf(bison_fp, "false\n");
-	} | T_INT{
+	} 
+	|   T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERED=");
 		if(unary==1)
 			fprintf(bison_fp, "-");
