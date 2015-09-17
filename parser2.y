@@ -13,7 +13,13 @@ FILE* bison_fp;
 
 void yyerror(const char* s);
 void operatorOutput(char op);
+void addToStack(char op, int opv);
 
+char stack[4]; 
+int stackv[4];
+int i=0;
+char op;
+int opv;
 int unary=0;
 %}
 
@@ -66,6 +72,10 @@ Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 	}
 
 Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
+		while(i--) {
+			operatorOutput(stack[i]);
+		}
+		i=0;
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", yylval.string);
@@ -77,46 +87,48 @@ InExpression:
 	} 
 
 Expression:
-	Expression TPLUS Expression {
-		operatorOutput('+');
-	} | 
-	Expression TMINUS Expression {
-		operatorOutput('-');
-	} | 
-	Expression TMUL Expression {
-		operatorOutput('*');
-	} | 
-	Expression TDIV Expression {
-		operatorOutput('/');
-	} | 
-	Expression MOD Expression {
-		operatorOutput('%');
-	} |
+	Expression TPLUS {
+		addToStack('+', 1);
+	} Expression  | 
+	Expression TMINUS {
+		addToStack('-', 1);
+	} Expression  | 
+	Expression TMUL {
+		addToStack('*', 2);
+	} Expression  | 
+	Expression TDIV {
+		addToStack('/', 2);
+	} Expression  | 
+	Expression MOD {
+		addToStack('%', 2);
+	} Expression  |
 	Def | 
     T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERED=%d\n", $1);
 	} 
 
 Expression_Right:
-	NOT Expression_Right {
+	NOT  {
 		unary=2;
-	} | TMINUS Expression_Right {
-		unary=1;
-	} | Expression_Right TPLUS Expression_Right {
-		operatorOutput('+');
-	}
-	|   Expression_Right TMINUS Expression_Right {
-		operatorOutput('-');
-	} | 
-		Expression_Right TMUL Expression_Right {
-		operatorOutput('*');
-	} | 
-	    Expression_Right TDIV Expression_Right {
-		operatorOutput('/');
-	}
-	|   Expression_Right MOD Expression_Right {
-		operatorOutput('%');
-	}
+	}   Expression_Right 
+	|   TMINUS {
+		  unary=1;
+	}   Expression_Right 
+    |   Expression_Right TPLUS {
+		addToStack('+', 1);
+	}   Expression_Right 
+	|   Expression_Right TMINUS {
+		addToStack('-', 1);
+	}   Expression_Right  | 
+		Expression_Right TMUL {
+		addToStack('*', 2);
+	}   Expression_Right  | 
+	    Expression_Right TDIV {
+		addToStack('/', 2);
+	}   Expression_Right 
+	|   Expression_Right MOD {
+		addToStack('%', 2);
+	}   Expression_Right 
 	|   Location 
 	|   Bool {
 		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
@@ -143,6 +155,10 @@ Bool: TRUE {$$=1;}| FALSE{$$=0;}
 Statements: Statement SEMI_COLON Statements | 
 
 Statement: Location TEQUAL Expression_Right {
+		while(i--) {
+			operatorOutput(stack[i]);
+		}
+		i=0;
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");	
 	} | CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
@@ -243,3 +259,12 @@ void operatorOutput(char op) {
 	}
 }
 
+
+void addToStack(char op, int opv){
+	while( i>0 && opv<=stackv[i-1] ) {
+		operatorOutput(stack[i-1]);
+		i--;
+	}
+	stackv[i]=opv;
+	stack[i++]=op;
+}
