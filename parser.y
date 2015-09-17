@@ -98,11 +98,13 @@ Expression:
 	} 
 
 Expression_Right:
-	NOT Expression_Right {
+	NOT  {
 		unary=2;
-	} | TMINUS Expression_Right {
+	}  Expression_Right 
+	|  TMINUS {
 		unary=1;
-	} | Expression_Right TPLUS Expression_Right {
+	}  Expression_Right  
+	|  Expression_Right TPLUS Expression_Right {
 		operatorOutput('+');
 	}
 	|   Expression_Right TMINUS Expression_Right {
