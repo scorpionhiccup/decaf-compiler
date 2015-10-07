@@ -171,8 +171,8 @@ Literals: CHAR_LITERAL  {
 
 int main(int argc, char* argv[]) {
 	char infile[100] = "stdin";
-	char *outfile = "flex_output.txt";
-	char *bison_outfile = "bison_output.txt";
+	char *outfile = (char *)"flex_output.txt";
+	char *bison_outfile = (char *)"bison_output.txt";
 
 	if (argc>=2){
 		yyin = fopen( argv[1], "r");
@@ -200,14 +200,14 @@ int main(int argc, char* argv[]) {
 	}	
 
 	clock_t start, end;
-	//start = clock();
+	start = clock();
 	
 	do { 
 		yyparse();
 	} while(!feof(yyin));
 	
-	//end = clock();
-	//printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+	end = clock();
+	printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
 
 	fprintf(stdout, "Success\n");
 	
