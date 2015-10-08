@@ -6,7 +6,8 @@
 #include <string.h>
 #include <iostream> 
 #include <string.h> 
-using namespace std; 
+#include "AST.h"
+using namespace std;
 
 extern int yylex();
 extern int yyparse();
@@ -56,6 +57,8 @@ int unary=0;
 %%
 Program: START PROG_ID LBRACE Main RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
+		ASTProgram *ast_prog = new ASTProgram($2);
+		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
 
 Main: Field_Declarations Statements
