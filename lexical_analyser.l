@@ -1,9 +1,9 @@
 %option noyywrap
+%option c++
 
 %{
-#include <stdio.h>
+using namespace std;
 #include <string.h>
-
 #define YY_DECL int yylex()
 #include "parser.tab.h"
 int line_num = 1;

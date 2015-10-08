@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <iostream> 
+#include <string.h> 
+using namespace std; 
 
 extern int yylex();
 extern int yyparse();
@@ -59,7 +62,9 @@ Main: Field_Declarations Statements
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations | 
 
-Field_Declaration: Type Def
+Field_Declaration: Type Declarations 
+
+Declarations: Def TCOMMA Declarations | Def
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);
@@ -215,10 +220,9 @@ int main(int argc, char* argv[]) {
 	fclose(yyout);
 }
 
-void yyerror(const char* s) {
-	fprintf(stdout, "Syntax Error\n");
-	//fprintf(stderr, "Line: %d, Parse error: %s\n", line_num, s);
-	exit(1);
+void yyerror( const char *msg) {
+	cerr << "Line: " << line_num << ": " << msg << endl; 
+	cerr.flush();
 }
 
 void operatorOutput(char op) {

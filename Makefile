@@ -13,4 +13,4 @@ syntax_analyser: lex.yy.c parser.tab.c parser.tab.h
 	$(CC) $(CFLAGS) -o syntax_analyser parser.tab.c lex.yy.c -lfl
 
 clean:
-	rm -f syntax_analyser parser.tab.c lex.yy.c parser.tab.h parser.output
+	rm -f syntax_analyser parser.tab.c lex.yy.cc parser.tab.h parser.output
