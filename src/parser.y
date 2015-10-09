@@ -1,7 +1,7 @@
 %{
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <time.h>
 #include <string.h>
 #include <iostream> 
@@ -9,10 +9,10 @@
 #include "AST.h"
 using namespace std;
 
-extern int yylex();
+extern int yylex(), yylineno;
 extern int yyparse();
 extern FILE* yyin, *yyout;
-extern int line_num;
+FILE *XML_fp;
 FILE* bison_fp;
 
 void yyerror(const char* s);
@@ -58,6 +58,7 @@ int unary=0;
 Program: START PROG_ID LBRACE Main RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($2);
+		ast_prog->visit();
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
 
@@ -181,7 +182,8 @@ int main(int argc, char* argv[]) {
 	char infile[100] = "stdin";
 	char *outfile = (char *)"flex_output.txt";
 	char *bison_outfile = (char *)"bison_output.txt";
-
+	char *xml_outfile = (char *)"XML_visitor.txt";
+	
 	if (argc>=2){
 		yyin = fopen( argv[1], "r");
 		strcpy(infile, argv[1]);
@@ -191,6 +193,7 @@ int main(int argc, char* argv[]) {
 
 	yyout = fopen(outfile, "w");
 	bison_fp = fopen(bison_outfile, "w");
+	XML_fp = fopen(xml_outfile, "w");
 
 	if(!yyin){
 		printf("Error in opening '%s' for reading!", infile);
@@ -204,6 +207,11 @@ int main(int argc, char* argv[]) {
 
 	if(!bison_fp){
 		printf("Error in opening '%s' for writing!", bison_outfile);
+		exit(0);
+	}	
+
+	if(!XML_fp){
+		printf("Error in opening '%s' for writing!", xml_outfile);
 		exit(0);
 	}	
 
@@ -224,7 +232,7 @@ int main(int argc, char* argv[]) {
 }
 
 void yyerror( const char *msg) {
-	cerr << "Line: " << line_num << ": " << msg << endl; 
+	cerr << "Line: " << yylineno << ": " << msg << endl; 
 	cerr.flush();
 }
 

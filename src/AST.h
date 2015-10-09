@@ -2,6 +2,7 @@
 #define __AST_H__
 
 #include <string>
+extern FILE* XML_fp;
 
 class ASTnode{
 public:
@@ -23,9 +24,7 @@ class ASTProgram: public ASTnode{
 private:
 	std::string id_;
 public:
-	void visit(){
-
-	}
+	void visit();
 	ASTProgram(std::string id);
 	std::string getId();
 };

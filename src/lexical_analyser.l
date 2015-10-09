@@ -1,20 +1,21 @@
-%option noyywrap
-%option c++
-
 %{
+#include <iostream>
+#include <string>
 using namespace std;
-#include <string.h>
 #define YY_DECL int yylex()
 #include "parser.tab.h"
-int line_num = 1;
 %}
+
+%option nodefault
+%option noyywrap
+%option yylineno
 
 LETTER            		[a-zA-Z_]
 DIGIT             		[0-9]
 ALPHANUMERICAL       	[a-zA-Z0-9_]
 
 %%
-[\n]	{++line_num;} 
+[\n]					{} 
 [ \t]+	; // ignore all whitespace
 "class" 				{fprintf(yyout,"%s\n", "CLASS");return START;}
 ";"						{return SEMI_COLON;}

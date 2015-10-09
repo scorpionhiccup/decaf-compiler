@@ -2,6 +2,10 @@
 #include "AST.h"
 using namespace std;
 
+void ASTProgram::visit(){
+	fprintf(XML_fp, "<program>\n");
+}
+
 void ASTnode::visit(){
 	std::cout<<"Visited ASTNode\n";
 }
