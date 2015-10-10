@@ -1,13 +1,12 @@
-#include "AST.h"
+#ifndef VISITOR_H
+#define VISITOR_H
 
-#if !defined(VISITOR_H)
-#define VISITOR_H 1
-
+class ASTProgram;
 class Visitor
 {
 public:
 	virtual ~Visitor();
-	void visit(ASTProgram aSTProgram);
+	void visit(ASTProgram* aSTProgram);
 };
 
 #endif

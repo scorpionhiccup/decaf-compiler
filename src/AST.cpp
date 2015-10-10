@@ -1,10 +1,12 @@
 #include <bits/stdc++.h>
 #include "AST.h"
+#include "Visitor.h"
+
 using namespace std;
 
-/*void ASTProgram::accept(Visitor* visitor){
-	fprintf(XML_fp, "<program>\n");
-}*/
+void ASTProgram::accept(Visitor* visitor){
+	visitor->visit(this);
+}
 
 void ASTnode::accept(){
 	std::cout<<"Accepted ASTNode\n";
@@ -19,7 +21,7 @@ std::string ASTProgram::getId(){
 }
 
 ASTProgram::ASTProgram(std::string id){
-	this->id_=id;
+	this->id_=id;		
 }
 	
 ASTBlockStatement::ASTBlockStatement(ASTStatement * stmtlist){

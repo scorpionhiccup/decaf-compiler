@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-Wall -g -std=c++11
 
-all: syntax_analyser
+all: clean syntax_analyser
 
 parser.tab.c parser.tab.h:	parser.y
 	bison -d -Wconflicts-sr -Wconflicts-rr --verbose parser.y

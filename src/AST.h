@@ -1,12 +1,12 @@
-#pragma once
 #include <string>
-#if !defined(VISITOR_H)
+
+#ifndef VISITOR_H
 #include "Visitor.h"
 #endif
 
-#if !defined(AST_H)
-#define AST_H 1
-
+#ifndef AST_H
+#define AST_H
+class Visitor;
 extern FILE* XML_fp;
 
 class ASTnode{
