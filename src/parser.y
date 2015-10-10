@@ -7,6 +7,7 @@
 #include <iostream> 
 #include <string.h> 
 #include "AST.h"
+#include "Visitor.h"
 using namespace std;
 
 extern int yylex(), yylineno;
@@ -58,7 +59,8 @@ int unary=0;
 Program: START PROG_ID LBRACE Main RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($2);
-		ast_prog->visit();
+		ast_prog->accept(new Visitor());
+		//ast_prog->accept();
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
 

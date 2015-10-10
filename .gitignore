@@ -30,3 +30,11 @@
 
 # Debug files
 *.dSYM/
+
+src/AST.h.gch 
+src/syntax_analyser 
+src/parser.tab.c 
+src/lex.yy.c 
+src/parser.tab.h 
+src/parser.output
+src/a.out
