@@ -27,6 +27,17 @@ int unary=0;
 	int bval;
 	char character;
 	char string[100];
+	ASTMain *ast_main;
+	ASTIdentifier *identifier;
+	ASTField_Declarations *fieldBaseDeclaration;
+	Def *Def_;
+	Field_Declaration *Field_Declaration_;
+	Field_Declarations *Field_Declarations_;
+	Declarations *Declarations_;
+	IntType *intType;
+	BooleanType *booleanType;	
+	Declarations *Declarations;
+	Type *type;
 }
 
 %token<number> T_INT
@@ -46,6 +57,10 @@ int unary=0;
 %type<number> Expression
 %type<number> InExpression Def
 %type<number> Bool
+%type<type> Type
+%type<Declarations> Declarations
+%type<fieldBaseDeclaration> Field_Declarations
+%type<Field_Declaration_> Field_Declaration
 
 %left TEQUAL
 %left TGREAT TLESS
@@ -64,24 +79,38 @@ Program: START PROG_ID LBRACE Main RBRACE {
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
 
-Main: Field_Declarations Statements
+Main: Field_Declarations Statements {
+	ASTMain * ast_main = new ASTMain($1);
+}
 
-Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations | 
+Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
+	$$=new ASTField_Declarations($1, $3);
+} | 
 
-Field_Declaration: Type Declarations 
 
-Declarations: Def TCOMMA Declarations | Def
+Field_Declaration: Type Declarations {
+	$$ = new Field_Declaration($1, $2);	
+}
+
+Declarations: Def TCOMMA Declarations { 
+ $$=new Declarations($1,$3);}
+| Def{
+	$$=new Declarations($1, null);
+}
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);
+		$$=new ASTArrayFieldDeclaration($1, $3);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
+		$$=new ASTIdentifier(yylval.string);
 	}
 
 Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", yylval.string);
+		//$$=new ASTIdentifier(yylval.string);
 	}
 
 InExpression:
@@ -169,8 +198,10 @@ Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
 Arguments: Literals | Expression_Right
 
 Type: INT {
+		$$=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
 	} | BOOLEAN {
+		$$=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
   

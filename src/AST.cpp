@@ -9,6 +9,7 @@ void ASTProgram::accept(Visitor* visitor){
 }
 
 void ASTnode::accept(){
+	visitor->visit(this);
 	std::cout<<"Accepted ASTNode\n";
 }
 
@@ -20,10 +21,14 @@ std::string ASTProgram::getId(){
 	return id_;
 }
 
-ASTProgram::ASTProgram(std::string id){
+ASTIdentifier::ASTIdentifier(std::string id){
 	this->id_=id;		
 }
 	
+ASTProgram::ASTProgram(std::string id){
+	this->id_=id;		
+}
+
 ASTBlockStatement::ASTBlockStatement(ASTStatement * stmtlist){
 	this->stmtlist_ = stmtlist;
 }
