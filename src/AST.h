@@ -64,7 +64,6 @@ public:
 		
 };
 
-
 class ASTIdentifier: public ASTnode{
 	std::string id;
 public:
@@ -72,6 +71,7 @@ public:
 		this->id=id;
 	};
 };
+
 
 /*class CalloutArg: public ASTnode{
 	std::string id;
@@ -88,13 +88,13 @@ public:
 		this->id=id_;
 		this->CalloutArgs=CalloutArgs;
 	};
-};*/
+};
 
 class ASTBinaryOperatorExpression: public ASTExpression {
-	ASTExpression right_, left_;
+	ASTExpression *right_, *left_;
 	std::string operator_;
 public:
-	ASTBinaryOperatorExpression(ASTExpression left, ASTExpression right, std::string operator_){
+	ASTBinaryOperatorExpression(ASTExpression *left, ASTExpression *right, std::string operator_){
 		this->left_ = left;
 		this->right_ = right;
 		this->operator_ = operator_;
@@ -111,10 +111,10 @@ public:
 };
 
 class ASTUnaryOperatorExpression: public ASTExpression {
-	ASTExpression expr_;
+	ASTExpression *expr_;
 	std::string operator_;
 public:
-	ASTUnaryOperatorExpression(ASTExpression expr, std::string operator_){
+	ASTUnaryOperatorExpression(ASTExpression *expr, std::string operator_){
 		this->expr_ = expr;
 		this->operator_ = operator_;
 	}
@@ -124,7 +124,7 @@ public:
 	};
 
 };
-
+*/
 
 class Type: public ASTnode{
 };
@@ -156,15 +156,16 @@ public:
 Field_Declaration: Type Declarations
 */
 class BaseFieldDeclaration: public ASTnode{
-		Type type_;
-		BaseDeclaration FieldDeclaration_;
+		Type *type_;
+		BaseDeclaration *FieldDeclaration_;
 	public:
-		BaseFieldDeclaration(Type type_, BaseDeclaration FieldDeclaration_){
+		BaseFieldDeclaration(Type *type_, BaseDeclaration *FieldDeclaration_){
 			this->type_=type_;
 			this->FieldDeclaration_=FieldDeclaration_;
 		}
 
 };
+
 
 
 /*
@@ -183,56 +184,58 @@ public:
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations |
 */
 class ASTField_Declarations: public BaseDeclaration{
-	BaseDeclaration FieldDeclaration_;
-	ASTField_Declarations FieldBaseDeclarations;
+	BaseDeclaration *FieldDeclaration_;
+	ASTField_Declarations *FieldBaseDeclarations_;
 public:
-	ASTField_Declarations(BaseDeclaration FieldBaseDeclaration,	ASTField_Declarations FieldBaseDeclarations){
-		this->BaseDeclaration=FieldBaseDeclaration;
-		this->FieldDeclarations = FieldBaseDeclarations;
-	}
-};
-/*
-Declarations: Def TCOMMA Declarations
-*/
-class Declarations: public ASTnode{
-	Def Def_;
-	Declarations Declarations_;
-public:
-	Declarations(Def Def_,Declarations Declarations_) {
-		this->Def_=Def_;
-		this->Declarations_=Declarations_;
+	ASTField_Declarations(BaseDeclaration *BaseDeclaration1, ASTField_Declarations *Field_Declarations1){
+		FieldDeclaration_=BaseDeclaration1;
+		FieldBaseDeclarations_= Field_Declarations1;
 	}
 };
 /*
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
 */
 class Def: public ASTnode{
-	union def_value{
-		struct value{
-			ASTIdentifier Identifier_;
+	struct value{
+			ASTIdentifier *Identifier_;
 			int InEpression_;
 		};
-		ASTIdentifier Indentifier_;
-	};
+	union def_value{
+		struct  value *v1;
+		ASTIdentifier *Identifier;
+	}*dv1;
 public:
-	Def(Identifier Identifier_obj) {
-		this->def_value=Identifier_obj;
+	Def(ASTIdentifier *Identifier_obj) {
+		dv1->Identifier=Identifier_obj;
 	}
-	Def(Identifier Identifier_obj, int InEpression){
-		this->def_value.value.Identifier_=Identifier_obj;
-		this->def_value.value.InEpression_=InEpression;
+	Def(ASTIdentifier Identifier_obj, int InEpression){
+		dv1->v1->Identifier_=&Identifier_obj;
+		dv1->v1->InEpression_=InEpression;
 	}
 
 };
+/*
+Declarations: Def TCOMMA Declarations
+*/
+class Declarations: public ASTnode{
+	Def *Def_;
+	Declarations *Declarations_;
+public:
+	Declarations(Def *Def1,Declarations *Declarations1) {
+		Def_=Def1;
+		Declarations_=Declarations1;
+	}
+};
+
 
 /*
 Main: Field_Declarations Statements
 */
 
 class ASTMain: public ASTnode{
-	ASTField_Declarations FieldBaseDeclaration_;
+	ASTField_Declarations *FieldBaseDeclaration_;
 public:
-	ASTMain(ASTField_Declarations FieldBaseDeclaration){
+	ASTMain(ASTField_Declarations *FieldBaseDeclaration){
 		this->FieldBaseDeclaration_=FieldBaseDeclaration;
 	}
 };
