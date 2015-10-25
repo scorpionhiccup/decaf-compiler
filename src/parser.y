@@ -30,6 +30,7 @@ int unary=0;
 	char character;
 	char string[100];
 	ASTMain *ast_main;
+	BaseDeclaration * _BaseDeclaration;
 	ASTIdentifier *identifier;
 	ASTField_Declaration *_ASTField_Declaration;
 	//ASTField_Declarations *fieldBaseDeclaration;
@@ -38,8 +39,8 @@ int unary=0;
 	//Field_Declarations *Field_Declarations_;
 	list<ASTField_Declaration *> *_ASTField_Declarations;
 	ASTDeclarations * Declarations_;
-	IntType *intType;
-	BooleanType *booleanType;	
+	//IntType *intType;
+	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
 	Type *type;
 }
@@ -58,10 +59,11 @@ int unary=0;
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
 %type<string> Statement
-%type<number> Expression InExpression Def Bool
+%type<number> Expression InExpression Bool
 %type<type> Type
 %type<Declarations_> Declarations
 //%type<fieldBaseDeclaration> Field_Declarations
+%type<_BaseDeclaration> Def
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
 
@@ -206,10 +208,12 @@ Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
 Arguments: Literals | Expression_Right
 
 Type: INT {
-		$$=new IntType();
+		$$=new Type();
+		//$$=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
 	} | BOOLEAN {
-		$$=new BooleanType();
+		$$=new Type();
+		//$$=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
   

@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+
 #include "AST.h"
 #include "Visitor.h"
 
@@ -8,7 +9,7 @@ void ASTProgram::accept(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void ASTnode::accept(){
+void ASTnode::accept(Visitor* visitor){
 	visitor->visit(this);
 	std::cout<<"Accepted ASTNode\n";
 }
@@ -33,10 +34,6 @@ ASTBlockStatement::ASTBlockStatement(ASTStatement * stmtlist){
 	this->stmtlist_ = stmtlist;
 }
 
-ASTAssignmentStatement::ASTAssignmentStatement(ASTLocation loc, ASTExpression expr){
-	this->loc_ = loc;
-	this->expr_ = expr;	
-}
 
 ASTIntegerLiteralExpression::ASTIntegerLiteralExpression(int value){
 	this->value_=value;

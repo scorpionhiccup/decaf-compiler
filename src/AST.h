@@ -1,17 +1,19 @@
-#include <list>
-
 #ifndef VISITOR_H
 #include "Visitor.h"
 #endif
 
 #ifndef AST_H
 #define AST_H
+#include <list>
+
 class Visitor;
+class Type;
+class ASTDeclarations;
 extern FILE* XML_fp;
 
 class ASTnode{
 public:
-	virtual void accept();
+	virtual void accept(Visitor* visitor);
 };
 
 class ASTStatement: public ASTnode{
@@ -61,22 +63,13 @@ public:
 
 class ASTField_Declaration: public ASTExpression{
 	Type* type;
-	ASTDeclarations* Declarations
+	ASTDeclarations* Declarations;
 public:
 	ASTField_Declaration(Type* type, ASTDeclarations* Declarations){
 		this->type = type;
 		this->Declarations = Declarations; 
 	}
 };
-
-class ASTIdentifier: public ASTnode{
-	std::string id;
-public:
-	ASTIdentifier(std::string id){
-		this->id=id;
-	};
-};
-
 
 /*class CalloutArg: public ASTnode{
 	std::string id;
@@ -157,6 +150,15 @@ public:
 	}
 };
 
+class ASTIdentifier: public BaseDeclaration{
+	std::string id;
+public:
+	ASTIdentifier(std::string id){
+		this->id=id;
+	};
+};
+
+
 /*
 Field_Declaration: Type Declarations
 */
@@ -223,12 +225,12 @@ public:
 Declarations: Def TCOMMA Declarations
 */
 class ASTDeclarations: public ASTnode{
-	Def *Def_;
+	BaseDeclaration *Def_;
 	ASTDeclarations *Declarations_;
 public:
-	ASTDeclarations(Def *Def1, ASTDeclarations *Declarations1) {
-		Def_=Def1;
-		Declarations_=Declarations1;
+	ASTDeclarations(BaseDeclaration *Def1, ASTDeclarations *Declarations1) {
+		this->Def_=Def1;
+		this->Declarations_=Declarations1;
 	}
 };
 

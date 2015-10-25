@@ -91,6 +91,7 @@ union YYSTYPE
 	char character;
 	char string[100];
 	ASTMain *ast_main;
+	BaseDeclaration * _BaseDeclaration;
 	ASTIdentifier *identifier;
 	ASTField_Declaration *_ASTField_Declaration;
 	//ASTField_Declarations *fieldBaseDeclaration;
@@ -99,12 +100,12 @@ union YYSTYPE
 	//Field_Declarations *Field_Declarations_;
 	list<ASTField_Declaration *> *_ASTField_Declarations;
 	ASTDeclarations * Declarations_;
-	IntType *intType;
-	BooleanType *booleanType;	
+	//IntType *intType;
+	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
 	Type *type;
 
-#line 108 "parser.tab.h" /* yacc.c:1909  */
+#line 109 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
