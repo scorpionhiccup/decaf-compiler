@@ -1,11 +1,13 @@
 %{
-
+#include <string>
 #include <cstdio>
 #include <cstdlib>
+#include <cstddef>
 #include <time.h>
-#include <string.h>
 #include <iostream> 
 #include <string.h> 
+#include <list>
+
 #include "AST.h"
 #include "Visitor.h"
 using namespace std;
@@ -29,14 +31,16 @@ int unary=0;
 	char string[100];
 	ASTMain *ast_main;
 	ASTIdentifier *identifier;
-	ASTField_Declarations *fieldBaseDeclaration;
+	ASTField_Declaration *_ASTField_Declaration;
+	//ASTField_Declarations *fieldBaseDeclaration;
 	Def *Def_;
-	Field_Declaration *Field_Declaration_;
-	Field_Declarations *Field_Declarations_;
-	Declarations *Declarations_;
+	//Field_Declaration *Field_Declaration_;
+	//Field_Declarations *Field_Declarations_;
+	list<ASTField_Declaration *> *_ASTField_Declarations;
+	ASTDeclarations * Declarations_;
 	IntType *intType;
 	BooleanType *booleanType;	
-	Declarations *Declarations;
+	ASTDeclarations * _ASTDeclarations;
 	Type *type;
 }
 
@@ -51,22 +55,22 @@ int unary=0;
 %token T_NEWLINE T_QUIT START 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
 %token FALSE TRUE  
-%token TLESS TGREAT SEMI_COLON TCOMMA
+%token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
 %type<string> Statement
-%type<number> Expression
-%type<number> InExpression Def
-%type<number> Bool
+%type<number> Expression InExpression Def Bool
 %type<type> Type
-%type<Declarations> Declarations
-%type<fieldBaseDeclaration> Field_Declarations
-%type<Field_Declaration_> Field_Declaration
+%type<Declarations_> Declarations
+//%type<fieldBaseDeclaration> Field_Declarations
+%type<_ASTField_Declaration> Field_Declaration
+%type<_ASTField_Declarations> Field_Declarations 
 
 %left TEQUAL
 %left TGREAT TLESS
 %left TPLUS TMINUS  
 %left TMUL TDIV MOD
-%left NOT
+//%left NOT
+%nonassoc NOT
 %left TLROUND TRROUND
 
 %start Program 
@@ -84,18 +88,22 @@ Main: Field_Declarations Statements {
 }
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
-	$$=new ASTField_Declarations($1, $3);
-} | 
+	$$=$3;
+	$$->push_back($1);
+	//$$=new ASTField_Declarations($1, $3);
+} | {
+	$$=new list<ASTField_Declaration*>();
+}
 
 
 Field_Declaration: Type Declarations {
-	$$ = new Field_Declaration($1, $2);	
+	$$ = new ASTField_Declaration($1, $2);	
 }
 
 Declarations: Def TCOMMA Declarations { 
- $$=new Declarations($1,$3);}
+	$$=new ASTDeclarations($1, $3);}
 | Def{
-	$$=new Declarations($1, null);
+	$$=new ASTDeclarations($1, NULL);
 }
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {

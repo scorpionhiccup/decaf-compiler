@@ -1,4 +1,4 @@
-#include <string>
+#include <list>
 
 #ifndef VISITOR_H
 #include "Visitor.h"
@@ -60,8 +60,13 @@ public:
 };
 
 class ASTField_Declaration: public ASTExpression{
+	Type* type;
+	ASTDeclarations* Declarations
 public:
-		
+	ASTField_Declaration(Type* type, ASTDeclarations* Declarations){
+		this->type = type;
+		this->Declarations = Declarations; 
+	}
 };
 
 class ASTIdentifier: public ASTnode{
@@ -217,11 +222,11 @@ public:
 /*
 Declarations: Def TCOMMA Declarations
 */
-class Declarations: public ASTnode{
+class ASTDeclarations: public ASTnode{
 	Def *Def_;
-	Declarations *Declarations_;
+	ASTDeclarations *Declarations_;
 public:
-	Declarations(Def *Def1,Declarations *Declarations1) {
+	ASTDeclarations(Def *Def1, ASTDeclarations *Declarations1) {
 		Def_=Def1;
 		Declarations_=Declarations1;
 	}
@@ -233,9 +238,9 @@ Main: Field_Declarations Statements
 */
 
 class ASTMain: public ASTnode{
-	ASTField_Declarations *FieldBaseDeclaration_;
+	std::list<ASTField_Declaration*> *FieldBaseDeclaration_;
 public:
-	ASTMain(ASTField_Declarations *FieldBaseDeclaration){
+	ASTMain(std::list<ASTField_Declaration*> *FieldBaseDeclaration){
 		this->FieldBaseDeclaration_=FieldBaseDeclaration;
 	}
 };

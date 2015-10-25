@@ -74,7 +74,8 @@ extern int yydebug;
     TLESS = 284,
     TGREAT = 285,
     SEMI_COLON = 286,
-    TCOMMA = 287
+    TCOMMA = 287,
+    NOT_EQUAL = 288
   };
 #endif
 
@@ -83,7 +84,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 25 "parser.y" /* yacc.c:1909  */
+#line 27 "parser.y" /* yacc.c:1909  */
 
 	int number;
 	int bval;
@@ -91,17 +92,19 @@ union YYSTYPE
 	char string[100];
 	ASTMain *ast_main;
 	ASTIdentifier *identifier;
-	ASTField_Declarations *fieldBaseDeclaration;
+	ASTField_Declaration *_ASTField_Declaration;
+	//ASTField_Declarations *fieldBaseDeclaration;
 	Def *Def_;
-	Field_Declaration *Field_Declaration_;
-	Field_Declarations *Field_Declarations_;
-	Declarations *Declarations_;
+	//Field_Declaration *Field_Declaration_;
+	//Field_Declarations *Field_Declarations_;
+	list<ASTField_Declaration *> *_ASTField_Declarations;
+	ASTDeclarations * Declarations_;
 	IntType *intType;
 	BooleanType *booleanType;	
-	Declarations *Declarations;
+	ASTDeclarations * _ASTDeclarations;
 	Type *type;
 
-#line 105 "parser.tab.h" /* yacc.c:1909  */
+#line 108 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

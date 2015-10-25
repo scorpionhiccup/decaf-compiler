@@ -64,13 +64,15 @@
 /* Copy the first part of user declarations.  */
 #line 1 "parser.y" /* yacc.c:339  */
 
-
+#include <string>
 #include <cstdio>
 #include <cstdlib>
+#include <cstddef>
 #include <time.h>
-#include <string.h>
 #include <iostream> 
 #include <string.h> 
+#include <list>
+
 #include "AST.h"
 #include "Visitor.h"
 using namespace std;
@@ -86,7 +88,7 @@ void operatorOutput(char op);
 
 int unary=0;
 
-#line 90 "parser.tab.c" /* yacc.c:339  */
+#line 92 "parser.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -150,7 +152,8 @@ extern int yydebug;
     TLESS = 284,
     TGREAT = 285,
     SEMI_COLON = 286,
-    TCOMMA = 287
+    TCOMMA = 287,
+    NOT_EQUAL = 288
   };
 #endif
 
@@ -159,7 +162,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 25 "parser.y" /* yacc.c:355  */
+#line 27 "parser.y" /* yacc.c:355  */
 
 	int number;
 	int bval;
@@ -167,17 +170,19 @@ union YYSTYPE
 	char string[100];
 	ASTMain *ast_main;
 	ASTIdentifier *identifier;
-	ASTField_Declarations *fieldBaseDeclaration;
+	ASTField_Declaration *_ASTField_Declaration;
+	//ASTField_Declarations *fieldBaseDeclaration;
 	Def *Def_;
-	Field_Declaration *Field_Declaration_;
-	Field_Declarations *Field_Declarations_;
-	Declarations *Declarations_;
+	//Field_Declaration *Field_Declaration_;
+	//Field_Declarations *Field_Declarations_;
+	list<ASTField_Declaration *> *_ASTField_Declarations;
+	ASTDeclarations * Declarations_;
 	IntType *intType;
 	BooleanType *booleanType;	
-	Declarations *Declarations;
+	ASTDeclarations * _ASTDeclarations;
 	Type *type;
 
-#line 181 "parser.tab.c" /* yacc.c:355  */
+#line 186 "parser.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -192,7 +197,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 196 "parser.tab.c" /* yacc.c:358  */
+#line 201 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -437,7 +442,7 @@ union yyalloc
 #define YYLAST   76
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  33
+#define YYNTOKENS  34
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  21
 /* YYNRULES -- Number of rules.  */
@@ -448,7 +453,7 @@ union yyalloc
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   287
+#define YYMAXUTOK   288
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -485,18 +490,18 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    29,    30,    31,    32
+      25,    26,    27,    28,    29,    30,    31,    32,    33
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    74,    74,    82,    86,    88,    91,    95,    97,   101,
-     104,   109,   111,   117,   122,   125,   128,   131,   134,   137,
-     138,   144,   144,   147,   147,   150,   153,   156,   159,   162,
-     165,   166,   176,   186,   186,   188,   188,   190,   192,   192,
-     196,   196,   198,   198,   200,   203,   208,   210
+       0,    78,    78,    86,    90,    94,    99,   103,   105,   109,
+     112,   117,   119,   125,   130,   133,   136,   139,   142,   145,
+     146,   152,   152,   155,   155,   158,   161,   164,   167,   170,
+     173,   174,   184,   194,   194,   196,   196,   198,   200,   200,
+     204,   204,   206,   206,   208,   211,   216,   218
 };
 #endif
 
@@ -510,10 +515,10 @@ static const char *const yytname[] =
   "TPLUS", "TMINUS", "TMUL", "TDIV", "NOT", "MOD", "RBRACE", "LBRACE",
   "T_NEWLINE", "T_QUIT", "START", "TLROUND", "TRROUND", "TLSQUARE",
   "TRSQUARE", "FALSE", "TRUE", "TLESS", "TGREAT", "SEMI_COLON", "TCOMMA",
-  "$accept", "Program", "Main", "Field_Declarations", "Field_Declaration",
-  "Declarations", "Def", "Location", "InExpression", "Expression",
-  "Expression_Right", "$@1", "$@2", "Bool", "Statements", "Statement",
-  "$@3", "Callout_Arg", "Arguments", "Type", "Literals", YY_NULLPTR
+  "NOT_EQUAL", "$accept", "Program", "Main", "Field_Declarations",
+  "Field_Declaration", "Declarations", "Def", "Location", "InExpression",
+  "Expression", "Expression_Right", "$@1", "$@2", "Bool", "Statements",
+  "Statement", "$@3", "Callout_Arg", "Arguments", "Type", "Literals", YY_NULLPTR
 };
 #endif
 
@@ -525,7 +530,7 @@ static const yytype_uint16 yytoknum[] =
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287
+     285,   286,   287,   288
 };
 # endif
 
@@ -617,25 +622,25 @@ static const yytype_uint8 yycheck[] =
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    22,    34,     6,     0,    19,     8,    11,    35,    36,
-      37,    52,    18,     4,     9,    40,    47,    48,    31,     4,
-      38,    39,    25,    23,    10,    31,    36,    25,    32,     3,
-      39,    42,     5,     3,    13,    16,    27,    28,    40,    43,
-      46,    47,     3,    41,    38,    12,    13,    14,    15,    17,
-      26,    49,    45,    44,    12,    13,    14,    15,    17,    26,
-      42,    42,    42,    42,    42,    32,    43,    43,    43,    43,
-      43,    43,    43,     5,     7,    43,    50,    51,    53,    24,
-      32,    50
+       0,    22,    35,     6,     0,    19,     8,    11,    36,    37,
+      38,    53,    18,     4,     9,    41,    48,    49,    31,     4,
+      39,    40,    25,    23,    10,    31,    37,    25,    32,     3,
+      40,    43,     5,     3,    13,    16,    27,    28,    41,    44,
+      47,    48,     3,    42,    39,    12,    13,    14,    15,    17,
+      26,    50,    46,    45,    12,    13,    14,    15,    17,    26,
+      43,    43,    43,    43,    43,    32,    44,    44,    44,    44,
+      44,    44,    44,     5,     7,    44,    51,    52,    54,    24,
+      32,    51
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    33,    34,    35,    36,    36,    37,    38,    38,    39,
-      39,    40,    40,    41,    42,    42,    42,    42,    42,    42,
-      42,    44,    43,    45,    43,    43,    43,    43,    43,    43,
-      43,    43,    43,    46,    46,    47,    47,    48,    49,    48,
-      50,    50,    51,    51,    52,    52,    53,    53
+       0,    34,    35,    36,    37,    37,    38,    39,    39,    40,
+      40,    41,    41,    42,    43,    43,    43,    43,    43,    43,
+      43,    45,    44,    46,    44,    44,    44,    44,    44,    44,
+      44,    44,    44,    47,    47,    48,    48,    49,    50,    49,
+      51,    51,    52,    52,    53,    53,    54,    54
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -1322,7 +1327,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 74 "parser.y" /* yacc.c:1646  */
+#line 78 "parser.y" /* yacc.c:1646  */
     {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram((yyvsp[-3].string));
@@ -1330,197 +1335,207 @@ yyreduce:
 		//ast_prog->accept();
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
-#line 1334 "parser.tab.c" /* yacc.c:1646  */
+#line 1339 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 82 "parser.y" /* yacc.c:1646  */
+#line 86 "parser.y" /* yacc.c:1646  */
     {
-	ASTMain * ast_main = new ASTMain((yyvsp[-1].fieldBaseDeclaration));
+	ASTMain * ast_main = new ASTMain((yyvsp[-1]._ASTField_Declarations));
 }
-#line 1342 "parser.tab.c" /* yacc.c:1646  */
+#line 1347 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 86 "parser.y" /* yacc.c:1646  */
+#line 90 "parser.y" /* yacc.c:1646  */
     {
-	(yyval.fieldBaseDeclaration)=new ASTField_Declarations((yyvsp[-2].Field_Declaration_), (yyvsp[0].fieldBaseDeclaration));
+	(yyval._ASTField_Declarations)=(yyvsp[0]._ASTField_Declarations);
+	(yyval._ASTField_Declarations)->push_back((yyvsp[-2]._ASTField_Declaration));
+	//$$=new ASTField_Declarations($1, $3);
 }
-#line 1350 "parser.tab.c" /* yacc.c:1646  */
+#line 1357 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 6:
-#line 91 "parser.y" /* yacc.c:1646  */
+  case 5:
+#line 94 "parser.y" /* yacc.c:1646  */
     {
-	(yyval.Field_Declaration_) = new Field_Declaration((yyvsp[-1].type), (yyvsp[0].Declarations));	
+	(yyval._ASTField_Declarations)=new list<ASTField_Declaration*>();
 }
-#line 1358 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 7:
-#line 95 "parser.y" /* yacc.c:1646  */
-    { 
- (yyval.Declarations)=new Declarations((yyvsp[-2].number),(yyvsp[0].Declarations));}
 #line 1365 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 8:
-#line 97 "parser.y" /* yacc.c:1646  */
+  case 6:
+#line 99 "parser.y" /* yacc.c:1646  */
     {
-	(yyval.Declarations)=new Declarations((yyvsp[0].number), null);
+	(yyval._ASTField_Declaration) = new ASTField_Declaration((yyvsp[-1].type), (yyvsp[0].Declarations_));	
 }
 #line 1373 "parser.tab.c" /* yacc.c:1646  */
     break;
 
+  case 7:
+#line 103 "parser.y" /* yacc.c:1646  */
+    { 
+	(yyval.Declarations_)=new ASTDeclarations((yyvsp[-2].number), (yyvsp[0].Declarations_));}
+#line 1380 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 8:
+#line 105 "parser.y" /* yacc.c:1646  */
+    {
+	(yyval.Declarations_)=new ASTDeclarations((yyvsp[0].number), NULL);
+}
+#line 1388 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
   case 9:
-#line 101 "parser.y" /* yacc.c:1646  */
+#line 109 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", (yyvsp[-3].string), (yyvsp[-1].number));
 		(yyval.number)=new ASTArrayFieldDeclaration((yyvsp[-3].string), (yyvsp[-1].number));
 	}
-#line 1382 "parser.tab.c" /* yacc.c:1646  */
+#line 1397 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 104 "parser.y" /* yacc.c:1646  */
+#line 112 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
 		(yyval.number)=new ASTIdentifier(yylval.string);
 	}
-#line 1391 "parser.tab.c" /* yacc.c:1646  */
+#line 1406 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 109 "parser.y" /* yacc.c:1646  */
+#line 117 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", (yyvsp[-3].string));
 	}
-#line 1399 "parser.tab.c" /* yacc.c:1646  */
+#line 1414 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 111 "parser.y" /* yacc.c:1646  */
+#line 119 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", yylval.string);
 		//$$=new ASTIdentifier(yylval.string);
 	}
-#line 1408 "parser.tab.c" /* yacc.c:1646  */
+#line 1423 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 117 "parser.y" /* yacc.c:1646  */
+#line 125 "parser.y" /* yacc.c:1646  */
     {
 		(yyval.number)=(yyvsp[0].number);
 	}
-#line 1416 "parser.tab.c" /* yacc.c:1646  */
+#line 1431 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 122 "parser.y" /* yacc.c:1646  */
+#line 130 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('+');
 	}
-#line 1424 "parser.tab.c" /* yacc.c:1646  */
+#line 1439 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 125 "parser.y" /* yacc.c:1646  */
+#line 133 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('-');
 	}
-#line 1432 "parser.tab.c" /* yacc.c:1646  */
+#line 1447 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 128 "parser.y" /* yacc.c:1646  */
+#line 136 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('*');
 	}
-#line 1440 "parser.tab.c" /* yacc.c:1646  */
+#line 1455 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 131 "parser.y" /* yacc.c:1646  */
+#line 139 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('/');
 	}
-#line 1448 "parser.tab.c" /* yacc.c:1646  */
+#line 1463 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 134 "parser.y" /* yacc.c:1646  */
+#line 142 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('%');
 	}
-#line 1456 "parser.tab.c" /* yacc.c:1646  */
+#line 1471 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 138 "parser.y" /* yacc.c:1646  */
+#line 146 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "INT ENCOUNTERED=%d\n", (yyvsp[0].number));
 	}
-#line 1464 "parser.tab.c" /* yacc.c:1646  */
+#line 1479 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 144 "parser.y" /* yacc.c:1646  */
+#line 152 "parser.y" /* yacc.c:1646  */
     {
 		unary=2;
 	}
-#line 1472 "parser.tab.c" /* yacc.c:1646  */
+#line 1487 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 147 "parser.y" /* yacc.c:1646  */
+#line 155 "parser.y" /* yacc.c:1646  */
     {
 		unary=1;
 	}
-#line 1480 "parser.tab.c" /* yacc.c:1646  */
+#line 1495 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 150 "parser.y" /* yacc.c:1646  */
+#line 158 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('+');
 	}
-#line 1488 "parser.tab.c" /* yacc.c:1646  */
+#line 1503 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 153 "parser.y" /* yacc.c:1646  */
+#line 161 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('-');
 	}
-#line 1496 "parser.tab.c" /* yacc.c:1646  */
+#line 1511 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 156 "parser.y" /* yacc.c:1646  */
+#line 164 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('*');
 	}
-#line 1504 "parser.tab.c" /* yacc.c:1646  */
+#line 1519 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 159 "parser.y" /* yacc.c:1646  */
+#line 167 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('/');
 	}
-#line 1512 "parser.tab.c" /* yacc.c:1646  */
+#line 1527 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 162 "parser.y" /* yacc.c:1646  */
+#line 170 "parser.y" /* yacc.c:1646  */
     {
 		operatorOutput('%');
 	}
-#line 1520 "parser.tab.c" /* yacc.c:1646  */
+#line 1535 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 166 "parser.y" /* yacc.c:1646  */
+#line 174 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
 		if(unary==2) 
@@ -1531,11 +1546,11 @@ yyreduce:
 		else
 			fprintf(bison_fp, "false\n");
 	}
-#line 1535 "parser.tab.c" /* yacc.c:1646  */
+#line 1550 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 176 "parser.y" /* yacc.c:1646  */
+#line 184 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "INT ENCOUNTERED=");
 		if(unary==1)
@@ -1545,65 +1560,65 @@ yyreduce:
 		fprintf(bison_fp, "%d\n",(yyvsp[0].number));
 		unary=0;
 	}
-#line 1549 "parser.tab.c" /* yacc.c:1646  */
+#line 1564 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 186 "parser.y" /* yacc.c:1646  */
+#line 194 "parser.y" /* yacc.c:1646  */
     {(yyval.number)=1;}
-#line 1555 "parser.tab.c" /* yacc.c:1646  */
+#line 1570 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 186 "parser.y" /* yacc.c:1646  */
+#line 194 "parser.y" /* yacc.c:1646  */
     {(yyval.number)=0;}
-#line 1561 "parser.tab.c" /* yacc.c:1646  */
+#line 1576 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 190 "parser.y" /* yacc.c:1646  */
+#line 198 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");	
 	}
-#line 1569 "parser.tab.c" /* yacc.c:1646  */
+#line 1584 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 192 "parser.y" /* yacc.c:1646  */
+#line 200 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", (yyvsp[0].string));	
 	}
-#line 1577 "parser.tab.c" /* yacc.c:1646  */
+#line 1592 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 200 "parser.y" /* yacc.c:1646  */
+#line 208 "parser.y" /* yacc.c:1646  */
     {
 		(yyval.type)=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
 	}
-#line 1586 "parser.tab.c" /* yacc.c:1646  */
+#line 1601 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 203 "parser.y" /* yacc.c:1646  */
+#line 211 "parser.y" /* yacc.c:1646  */
     {
 		(yyval.type)=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
-#line 1595 "parser.tab.c" /* yacc.c:1646  */
+#line 1610 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 208 "parser.y" /* yacc.c:1646  */
+#line 216 "parser.y" /* yacc.c:1646  */
     {
 	fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", (yyvsp[0].string));
 }
-#line 1603 "parser.tab.c" /* yacc.c:1646  */
+#line 1618 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1607 "parser.tab.c" /* yacc.c:1646  */
+#line 1622 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1831,7 +1846,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 212 "parser.y" /* yacc.c:1906  */
+#line 220 "parser.y" /* yacc.c:1906  */
 
 
 int main(int argc, char* argv[]) {
