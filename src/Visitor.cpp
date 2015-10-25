@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
-#include "AST.h"
 #include "Visitor.h"
+#include "AST.h"
 
 using namespace std;
 

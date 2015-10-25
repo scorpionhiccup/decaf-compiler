@@ -1,21 +1,17 @@
 %{
-/*class Type;
-class ASTDeclarations;
-class ASTIdentifier;
-class ASTField_Declaration;
-class Def;
-class ASTMain;
-class BaseDeclaration;*/
 
 #include <iostream>
 #include <string>
-#include <list>
-using namespace std;
-
 #define YY_DECL int yylex()
+#include <list>
+
+class Visitor;
+
 #include "AST.h"
 #include "Visitor.h"
 #include "parser.tab.h"
+using namespace std;
+
 %}
 
 %option nodefault

@@ -84,7 +84,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 27 "parser.y" /* yacc.c:1909  */
+#line 22 "parser.y" /* yacc.c:1909  */
 
 	int number;
 	int bval;
@@ -98,7 +98,7 @@ union YYSTYPE
 	Def *Def_;
 	//Field_Declaration *Field_Declaration_;
 	//Field_Declarations *Field_Declarations_;
-	list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	ASTDeclarations * Declarations_;
 	//IntType *intType;
 	//BooleanType *booleanType;	

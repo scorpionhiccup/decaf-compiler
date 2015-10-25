@@ -1,10 +1,8 @@
 #ifndef VISITOR_H
 #define VISITOR_H
 
-#include <list>
+#include "AST.h"
 
-class ASTProgram;
-class ASTnode;
 class Visitor{
 public:
 	virtual ~Visitor();

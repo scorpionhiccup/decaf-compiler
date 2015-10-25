@@ -1,13 +1,7 @@
 %{
-#include <string>
-#include <cstdio>
-#include <cstdlib>
-#include <cstddef>
-#include <time.h>
-#include <iostream> 
-#include <string.h> 
-#include <list>
+#include <bits/stdc++.h>
 
+class Visitor;
 #include "AST.h"
 #include "Visitor.h"
 using namespace std;
@@ -24,6 +18,7 @@ void operatorOutput(char op);
 int unary=0;
 %}
 
+
 %union {
 	int number;
 	int bval;
@@ -37,7 +32,7 @@ int unary=0;
 	Def *Def_;
 	//Field_Declaration *Field_Declaration_;
 	//Field_Declarations *Field_Declarations_;
-	list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	ASTDeclarations * Declarations_;
 	//IntType *intType;
 	//BooleanType *booleanType;	

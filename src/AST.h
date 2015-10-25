@@ -1,12 +1,15 @@
-#ifndef VISITOR_H
+
+#include <bits/stdc++.h>
+
+/*#ifndef VISITOR_H
 #include "Visitor.h"
-#endif
+#endif*/
 
 #ifndef AST_H
 #define AST_H
-#include <list>
 
 class Visitor;
+
 class Type;
 class ASTDeclarations;
 extern FILE* XML_fp;
