@@ -22,9 +22,9 @@ std::string ASTProgram::getId(){
 	return id_;
 }
 
-ASTIdentifier::ASTIdentifier(std::string id){
+/*ASTIdentifier::ASTIdentifier(std::string id){
 	this->id_=id;		
-}
+}*/
 	
 ASTProgram::ASTProgram(std::string id){
 	this->id_=id;		

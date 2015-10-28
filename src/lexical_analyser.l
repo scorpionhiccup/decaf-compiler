@@ -5,8 +5,6 @@
 #define YY_DECL int yylex()
 #include <list>
 
-class Visitor;
-
 #include "AST.h"
 #include "Visitor.h"
 #include "parser.tab.h"

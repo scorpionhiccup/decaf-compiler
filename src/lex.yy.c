@@ -612,10 +612,10 @@ int yy_flex_debug = 1;
 
 static yyconst flex_int16_t yy_rule_linenum[33] =
     {   0,
-       26,   27,   28,   29,   30,   31,   32,   33,   34,   35,
-       36,   37,   38,   39,   40,   41,   42,   43,   44,   45,
-       46,   47,   48,   49,   50,   51,   52,   53,   54,   55,
-       56,   57
+       24,   25,   26,   27,   28,   29,   30,   31,   32,   33,
+       34,   35,   36,   37,   38,   39,   40,   41,   42,   43,
+       44,   45,   46,   47,   48,   49,   50,   51,   52,   53,
+       54,   55
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -634,14 +634,12 @@ char *yytext;
 #define YY_DECL int yylex()
 #include <list>
 
-class Visitor;
-
 #include "AST.h"
 #include "Visitor.h"
 #include "parser.tab.h"
 using namespace std;
 
-#line 645 "lex.yy.c"
+#line 643 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -888,9 +886,9 @@ YY_DECL
 	register int yy_act;
     
 /* %% [7.0] user's declarations go here */
-#line 25 "lexical_analyser.l"
+#line 23 "lexical_analyser.l"
 
-#line 894 "lex.yy.c"
+#line 892 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -1017,172 +1015,172 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 26 "lexical_analyser.l"
+#line 24 "lexical_analyser.l"
 {} 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 27 "lexical_analyser.l"
+#line 25 "lexical_analyser.l"
 ; // ignore all whitespace
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 28 "lexical_analyser.l"
+#line 26 "lexical_analyser.l"
 {fprintf(yyout,"%s\n", "CLASS");return START;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 29 "lexical_analyser.l"
+#line 27 "lexical_analyser.l"
 {return SEMI_COLON;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 30 "lexical_analyser.l"
+#line 28 "lexical_analyser.l"
 {return LBRACE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 31 "lexical_analyser.l"
+#line 29 "lexical_analyser.l"
 {return RBRACE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 32 "lexical_analyser.l"
+#line 30 "lexical_analyser.l"
 {return TLSQUARE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 33 "lexical_analyser.l"
+#line 31 "lexical_analyser.l"
 {return TRSQUARE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 34 "lexical_analyser.l"
+#line 32 "lexical_analyser.l"
 {return TLROUND;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 35 "lexical_analyser.l"
+#line 33 "lexical_analyser.l"
 {return TRROUND;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 36 "lexical_analyser.l"
+#line 34 "lexical_analyser.l"
 {return TCOMMA;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 37 "lexical_analyser.l"
+#line 35 "lexical_analyser.l"
 {fprintf(yyout, "%s\n", "CALLOUT");return CALLOUT;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 38 "lexical_analyser.l"
+#line 36 "lexical_analyser.l"
 {fprintf(yyout,"%s\n", "INT_DECLARATION");return INT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 39 "lexical_analyser.l"
+#line 37 "lexical_analyser.l"
 {fprintf(yyout,"%s\n", "BOOLEAN_DECLARATION");return BOOLEAN;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 40 "lexical_analyser.l"
+#line 38 "lexical_analyser.l"
 {fprintf(yyout,"%s\n", "BOOLEAN: false");yylval.bval=0;return FALSE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 41 "lexical_analyser.l"
+#line 39 "lexical_analyser.l"
 {fprintf(yyout,"%s\n", "BOOLEAN: true");yylval.bval=1;return TRUE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 42 "lexical_analyser.l"
+#line 40 "lexical_analyser.l"
 {return NOT_EQUAL;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 43 "lexical_analyser.l"
+#line 41 "lexical_analyser.l"
 {return TEQUAL;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 44 "lexical_analyser.l"
+#line 42 "lexical_analyser.l"
 {return TMUL;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 45 "lexical_analyser.l"
+#line 43 "lexical_analyser.l"
 {return TDIV;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 46 "lexical_analyser.l"
+#line 44 "lexical_analyser.l"
 {return MOD;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 47 "lexical_analyser.l"
+#line 45 "lexical_analyser.l"
 {return TPLUS;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 48 "lexical_analyser.l"
+#line 46 "lexical_analyser.l"
 {return TMINUS;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 49 "lexical_analyser.l"
+#line 47 "lexical_analyser.l"
 {return NOT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 50 "lexical_analyser.l"
+#line 48 "lexical_analyser.l"
 {return TGREAT;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 51 "lexical_analyser.l"
+#line 49 "lexical_analyser.l"
 {return TLESS;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 52 "lexical_analyser.l"
+#line 50 "lexical_analyser.l"
 {fprintf(yyout,"INT: %s\n", yytext);yylval.number = atoi(yytext); return T_INT; }
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 53 "lexical_analyser.l"
+#line 51 "lexical_analyser.l"
 {fprintf(yyout,"CHARACTER: %s\n", yytext); strcpy(yylval.string, yytext); return CHAR_LITERAL;}
 	YY_BREAK
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 54 "lexical_analyser.l"
+#line 52 "lexical_analyser.l"
 {fprintf(yyout,"STRING: %s\n", yytext); strcpy(yylval.string, yytext); return STRING_LITERAL;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 55 "lexical_analyser.l"
+#line 53 "lexical_analyser.l"
 {fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return PROG_ID; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 56 "lexical_analyser.l"
+#line 54 "lexical_analyser.l"
 {fprintf(yyout, "ID: %s\n", yytext); strcpy(yylval.string, yytext); return IDENTIFIER; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 57 "lexical_analyser.l"
+#line 55 "lexical_analyser.l"
 { fprintf(stdout, "Syntax Error\n"); exit(1);} 
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 58 "lexical_analyser.l"
+#line 56 "lexical_analyser.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 1186 "lex.yy.c"
+#line 1184 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2328,7 +2326,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 58 "lexical_analyser.l"
+#line 56 "lexical_analyser.l"
 
 
 
