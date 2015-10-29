@@ -1,0 +1,1029 @@
+Terminals unused in grammar
+
+   T_NEWLINE
+   T_QUIT
+   TLESS
+   TGREAT
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: START PROG_ID LBRACE Main RBRACE
+
+    2 Main: Field_Declarations Statements
+
+    3 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations
+    4                   | %empty
+
+    5 Field_Declaration: Type Declarations
+
+    6 Declarations: Def TCOMMA Declarations
+    7             | Def
+
+    8 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE
+    9    | IDENTIFIER
+
+   10 Location: IDENTIFIER TLSQUARE Expression TRSQUARE
+   11         | IDENTIFIER
+
+   12 InExpression: T_INT
+
+   13 Expression: Expression TPLUS Expression
+   14           | Expression TMINUS Expression
+   15           | Expression TMUL Expression
+   16           | Expression TDIV Expression
+   17           | Expression MOD Expression
+   18           | Def
+   19           | T_INT
+
+   20 $@1: %empty
+
+   21 Expression_Right: NOT $@1 Expression_Right
+
+   22 $@2: %empty
+
+   23 Expression_Right: TMINUS $@2 Expression_Right
+   24                 | Expression_Right TPLUS Expression_Right
+   25                 | Expression_Right TMINUS Expression_Right
+   26                 | Expression_Right TMUL Expression_Right
+   27                 | Expression_Right TDIV Expression_Right
+   28                 | Expression_Right MOD Expression_Right
+   29                 | Location
+   30                 | Bool
+   31                 | T_INT
+
+   32 Bool: TRUE
+   33     | FALSE
+
+   34 Statements: Statement SEMI_COLON Statements
+   35           | %empty
+
+   36 Statement: Location TEQUAL Expression_Right
+
+   37 $@3: %empty
+
+   38 Statement: CALLOUT TLROUND STRING_LITERAL $@3 TCOMMA Callout_Arg TRROUND
+
+   39 Callout_Arg: Arguments
+   40            | Arguments TCOMMA Callout_Arg
+
+   41 Arguments: Literals
+   42          | Expression_Right
+
+   43 Type: INT
+   44     | BOOLEAN
+
+   45 Literals: CHAR_LITERAL
+   46         | STRING_LITERAL
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+T_INT (258) 12 19 31
+IDENTIFIER (259) 8 9 10 11
+STRING_LITERAL (260) 38 46
+PROG_ID (261) 1
+CHAR_LITERAL (262) 45
+BOOLEAN (263) 44
+CALLOUT (264) 38
+TEQUAL (265) 36
+INT (266) 43
+TPLUS (267) 13 24
+TMINUS (268) 14 23 25
+TMUL (269) 15 26
+TDIV (270) 16 27
+NOT (271) 21
+MOD (272) 17 28
+RBRACE (273) 1
+LBRACE (274) 1
+T_NEWLINE (275)
+T_QUIT (276)
+START (277) 1
+TLROUND (278) 38
+TRROUND (279) 38
+TLSQUARE (280) 8 10
+TRSQUARE (281) 8 10
+FALSE (282) 33
+TRUE (283) 32
+TLESS (284)
+TGREAT (285)
+SEMI_COLON (286) 3 34
+TCOMMA (287) 6 38 40
+
+
+Nonterminals, with rules where they appear
+
+$accept (33)
+    on left: 0
+Program (34)
+    on left: 1, on right: 0
+Main (35)
+    on left: 2, on right: 1
+Field_Declarations (36)
+    on left: 3 4, on right: 2 3
+Field_Declaration (37)
+    on left: 5, on right: 3
+Declarations (38)
+    on left: 6 7, on right: 5 6
+Def (39)
+    on left: 8 9, on right: 6 7 18
+Location (40)
+    on left: 10 11, on right: 29 36
+InExpression (41)
+    on left: 12, on right: 8
+Expression (42)
+    on left: 13 14 15 16 17 18 19, on right: 10 13 14 15 16 17
+Expression_Right (43)
+    on left: 21 23 24 25 26 27 28 29 30 31, on right: 21 23 24 25 26
+    27 28 36 42
+$@1 (44)
+    on left: 20, on right: 21
+$@2 (45)
+    on left: 22, on right: 23
+Bool (46)
+    on left: 32 33, on right: 30
+Statements (47)
+    on left: 34 35, on right: 2 34
+Statement (48)
+    on left: 36 38, on right: 34
+$@3 (49)
+    on left: 37, on right: 38
+Callout_Arg (50)
+    on left: 39 40, on right: 38 40
+Arguments (51)
+    on left: 41 42, on right: 39 40
+Type (52)
+    on left: 43 44, on right: 5
+Literals (53)
+    on left: 45 46, on right: 41
+
+
+State 0
+
+    0 $accept: . Program $end
+
+    START  shift, and go to state 1
+
+    Program  go to state 2
+
+
+State 1
+
+    1 Program: START . PROG_ID LBRACE Main RBRACE
+
+    PROG_ID  shift, and go to state 3
+
+
+State 2
+
+    0 $accept: Program . $end
+
+    $end  shift, and go to state 4
+
+
+State 3
+
+    1 Program: START PROG_ID . LBRACE Main RBRACE
+
+    LBRACE  shift, and go to state 5
+
+
+State 4
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+State 5
+
+    1 Program: START PROG_ID LBRACE . Main RBRACE
+
+    BOOLEAN  shift, and go to state 6
+    INT      shift, and go to state 7
+
+    $default  reduce using rule 4 (Field_Declarations)
+
+    Main                go to state 8
+    Field_Declarations  go to state 9
+    Field_Declaration   go to state 10
+    Type                go to state 11
+
+
+State 6
+
+   44 Type: BOOLEAN .
+
+    $default  reduce using rule 44 (Type)
+
+
+State 7
+
+   43 Type: INT .
+
+    $default  reduce using rule 43 (Type)
+
+
+State 8
+
+    1 Program: START PROG_ID LBRACE Main . RBRACE
+
+    RBRACE  shift, and go to state 12
+
+
+State 9
+
+    2 Main: Field_Declarations . Statements
+
+    IDENTIFIER  shift, and go to state 13
+    CALLOUT     shift, and go to state 14
+
+    $default  reduce using rule 35 (Statements)
+
+    Location    go to state 15
+    Statements  go to state 16
+    Statement   go to state 17
+
+
+State 10
+
+    3 Field_Declarations: Field_Declaration . SEMI_COLON Field_Declarations
+
+    SEMI_COLON  shift, and go to state 18
+
+
+State 11
+
+    5 Field_Declaration: Type . Declarations
+
+    IDENTIFIER  shift, and go to state 19
+
+    Declarations  go to state 20
+    Def           go to state 21
+
+
+State 12
+
+    1 Program: START PROG_ID LBRACE Main RBRACE .
+
+    $default  reduce using rule 1 (Program)
+
+
+State 13
+
+   10 Location: IDENTIFIER . TLSQUARE Expression TRSQUARE
+   11         | IDENTIFIER .
+
+    TLSQUARE  shift, and go to state 22
+
+    $default  reduce using rule 11 (Location)
+
+
+State 14
+
+   38 Statement: CALLOUT . TLROUND STRING_LITERAL $@3 TCOMMA Callout_Arg TRROUND
+
+    TLROUND  shift, and go to state 23
+
+
+State 15
+
+   36 Statement: Location . TEQUAL Expression_Right
+
+    TEQUAL  shift, and go to state 24
+
+
+State 16
+
+    2 Main: Field_Declarations Statements .
+
+    $default  reduce using rule 2 (Main)
+
+
+State 17
+
+   34 Statements: Statement . SEMI_COLON Statements
+
+    SEMI_COLON  shift, and go to state 25
+
+
+State 18
+
+    3 Field_Declarations: Field_Declaration SEMI_COLON . Field_Declarations
+
+    BOOLEAN  shift, and go to state 6
+    INT      shift, and go to state 7
+
+    $default  reduce using rule 4 (Field_Declarations)
+
+    Field_Declarations  go to state 26
+    Field_Declaration   go to state 10
+    Type                go to state 11
+
+
+State 19
+
+    8 Def: IDENTIFIER . TLSQUARE InExpression TRSQUARE
+    9    | IDENTIFIER .
+
+    TLSQUARE  shift, and go to state 27
+
+    $default  reduce using rule 9 (Def)
+
+
+State 20
+
+    5 Field_Declaration: Type Declarations .
+
+    $default  reduce using rule 5 (Field_Declaration)
+
+
+State 21
+
+    6 Declarations: Def . TCOMMA Declarations
+    7             | Def .
+
+    TCOMMA  shift, and go to state 28
+
+    $default  reduce using rule 7 (Declarations)
+
+
+State 22
+
+   10 Location: IDENTIFIER TLSQUARE . Expression TRSQUARE
+
+    T_INT       shift, and go to state 29
+    IDENTIFIER  shift, and go to state 19
+
+    Def         go to state 30
+    Expression  go to state 31
+
+
+State 23
+
+   38 Statement: CALLOUT TLROUND . STRING_LITERAL $@3 TCOMMA Callout_Arg TRROUND
+
+    STRING_LITERAL  shift, and go to state 32
+
+
+State 24
+
+   36 Statement: Location TEQUAL . Expression_Right
+
+    T_INT       shift, and go to state 33
+    IDENTIFIER  shift, and go to state 13
+    TMINUS      shift, and go to state 34
+    NOT         shift, and go to state 35
+    FALSE       shift, and go to state 36
+    TRUE        shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 39
+    Bool              go to state 40
+
+
+State 25
+
+   34 Statements: Statement SEMI_COLON . Statements
+
+    IDENTIFIER  shift, and go to state 13
+    CALLOUT     shift, and go to state 14
+
+    $default  reduce using rule 35 (Statements)
+
+    Location    go to state 15
+    Statements  go to state 41
+    Statement   go to state 17
+
+
+State 26
+
+    3 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations .
+
+    $default  reduce using rule 3 (Field_Declarations)
+
+
+State 27
+
+    8 Def: IDENTIFIER TLSQUARE . InExpression TRSQUARE
+
+    T_INT  shift, and go to state 42
+
+    InExpression  go to state 43
+
+
+State 28
+
+    6 Declarations: Def TCOMMA . Declarations
+
+    IDENTIFIER  shift, and go to state 19
+
+    Declarations  go to state 44
+    Def           go to state 21
+
+
+State 29
+
+   19 Expression: T_INT .
+
+    $default  reduce using rule 19 (Expression)
+
+
+State 30
+
+   18 Expression: Def .
+
+    $default  reduce using rule 18 (Expression)
+
+
+State 31
+
+   10 Location: IDENTIFIER TLSQUARE Expression . TRSQUARE
+   13 Expression: Expression . TPLUS Expression
+   14           | Expression . TMINUS Expression
+   15           | Expression . TMUL Expression
+   16           | Expression . TDIV Expression
+   17           | Expression . MOD Expression
+
+    TPLUS     shift, and go to state 45
+    TMINUS    shift, and go to state 46
+    TMUL      shift, and go to state 47
+    TDIV      shift, and go to state 48
+    MOD       shift, and go to state 49
+    TRSQUARE  shift, and go to state 50
+
+
+State 32
+
+   38 Statement: CALLOUT TLROUND STRING_LITERAL . $@3 TCOMMA Callout_Arg TRROUND
+
+    $default  reduce using rule 37 ($@3)
+
+    $@3  go to state 51
+
+
+State 33
+
+   31 Expression_Right: T_INT .
+
+    $default  reduce using rule 31 (Expression_Right)
+
+
+State 34
+
+   23 Expression_Right: TMINUS . $@2 Expression_Right
+
+    $default  reduce using rule 22 ($@2)
+
+    $@2  go to state 52
+
+
+State 35
+
+   21 Expression_Right: NOT . $@1 Expression_Right
+
+    $default  reduce using rule 20 ($@1)
+
+    $@1  go to state 53
+
+
+State 36
+
+   33 Bool: FALSE .
+
+    $default  reduce using rule 33 (Bool)
+
+
+State 37
+
+   32 Bool: TRUE .
+
+    $default  reduce using rule 32 (Bool)
+
+
+State 38
+
+   29 Expression_Right: Location .
+
+    $default  reduce using rule 29 (Expression_Right)
+
+
+State 39
+
+   24 Expression_Right: Expression_Right . TPLUS Expression_Right
+   25                 | Expression_Right . TMINUS Expression_Right
+   26                 | Expression_Right . TMUL Expression_Right
+   27                 | Expression_Right . TDIV Expression_Right
+   28                 | Expression_Right . MOD Expression_Right
+   36 Statement: Location TEQUAL Expression_Right .
+
+    TPLUS   shift, and go to state 54
+    TMINUS  shift, and go to state 55
+    TMUL    shift, and go to state 56
+    TDIV    shift, and go to state 57
+    MOD     shift, and go to state 58
+
+    $default  reduce using rule 36 (Statement)
+
+
+State 40
+
+   30 Expression_Right: Bool .
+
+    $default  reduce using rule 30 (Expression_Right)
+
+
+State 41
+
+   34 Statements: Statement SEMI_COLON Statements .
+
+    $default  reduce using rule 34 (Statements)
+
+
+State 42
+
+   12 InExpression: T_INT .
+
+    $default  reduce using rule 12 (InExpression)
+
+
+State 43
+
+    8 Def: IDENTIFIER TLSQUARE InExpression . TRSQUARE
+
+    TRSQUARE  shift, and go to state 59
+
+
+State 44
+
+    6 Declarations: Def TCOMMA Declarations .
+
+    $default  reduce using rule 6 (Declarations)
+
+
+State 45
+
+   13 Expression: Expression TPLUS . Expression
+
+    T_INT       shift, and go to state 29
+    IDENTIFIER  shift, and go to state 19
+
+    Def         go to state 30
+    Expression  go to state 60
+
+
+State 46
+
+   14 Expression: Expression TMINUS . Expression
+
+    T_INT       shift, and go to state 29
+    IDENTIFIER  shift, and go to state 19
+
+    Def         go to state 30
+    Expression  go to state 61
+
+
+State 47
+
+   15 Expression: Expression TMUL . Expression
+
+    T_INT       shift, and go to state 29
+    IDENTIFIER  shift, and go to state 19
+
+    Def         go to state 30
+    Expression  go to state 62
+
+
+State 48
+
+   16 Expression: Expression TDIV . Expression
+
+    T_INT       shift, and go to state 29
+    IDENTIFIER  shift, and go to state 19
+
+    Def         go to state 30
+    Expression  go to state 63
+
+
+State 49
+
+   17 Expression: Expression MOD . Expression
+
+    T_INT       shift, and go to state 29
+    IDENTIFIER  shift, and go to state 19
+
+    Def         go to state 30
+    Expression  go to state 64
+
+
+State 50
+
+   10 Location: IDENTIFIER TLSQUARE Expression TRSQUARE .
+
+    $default  reduce using rule 10 (Location)
+
+
+State 51
+
+   38 Statement: CALLOUT TLROUND STRING_LITERAL $@3 . TCOMMA Callout_Arg TRROUND
+
+    TCOMMA  shift, and go to state 65
+
+
+State 52
+
+   23 Expression_Right: TMINUS $@2 . Expression_Right
+
+    T_INT       shift, and go to state 33
+    IDENTIFIER  shift, and go to state 13
+    TMINUS      shift, and go to state 34
+    NOT         shift, and go to state 35
+    FALSE       shift, and go to state 36
+    TRUE        shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 66
+    Bool              go to state 40
+
+
+State 53
+
+   21 Expression_Right: NOT $@1 . Expression_Right
+
+    T_INT       shift, and go to state 33
+    IDENTIFIER  shift, and go to state 13
+    TMINUS      shift, and go to state 34
+    NOT         shift, and go to state 35
+    FALSE       shift, and go to state 36
+    TRUE        shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 67
+    Bool              go to state 40
+
+
+State 54
+
+   24 Expression_Right: Expression_Right TPLUS . Expression_Right
+
+    T_INT       shift, and go to state 33
+    IDENTIFIER  shift, and go to state 13
+    TMINUS      shift, and go to state 34
+    NOT         shift, and go to state 35
+    FALSE       shift, and go to state 36
+    TRUE        shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 68
+    Bool              go to state 40
+
+
+State 55
+
+   25 Expression_Right: Expression_Right TMINUS . Expression_Right
+
+    T_INT       shift, and go to state 33
+    IDENTIFIER  shift, and go to state 13
+    TMINUS      shift, and go to state 34
+    NOT         shift, and go to state 35
+    FALSE       shift, and go to state 36
+    TRUE        shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 69
+    Bool              go to state 40
+
+
+State 56
+
+   26 Expression_Right: Expression_Right TMUL . Expression_Right
+
+    T_INT       shift, and go to state 33
+    IDENTIFIER  shift, and go to state 13
+    TMINUS      shift, and go to state 34
+    NOT         shift, and go to state 35
+    FALSE       shift, and go to state 36
+    TRUE        shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 70
+    Bool              go to state 40
+
+
+State 57
+
+   27 Expression_Right: Expression_Right TDIV . Expression_Right
+
+    T_INT       shift, and go to state 33
+    IDENTIFIER  shift, and go to state 13
+    TMINUS      shift, and go to state 34
+    NOT         shift, and go to state 35
+    FALSE       shift, and go to state 36
+    TRUE        shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 71
+    Bool              go to state 40
+
+
+State 58
+
+   28 Expression_Right: Expression_Right MOD . Expression_Right
+
+    T_INT       shift, and go to state 33
+    IDENTIFIER  shift, and go to state 13
+    TMINUS      shift, and go to state 34
+    NOT         shift, and go to state 35
+    FALSE       shift, and go to state 36
+    TRUE        shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 72
+    Bool              go to state 40
+
+
+State 59
+
+    8 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE .
+
+    $default  reduce using rule 8 (Def)
+
+
+State 60
+
+   13 Expression: Expression . TPLUS Expression
+   13           | Expression TPLUS Expression .
+   14           | Expression . TMINUS Expression
+   15           | Expression . TMUL Expression
+   16           | Expression . TDIV Expression
+   17           | Expression . MOD Expression
+
+    TMUL  shift, and go to state 47
+    TDIV  shift, and go to state 48
+    MOD   shift, and go to state 49
+
+    $default  reduce using rule 13 (Expression)
+
+
+State 61
+
+   13 Expression: Expression . TPLUS Expression
+   14           | Expression . TMINUS Expression
+   14           | Expression TMINUS Expression .
+   15           | Expression . TMUL Expression
+   16           | Expression . TDIV Expression
+   17           | Expression . MOD Expression
+
+    TMUL  shift, and go to state 47
+    TDIV  shift, and go to state 48
+    MOD   shift, and go to state 49
+
+    $default  reduce using rule 14 (Expression)
+
+
+State 62
+
+   13 Expression: Expression . TPLUS Expression
+   14           | Expression . TMINUS Expression
+   15           | Expression . TMUL Expression
+   15           | Expression TMUL Expression .
+   16           | Expression . TDIV Expression
+   17           | Expression . MOD Expression
+
+    $default  reduce using rule 15 (Expression)
+
+
+State 63
+
+   13 Expression: Expression . TPLUS Expression
+   14           | Expression . TMINUS Expression
+   15           | Expression . TMUL Expression
+   16           | Expression . TDIV Expression
+   16           | Expression TDIV Expression .
+   17           | Expression . MOD Expression
+
+    $default  reduce using rule 16 (Expression)
+
+
+State 64
+
+   13 Expression: Expression . TPLUS Expression
+   14           | Expression . TMINUS Expression
+   15           | Expression . TMUL Expression
+   16           | Expression . TDIV Expression
+   17           | Expression . MOD Expression
+   17           | Expression MOD Expression .
+
+    $default  reduce using rule 17 (Expression)
+
+
+State 65
+
+   38 Statement: CALLOUT TLROUND STRING_LITERAL $@3 TCOMMA . Callout_Arg TRROUND
+
+    T_INT           shift, and go to state 33
+    IDENTIFIER      shift, and go to state 13
+    STRING_LITERAL  shift, and go to state 73
+    CHAR_LITERAL    shift, and go to state 74
+    TMINUS          shift, and go to state 34
+    NOT             shift, and go to state 35
+    FALSE           shift, and go to state 36
+    TRUE            shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 75
+    Bool              go to state 40
+    Callout_Arg       go to state 76
+    Arguments         go to state 77
+    Literals          go to state 78
+
+
+State 66
+
+   23 Expression_Right: TMINUS $@2 Expression_Right .
+   24                 | Expression_Right . TPLUS Expression_Right
+   25                 | Expression_Right . TMINUS Expression_Right
+   26                 | Expression_Right . TMUL Expression_Right
+   27                 | Expression_Right . TDIV Expression_Right
+   28                 | Expression_Right . MOD Expression_Right
+
+    TMUL  shift, and go to state 56
+    TDIV  shift, and go to state 57
+    MOD   shift, and go to state 58
+
+    $default  reduce using rule 23 (Expression_Right)
+
+
+State 67
+
+   21 Expression_Right: NOT $@1 Expression_Right .
+   24                 | Expression_Right . TPLUS Expression_Right
+   25                 | Expression_Right . TMINUS Expression_Right
+   26                 | Expression_Right . TMUL Expression_Right
+   27                 | Expression_Right . TDIV Expression_Right
+   28                 | Expression_Right . MOD Expression_Right
+
+    $default  reduce using rule 21 (Expression_Right)
+
+
+State 68
+
+   24 Expression_Right: Expression_Right . TPLUS Expression_Right
+   24                 | Expression_Right TPLUS Expression_Right .
+   25                 | Expression_Right . TMINUS Expression_Right
+   26                 | Expression_Right . TMUL Expression_Right
+   27                 | Expression_Right . TDIV Expression_Right
+   28                 | Expression_Right . MOD Expression_Right
+
+    TMUL  shift, and go to state 56
+    TDIV  shift, and go to state 57
+    MOD   shift, and go to state 58
+
+    $default  reduce using rule 24 (Expression_Right)
+
+
+State 69
+
+   24 Expression_Right: Expression_Right . TPLUS Expression_Right
+   25                 | Expression_Right . TMINUS Expression_Right
+   25                 | Expression_Right TMINUS Expression_Right .
+   26                 | Expression_Right . TMUL Expression_Right
+   27                 | Expression_Right . TDIV Expression_Right
+   28                 | Expression_Right . MOD Expression_Right
+
+    TMUL  shift, and go to state 56
+    TDIV  shift, and go to state 57
+    MOD   shift, and go to state 58
+
+    $default  reduce using rule 25 (Expression_Right)
+
+
+State 70
+
+   24 Expression_Right: Expression_Right . TPLUS Expression_Right
+   25                 | Expression_Right . TMINUS Expression_Right
+   26                 | Expression_Right . TMUL Expression_Right
+   26                 | Expression_Right TMUL Expression_Right .
+   27                 | Expression_Right . TDIV Expression_Right
+   28                 | Expression_Right . MOD Expression_Right
+
+    $default  reduce using rule 26 (Expression_Right)
+
+
+State 71
+
+   24 Expression_Right: Expression_Right . TPLUS Expression_Right
+   25                 | Expression_Right . TMINUS Expression_Right
+   26                 | Expression_Right . TMUL Expression_Right
+   27                 | Expression_Right . TDIV Expression_Right
+   27                 | Expression_Right TDIV Expression_Right .
+   28                 | Expression_Right . MOD Expression_Right
+
+    $default  reduce using rule 27 (Expression_Right)
+
+
+State 72
+
+   24 Expression_Right: Expression_Right . TPLUS Expression_Right
+   25                 | Expression_Right . TMINUS Expression_Right
+   26                 | Expression_Right . TMUL Expression_Right
+   27                 | Expression_Right . TDIV Expression_Right
+   28                 | Expression_Right . MOD Expression_Right
+   28                 | Expression_Right MOD Expression_Right .
+
+    $default  reduce using rule 28 (Expression_Right)
+
+
+State 73
+
+   46 Literals: STRING_LITERAL .
+
+    $default  reduce using rule 46 (Literals)
+
+
+State 74
+
+   45 Literals: CHAR_LITERAL .
+
+    $default  reduce using rule 45 (Literals)
+
+
+State 75
+
+   24 Expression_Right: Expression_Right . TPLUS Expression_Right
+   25                 | Expression_Right . TMINUS Expression_Right
+   26                 | Expression_Right . TMUL Expression_Right
+   27                 | Expression_Right . TDIV Expression_Right
+   28                 | Expression_Right . MOD Expression_Right
+   42 Arguments: Expression_Right .
+
+    TPLUS   shift, and go to state 54
+    TMINUS  shift, and go to state 55
+    TMUL    shift, and go to state 56
+    TDIV    shift, and go to state 57
+    MOD     shift, and go to state 58
+
+    $default  reduce using rule 42 (Arguments)
+
+
+State 76
+
+   38 Statement: CALLOUT TLROUND STRING_LITERAL $@3 TCOMMA Callout_Arg . TRROUND
+
+    TRROUND  shift, and go to state 79
+
+
+State 77
+
+   39 Callout_Arg: Arguments .
+   40            | Arguments . TCOMMA Callout_Arg
+
+    TCOMMA  shift, and go to state 80
+
+    $default  reduce using rule 39 (Callout_Arg)
+
+
+State 78
+
+   41 Arguments: Literals .
+
+    $default  reduce using rule 41 (Arguments)
+
+
+State 79
+
+   38 Statement: CALLOUT TLROUND STRING_LITERAL $@3 TCOMMA Callout_Arg TRROUND .
+
+    $default  reduce using rule 38 (Statement)
+
+
+State 80
+
+   40 Callout_Arg: Arguments TCOMMA . Callout_Arg
+
+    T_INT           shift, and go to state 33
+    IDENTIFIER      shift, and go to state 13
+    STRING_LITERAL  shift, and go to state 73
+    CHAR_LITERAL    shift, and go to state 74
+    TMINUS          shift, and go to state 34
+    NOT             shift, and go to state 35
+    FALSE           shift, and go to state 36
+    TRUE            shift, and go to state 37
+
+    Location          go to state 38
+    Expression_Right  go to state 75
+    Bool              go to state 40
+    Callout_Arg       go to state 81
+    Arguments         go to state 77
+    Literals          go to state 78
+
+
+State 81
+
+   40 Callout_Arg: Arguments TCOMMA Callout_Arg .
+
+    $default  reduce using rule 40 (Callout_Arg)
