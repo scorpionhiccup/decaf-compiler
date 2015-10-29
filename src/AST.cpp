@@ -26,8 +26,9 @@ ASTIdentifier::ASTIdentifier(std::string id){
 	this->id_=id;		
 }
 	
-ASTProgram::ASTProgram(std::string id){
-	this->id_=id;		
+ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
+	this->id_=id;
+	this->aSTMain=aSTMain;		
 }
 
 ASTBlockStatement::ASTBlockStatement(ASTStatement * stmtlist){
@@ -41,4 +42,5 @@ ASTIntegerLiteralExpression::ASTIntegerLiteralExpression(int value){
 
 void ASTIntegerLiteralExpression::setValue(int value){
 	this->value_=value;
+	
 }

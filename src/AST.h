@@ -1,9 +1,5 @@
-
 #include <bits/stdc++.h>
 
-/*#ifndef VISITOR_H
-#include "Visitor.h"
-#endif*/
 
 #ifndef AST_H
 #define AST_H
@@ -27,15 +23,11 @@ class ASTProgram: public ASTnode{
 private:
 	std::string id_;
 public:
+	ASTMain* aSTMain;
 	virtual void accept(Visitor* visitor);
-	ASTProgram(std::string id);
+	ASTProgram(std::string id, ASTMain* aSTMain);
 	std::string getId();
-};
 
-class ASTBlockStatement: public ASTStatement{
-	ASTStatement* stmtlist_;
-public:
-	ASTBlockStatement(ASTStatement *stmtlist);
 };
 
 class ASTExpression: public ASTnode{
@@ -44,24 +36,6 @@ public:
 	int getValue(){
 		return value_;
 	}
-};
-
-/*class ASTAssignmentStatement: public ASTStatement{
-	ASTLocation loc_;
-	ASTExpression expr_;
-public:
-	ASTAssignmentStatement(ASTLocation loc, ASTExpression expr);
-};*/
-
-class ASTMethodCallStatement: public ASTStatement{
-	
-};
-
-class ASTIntegerLiteralExpression: public ASTExpression{
-	int value_;
-public:
-	ASTIntegerLiteralExpression(int value);
-	void setValue(int value);
 };
 
 class ASTField_Declaration: public ASTExpression{
@@ -74,14 +48,7 @@ public:
 	}
 };
 
-/*class CalloutArg: public ASTnode{
-	std::string id;
-	CalloutArg(std::string id){
-		this->id=id;
-	}
-};
-
-class ASTCallout: public ASTStatement{
+/*class ASTCallout: public ASTnode{
 	std::string id_;
 	CalloutArg[] CalloutArgs;
 public:
@@ -89,9 +56,9 @@ public:
 		this->id=id_;
 		this->CalloutArgs=CalloutArgs;
 	};
-};
+};*/
 
-class ASTBinaryOperatorExpression: public ASTExpression {
+/*class ASTBinaryOperatorExpression: public ASTExpression {
 	ASTExpression *right_, *left_;
 	std::string operator_;
 public:
@@ -124,8 +91,7 @@ public:
 		return expr_;
 	};
 
-};
-*/
+};*/
 
 class Type: public ASTnode{
 };
@@ -153,7 +119,16 @@ public:
 	}
 };
 
-class ASTIdentifier: public BaseDeclaration{
+/*
+	Location
+*/
+class ASTLocation: public ASTnode{
+};
+
+/*
+	Location -> IDENTIFIER
+*/
+class ASTIdentifier: public ASTLocation{
 	std::string id;
 public:
 	ASTIdentifier(std::string id){
@@ -161,18 +136,30 @@ public:
 	};
 };
 
+/*
+	Location -> IDENTIFIER TLSQUARE Expression TRSQUARE 
+*/
+class ASTArrayIdentifier: public ASTLocation{
+	ASTIdentifier* aSTIdentifier;
+	ASTExpression* aSTExpression;
+public:
+	ASTArrayIdentifier(ASTIdentifier* aSTIdentifier, ASTExpression* aSTExpression){
+		this->aSTIdentifier=ASTIdentifier;
+		this->aSTExpression=aSTExpression;
+	}
+};
 
 /*
-Field_Declaration: Type Declarations
+	Field_Declaration: Type Declarations
 */
 class BaseFieldDeclaration: public ASTnode{
-		Type *type_;
-		BaseDeclaration *FieldDeclaration_;
-	public:
-		BaseFieldDeclaration(Type *type_, BaseDeclaration *FieldDeclaration_){
-			this->type_=type_;
-			this->FieldDeclaration_=FieldDeclaration_;
-		}
+	Type *type_;
+	BaseDeclaration *FieldDeclaration_;
+public:
+	BaseFieldDeclaration(Type *type_, BaseDeclaration *FieldDeclaration_){
+		this->type_=type_;
+		this->FieldDeclaration_=FieldDeclaration_;
+	}
 
 };
 
@@ -190,20 +177,9 @@ public:
 		this->size_=size;
 	}
 };
+
 /*
-Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations |
-*/
-class ASTField_Declarations: public BaseDeclaration{
-	BaseDeclaration *FieldDeclaration_;
-	ASTField_Declarations *FieldBaseDeclarations_;
-public:
-	ASTField_Declarations(BaseDeclaration *BaseDeclaration1, ASTField_Declarations *Field_Declarations1){
-		FieldDeclaration_=BaseDeclaration1;
-		FieldBaseDeclarations_= Field_Declarations1;
-	}
-};
-/*
-Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
+	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
 */
 class Def: public ASTnode{
 	struct value{
@@ -224,8 +200,9 @@ public:
 	}
 
 };
+
 /*
-Declarations: Def TCOMMA Declarations
+	Declarations: Def TCOMMA Declarations
 */
 class ASTDeclarations: public ASTnode{
 	BaseDeclaration *Def_;
@@ -239,17 +216,55 @@ public:
 
 
 /*
+Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
+*/
+class CalloutStatement: public ASTStatement{
+	std::string name;
+	list<CalloutArg *> callout_args;
+public:
+	CalloutStatement(string name, list<CalloutArg *> callout_args){
+		this->name=name;
+		this->callout_args=callout_args;
+	}
+};
+
+
+class CalloutArg: public ASTnode{
+	Argument* argument;
+public:
+	CalloutArg(Argument* argument1){
+		this->argument=argument1;
+	}
+};
+
+class Argument: public ASTnode{
+
+};
+
+class Literal: public ASTnode{
+
+};
+
+
+class AssignmentStatement: public ASTStatement{
+
+public:
+
+};
+
+/*
 Main: Field_Declarations Statements
 */
 
 class ASTMain: public ASTnode{
-	std::list<ASTField_Declaration*> *FieldBaseDeclaration_;
 public:
-	ASTMain(std::list<ASTField_Declaration*> *FieldBaseDeclaration){
+	std::list<ASTField_Declaration*> *FieldBaseDeclaration_;
+	std::list<ASTStatement*> *statements;
+	ASTMain(std::list<ASTField_Declaration*> *FieldBaseDeclaration, std::list<ASTStatement*> *statements){
 		this->FieldBaseDeclaration_=FieldBaseDeclaration;
+		this->statements=statements;
 	}
 };
-
 
 //Boolean
 //Binary	
