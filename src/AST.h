@@ -1,13 +1,16 @@
 #include <bits/stdc++.h>
 
-
 #ifndef AST_H
 #define AST_H
+
+using namespace std;
 
 class Visitor;
 
 class Type;
 class ASTDeclarations;
+class ASTMain;
+
 extern FILE* XML_fp;
 
 class ASTnode{
@@ -128,12 +131,10 @@ class ASTLocation: public ASTnode{
 /*
 	Location -> IDENTIFIER
 */
-class ASTIdentifier: public ASTLocation{
-	std::string id;
+class ASTIdentifier: public ASTLocation, public BaseDeclaration{
+	std::string id_;
 public:
-	ASTIdentifier(std::string id){
-		this->id=id;
-	};
+	ASTIdentifier(std::string id);
 };
 
 /*
@@ -144,7 +145,7 @@ class ASTArrayIdentifier: public ASTLocation{
 	ASTExpression* aSTExpression;
 public:
 	ASTArrayIdentifier(ASTIdentifier* aSTIdentifier, ASTExpression* aSTExpression){
-		this->aSTIdentifier=ASTIdentifier;
+		this->aSTIdentifier=aSTIdentifier;
 		this->aSTExpression=aSTExpression;
 	}
 };
@@ -215,8 +216,26 @@ public:
 };
 
 
+class Argument: public ASTnode{
+	std::string str;
+public:
+	Argument(std::string str){
+		this->str=str;
+	}
+};
+
+class CalloutArg: public ASTnode{
+	Argument* argument;
+public:
+	CalloutArg(Argument* argument1){
+		this->argument=argument1;
+	}
+};
+
+
+
 /*
-Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
+	Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
 */
 class CalloutStatement: public ASTStatement{
 	std::string name;
@@ -228,32 +247,19 @@ public:
 	}
 };
 
-
-class CalloutArg: public ASTnode{
-	Argument* argument;
+/*
+	Statement: Location TEQUAL Expression_Right
+*/
+class AssignmentStatement: public ASTStatement{
+	ASTLocation *locations;
 public:
-	CalloutArg(Argument* argument1){
-		this->argument=argument1;
+	AssignmentStatement(ASTLocation *locations){
+		this->locations=locations;
 	}
 };
 
-class Argument: public ASTnode{
-
-};
-
-class Literal: public ASTnode{
-
-};
-
-
-class AssignmentStatement: public ASTStatement{
-
-public:
-
-};
-
 /*
-Main: Field_Declarations Statements
+	Main: Field_Declarations Statements
 */
 
 class ASTMain: public ASTnode{

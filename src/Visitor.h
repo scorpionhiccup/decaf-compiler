@@ -11,7 +11,6 @@ public:
 	void visit(ASTnode* aSTnode);
 	void visit(ASTLocation* aSTLocation);
 	void visit(BaseDeclaration* baseDeclaration);
-	void visit(ASTLocation* aSTLocation);
 	void visit(ASTIdentifier* aSTIdentifier);
 	void visit(ASTArrayIdentifier* aSTArrayIdentifier);
 	void visit(BaseFieldDeclaration* baseFieldDeclaration);

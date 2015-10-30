@@ -30,17 +30,3 @@ ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
 	this->id_=id;
 	this->aSTMain=aSTMain;		
 }
-
-ASTBlockStatement::ASTBlockStatement(ASTStatement * stmtlist){
-	this->stmtlist_ = stmtlist;
-}
-
-
-ASTIntegerLiteralExpression::ASTIntegerLiteralExpression(int value){
-	this->value_=value;
-}
-
-void ASTIntegerLiteralExpression::setValue(int value){
-	this->value_=value;
-	
-}

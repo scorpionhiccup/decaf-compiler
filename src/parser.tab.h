@@ -96,6 +96,7 @@ union YYSTYPE
 	ASTIdentifier *identifier;
 	ASTField_Declaration *_ASTField_Declaration;
 	CalloutArg * _Callout_Arg;
+	Argument* _Arguments;
 	Def *Def_;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<CalloutArg*> *_Callout_Args; 
@@ -106,9 +107,9 @@ union YYSTYPE
 	ASTDeclarations * _ASTDeclarations;
 	ASTLocation* _ASTLocation;
 	Type *type;
-	string *_string;
+	std::string *_string;
 
-#line 112 "parser.tab.h" /* yacc.c:1909  */
+#line 113 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

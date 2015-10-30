@@ -30,6 +30,7 @@ int unary=0;
 	ASTIdentifier *identifier;
 	ASTField_Declaration *_ASTField_Declaration;
 	CalloutArg * _Callout_Arg;
+	Argument* _Arguments;
 	Def *Def_;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<CalloutArg*> *_Callout_Args; 
@@ -40,7 +41,7 @@ int unary=0;
 	ASTDeclarations * _ASTDeclarations;
 	ASTLocation* _ASTLocation;
 	Type *type;
-	string *_string;
+	std::string *_string;
 }
 
 %token<number> T_INT
@@ -63,10 +64,11 @@ int unary=0;
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
 %type<_ASTLocation> Location
-%type<_string> Arguments
 %type<_Callout_Args> Callout_Args
+%type<_Arguments> Arguments
 %type<_aSTStatement> Statement
 %type<_aSTStatements> Statements
+%type<ast_main> Main
 //%type<_string> STRING_LITERAL
 
 %left TEQUAL
@@ -81,7 +83,7 @@ int unary=0;
 %%
 Program: START PROG_ID LBRACE Main RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
-		ASTProgram *ast_prog = new ASTProgram($2);
+		ASTProgram *ast_prog = new ASTProgram($2, $4);
 		ast_prog->accept(new Visitor());
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
@@ -113,16 +115,18 @@ Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		$$=new ASTArrayFieldDeclaration($1, $3);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
-		$$=new ASTIdentifier(yylval.string);
+		$$=new ASTIdentifier($1);
 	}
 
 Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
-		$$=new ASTArrayIdentifier($1, $3);
+		//$$=new ASTArrayIdentifier($1, $3);
+		//TEMPORARY:
+		$$=new ASTIdentifier($1);
+
 	} | IDENTIFIER {
 		$$=new ASTIdentifier($1);
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
-		//$$=new ASTIdentifier(yylval.string);
 	}
 
 InExpression:
@@ -211,22 +215,21 @@ Statement: Location TEQUAL Expression_Right {
 	} | CALLOUT TLROUND STRING_LITERAL  {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
 	} TCOMMA Callout_Args TRROUND {
-
-		//$$=new CalloutStatement($2, $5);
+		//$$=new CalloutStatement($3, $5);
 	}
 
 Callout_Args: Arguments{
 		$$=new list<CalloutArg*>();
 	} | Arguments TCOMMA Callout_Args {
 		$$=$3;
-		$$->push_back($1);
+		$$->push_back(new CalloutArg($1));
 	}
 
 Arguments: CHAR_LITERAL  {
 		fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", $1);
-		$$=string($1);
+		$$=new Argument($1);
 	} | STRING_LITERAL{
-		$$=string($1);
+		$$=new Argument($1);
 	} | Expression_Right
 
 Type: INT {
