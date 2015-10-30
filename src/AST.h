@@ -122,7 +122,7 @@ public:
 /*
 	Location
 */
-class ASTLocation: public ASTnode{
+class ASTLocation: public ASTnode, public ExpressionRight{
 };
 
 /*
@@ -240,16 +240,73 @@ public:
 class Argument: public ASTnode{
 
 };
+//CharLiteral is taken as a string
+class CharLiteral: public Argument {
+	string charLiteral;
+public:
+	CharLiteral(string charLiteral1) {
+		this->charLiteral=charLiteral1;
+	}
+};
+class StringLiteral: public Argument{
+	string stringLiteral;
+public:
+	StringLiteral(string stringLiteral1) {
+		this->stringLiteral=stringLiteral1;
+	}
+};
 
+class ExpressionRight: public Argument{
+
+};
+
+class RUnaryExpr: public ExpressionRight{
+	int type;
+	ExpressionRight* expressionRight;
+
+public:
+	RUnaryExpr(int type1, ExpressionRight* expressionRight1) {
+		this->type=type1;
+		this->expressionRight=expressionRight1;
+	}
+};
+class RBinaryExpr: public ExpressionRight{
+	char type;
+	ExpressionRight* expressionRightL, expressionRightR;
+
+public:
+	RBinaryExpr(char type1, ExpressionRight* expressionRightL1, ExpressionRight* expressionRightR1) {
+		this->type=type1;
+		this->expressionRightL=expressionRightL1;
+		this->expressionRightR=expressionRightR1;
+	}
+};
+
+class Bool: public ExpressionRight{
+	int value;
+	Bool(int value1) {
+		this->value=value1;
+	}
+};
+class Integer: public ExpressionRight{
+	int integer;
+	Integer(int integer1){
+		this->integer=integer1;
+	}
+};
 class Literal: public ASTnode{
 
 };
 
 
 class AssignmentStatement: public ASTStatement{
-
+	ASTLocation* location;
+	list<ExpressionRight *> *expressionRight;
 public:
-
+	AssignmentStatement(ASTLocation *location1,list<ExpressionRight*> *expressionRight1) {
+		this->location=location1;
+		this->expressionRight=expressionRight1;
+	}
 };
 
 /*

@@ -154,28 +154,49 @@ Expression:
 RUnary_Expr:
 	NOT  {
 		unary=2;
-	}  Expression_Right 
+	}  Expression_Right {
+		$$=new RUnaryExpr(2,$2);
+
+	}
 	|  TMINUS {
 		unary=1;
-	}  Expression_Right	
+	}  Expression_Right{
+		$$=new RUnaryExpr(1,$2);
+
+	}	
 
 RBinaryExpr:
 	Expression_Right TPLUS Expression_Right {
 		operatorOutput('+');
+		$$= new RBinaryExpr($2, $1, $3);
 	} | Expression_Right TMINUS Expression_Right {
 		operatorOutput('-');
+		$$= new RBinaryExpr($2, $1, $3);
+
 	} | Expression_Right TMUL Expression_Right {
 		operatorOutput('*');
+		$$= new RBinaryExpr($2, $1, $3);
+
 	} | Expression_Right TDIV Expression_Right {
 		operatorOutput('/');
+		$$= new RBinaryExpr($2, $1, $3);
+
 	} | Expression_Right MOD Expression_Right {
 		operatorOutput('%');
+		$$= new RBinaryExpr($2, $1, $3);
 	}
 
 Expression_Right:
-	RUnary_Expr 
-	|   RBinaryExpr
-	|   Location 
+	RUnary_Expr {
+		$$->push_back($1);
+	}
+	|   RBinaryExpr{
+		$$->push_back($1);
+	}
+	|   Location {
+		$$=new list<ExpressionRight *>();
+		$$->push_back(new Integer($1));
+	}
 	|   Bool {
 		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
 		if(unary==2) 
@@ -185,6 +206,8 @@ Expression_Right:
 			fprintf(bison_fp, "true\n");
 		else
 			fprintf(bison_fp, "false\n");
+		$$=new list<ExpressionRight *>();
+		$$->push_back(new Integer($1));
 	} 
 	|   T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERED=");
@@ -194,6 +217,10 @@ Expression_Right:
 			fprintf(bison_fp, "!");
 		fprintf(bison_fp, "%d\n",$1);
 		unary=0;
+
+		$$=new list<ExpressionRight *>();
+		$$->push_back(new Integer($1));
+
 	} 
 
 Bool: TRUE {$$=1;}| FALSE{$$=0;}
@@ -207,16 +234,17 @@ Statements: Statement SEMI_COLON Statements{
 
 Statement: Location TEQUAL Expression_Right {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
-		$$=new AssignmentStatement($1);
+		$$=new AssignmentStatement($1,$3);
 	} | CALLOUT TLROUND STRING_LITERAL  {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
 	} TCOMMA Callout_Args TRROUND {
 
-		//$$=new CalloutStatement($2, $5);
+		$$=new CalloutStatement($3, $5);
 	}
 
 Callout_Args: Arguments{
 		$$=new list<CalloutArg*>();
+		$$->push_back($1);
 	} | Arguments TCOMMA Callout_Args {
 		$$=$3;
 		$$->push_back($1);
@@ -224,10 +252,12 @@ Callout_Args: Arguments{
 
 Arguments: CHAR_LITERAL  {
 		fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", $1);
-		$$=string($1);
+		$$=new CharLiteral($1);
 	} | STRING_LITERAL{
-		$$=string($1);
-	} | Expression_Right
+		$$=new StringLiteral($1);
+	} | Expression_Right {
+		$$=new ExpressionRight($1);
+	}
 
 Type: INT {
 		$$=new Type();
