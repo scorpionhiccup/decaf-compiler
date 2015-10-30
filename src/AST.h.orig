@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 
-
 #ifndef AST_H
 #define AST_H
 
@@ -216,6 +215,7 @@ public:
 	}
 };
 
+
 class Argument: public ASTnode{
 	std::string str;
 public:
@@ -223,20 +223,6 @@ public:
 		this->str=str;
 	}
 };
-
-/*
-Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
-*/
-class CalloutStatement: public ASTStatement{
-	std::string name;
-	list<CalloutArg *> callout_args;
-public:
-	CalloutStatement(string name, list<CalloutArg *> callout_args){
-		this->name=name;
-		this->callout_args=callout_args;
-	}
-};
-
 
 class CalloutArg: public ASTnode{
 	Argument* argument;
@@ -246,6 +232,9 @@ public:
 	}
 };
 
+<<<<<<< HEAD
+
+=======
 class Argument: public ASTnode{
 
 };
@@ -265,6 +254,9 @@ public:
 	}
 };
 
+class ExpressionRight: public Argument{
+>>>>>>> b19f7ebc355fd740f3839cb2e94edbf2ad10283f
+
 /*
 	Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
 */
@@ -278,6 +270,16 @@ public:
 	}
 };
 
+<<<<<<< HEAD
+/*
+	Statement: Location TEQUAL Expression_Right
+*/
+class AssignmentStatement: public ASTStatement{
+	ASTLocation *locations;
+public:
+	AssignmentStatement(ASTLocation *locations){
+		this->locations=locations;
+=======
 class RUnaryExpr: public ExpressionRight{
 	int type;
 	ExpressionRight* expressionRight;
@@ -321,11 +323,15 @@ class AssignmentStatement: public ASTStatement{
 	ASTLocation* location;
 	list<ExpressionRight *> *expressionRight;
 public:
-
+	AssignmentStatement(ASTLocation *location1,list<ExpressionRight*> *expressionRight1) {
+		this->location=location1;
+		this->expressionRight=expressionRight1;
+>>>>>>> b19f7ebc355fd740f3839cb2e94edbf2ad10283f
+	}
 };
 
 /*
-Main: Field_Declarations Statements
+	Main: Field_Declarations Statements
 */
 
 class ASTMain: public ASTnode{

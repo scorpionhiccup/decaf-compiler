@@ -64,7 +64,6 @@ int unary=0;
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
 %type<_ASTLocation> Location
-%type<_string> Arguments
 %type<_Callout_Args> Callout_Args
 %type<_Arguments> Arguments
 %type<_aSTStatement> Statement
@@ -128,7 +127,6 @@ Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 	} | IDENTIFIER {
 		$$=new ASTIdentifier($1);
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
-		//$$=new ASTIdentifier(yylval.string);
 	}
 
 InExpression:
@@ -244,25 +242,37 @@ Statement: Location TEQUAL Expression_Right {
 	} | CALLOUT TLROUND STRING_LITERAL  {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
 	} TCOMMA Callout_Args TRROUND {
+<<<<<<< HEAD
+		//$$=new CalloutStatement($3, $5);
+=======
 
 		$$=new CalloutStatement($3, $5);
+>>>>>>> b19f7ebc355fd740f3839cb2e94edbf2ad10283f
 	}
 
 Callout_Args: Arguments{
 		$$=new list<CalloutArg*>();
+		$$->push_back($1);
 	} | Arguments TCOMMA Callout_Args {
 		$$=$3;
-		$$->push_back($1);
+		$$->push_back(new CalloutArg($1));
 	}
 
 Arguments: CHAR_LITERAL  {
 		fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", $1);
+<<<<<<< HEAD
+		$$=new Argument($1);
+	} | STRING_LITERAL{
+		$$=new Argument($1);
+	} | Expression_Right
+=======
 		$$=new CharLiteral($1);
 	} | STRING_LITERAL{
 		$$=new StringLiteral($1);
 	} | Expression_Right {
 		$$=new ExpressionRight($1);
 	}
+>>>>>>> b19f7ebc355fd740f3839cb2e94edbf2ad10283f
 
 Type: INT {
 		$$=new Type();
