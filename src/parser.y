@@ -35,7 +35,11 @@ int unary=0;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<CalloutArg*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
+	std::list<ExpressionRight *> _ExpressionRights;
 	ASTDeclarations * Declarations_;
+	RUnaryExpr* _RUnaryExpr;
+	ExpressionRight* _ExpressionRight;
+	RBinaryExpr* _RBinaryExpr;
 	//IntType *intType;
 	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
@@ -50,7 +54,7 @@ int unary=0;
 %token<number> BOOLEAN
 
 %token<string> CALLOUT 
-%token TEQUAL  INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
+%token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
 %token FALSE TRUE  
@@ -64,12 +68,14 @@ int unary=0;
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
 %type<_ASTLocation> Location
-%type<_string> Arguments
 %type<_Callout_Args> Callout_Args
 %type<_Arguments> Arguments
+%type<_ExpressionRights> Expression_Right
 %type<_aSTStatement> Statement
 %type<_aSTStatements> Statements
 %type<ast_main> Main
+%type<_RUnaryExpr> RUnary_Expr
+%type<_RBinaryExpr> RBinaryExpr
 //%type<_string> STRING_LITERAL
 
 %left TEQUAL
@@ -161,42 +167,37 @@ RUnary_Expr:
 	NOT  {
 		unary=2;
 	}  Expression_Right {
-		$$=new RUnaryExpr(2,$2);
-
+		$$=new RUnaryExpr(2, $3);
 	}
 	|  TMINUS {
 		unary=1;
-	}  Expression_Right{
-		$$=new RUnaryExpr(1,$2);
-
+	}  Expression_Right {
+		$$=new RUnaryExpr(1, $3);
 	}	
 
 RBinaryExpr:
 	Expression_Right TPLUS Expression_Right {
 		operatorOutput('+');
-		$$= new RBinaryExpr($2, $1, $3);
+		$$=new RBinaryExpr('+', $1, $3);
 	} | Expression_Right TMINUS Expression_Right {
 		operatorOutput('-');
-		$$= new RBinaryExpr($2, $1, $3);
-
+		$$=new RBinaryExpr('-', $1, $3);
 	} | Expression_Right TMUL Expression_Right {
 		operatorOutput('*');
-		$$= new RBinaryExpr($2, $1, $3);
-
+		$$=new RBinaryExpr('*', $1, $3);
 	} | Expression_Right TDIV Expression_Right {
 		operatorOutput('/');
-		$$= new RBinaryExpr($2, $1, $3);
-
+		$$=new RBinaryExpr('/', $1, $3);
 	} | Expression_Right MOD Expression_Right {
 		operatorOutput('%');
-		$$= new RBinaryExpr($2, $1, $3);
+		$$=new RBinaryExpr('%', $1, $3);
 	}
 
 Expression_Right:
 	RUnary_Expr {
 		$$->push_back($1);
 	}
-	|   RBinaryExpr{
+	|   RBinaryExpr {
 		$$->push_back($1);
 	}
 	|   Location {
@@ -240,12 +241,11 @@ Statements: Statement SEMI_COLON Statements{
 
 Statement: Location TEQUAL Expression_Right {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
-		$$=new AssignmentStatement($1,$3);
+		$$=new AssignmentStatement($1, $3);
 	} | CALLOUT TLROUND STRING_LITERAL  {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
 	} TCOMMA Callout_Args TRROUND {
-
-		$$=new CalloutStatement($3, $5);
+		$$=new CalloutStatement($3, $6);
 	}
 
 Callout_Args: Arguments{

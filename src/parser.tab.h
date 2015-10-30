@@ -101,7 +101,11 @@ union YYSTYPE
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<CalloutArg*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
+	std::list<ExpressionRight *> _ExpressionRights;
 	ASTDeclarations * Declarations_;
+	RUnaryExpr* _RUnaryExpr;
+	ExpressionRight* _ExpressionRight;
+	RBinaryExpr* _RBinaryExpr;
 	//IntType *intType;
 	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
@@ -109,7 +113,7 @@ union YYSTYPE
 	Type *type;
 	std::string *_string;
 
-#line 113 "parser.tab.h" /* yacc.c:1909  */
+#line 117 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

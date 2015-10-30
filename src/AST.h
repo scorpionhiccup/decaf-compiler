@@ -257,6 +257,8 @@ public:
 		this->charLiteral=charLiteral1;
 	}
 };
+
+
 class StringLiteral: public Argument{
 	string stringLiteral;
 public:
@@ -264,6 +266,11 @@ public:
 		this->stringLiteral=stringLiteral1;
 	}
 };
+
+class ExpressionRight: public Argument{
+
+};
+
 
 /*
 	Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
@@ -278,7 +285,7 @@ public:
 	}
 };
 
-class RUnaryExpr: public ExpressionRight{
+class RUnaryExpr: public Expression_Right{
 	int type;
 	ExpressionRight* expressionRight;
 
