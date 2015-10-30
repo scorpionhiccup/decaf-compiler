@@ -26,23 +26,26 @@ int unary=0;
 	char string[100];
 	ASTMain *ast_main;
 	BaseDeclaration * _BaseDeclaration;
+	ASTStatement *_aSTStatement;
 	ASTIdentifier *identifier;
 	ASTField_Declaration *_ASTField_Declaration;
-	//ASTField_Declarations *fieldBaseDeclaration;
+	CalloutArg * _Callout_Arg;
+	Argument* _Arguments;
 	Def *Def_;
-	//Field_Declaration *Field_Declaration_;
-	//Field_Declarations *Field_Declarations_;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<CalloutArg*> *_Callout_Args; 
+	std::list<ASTStatement*>* _aSTStatements;
 	ASTDeclarations * Declarations_;
 	//IntType *intType;
 	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
+	ASTLocation* _ASTLocation;
 	Type *type;
+	std::string *_string;
 }
 
 %token<number> T_INT
-%token<string> IDENTIFIER
-%token<string> STRING_LITERAL PROG_ID 
+%token<string> STRING_LITERAL IDENTIFIER PROG_ID 
 %token<string> CHAR_LITERAL
 %token<number> BOOLEAN
 
@@ -53,7 +56,6 @@ int unary=0;
 %token FALSE TRUE  
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
-%type<string> Statement
 %type<number> Expression InExpression Bool
 %type<type> Type
 %type<Declarations_> Declarations
@@ -61,6 +63,13 @@ int unary=0;
 %type<_BaseDeclaration> Def
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
+%type<_ASTLocation> Location
+%type<_Callout_Args> Callout_Args
+%type<_Arguments> Arguments
+%type<_aSTStatement> Statement
+%type<_aSTStatements> Statements
+%type<ast_main> Main
+//%type<_string> STRING_LITERAL
 
 %left TEQUAL
 %left TGREAT TLESS
@@ -74,20 +83,18 @@ int unary=0;
 %%
 Program: START PROG_ID LBRACE Main RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
-		ASTProgram *ast_prog = new ASTProgram($2);
+		ASTProgram *ast_prog = new ASTProgram($2, $4);
 		ast_prog->accept(new Visitor());
-		//ast_prog->accept();
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
 
 Main: Field_Declarations Statements {
-	ASTMain * ast_main = new ASTMain($1);
+	ASTMain * ast_main = new ASTMain($1, $2);
 }
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
 	$$=$3;
 	$$->push_back($1);
-	//$$=new ASTField_Declarations($1, $3);
 } | {
 	$$=new list<ASTField_Declaration*>();
 }
@@ -98,24 +105,28 @@ Field_Declaration: Type Declarations {
 }
 
 Declarations: Def TCOMMA Declarations { 
-	$$=new ASTDeclarations($1, $3);}
-| Def{
-	$$=new ASTDeclarations($1, NULL);
-}
+		$$=new ASTDeclarations($1, $3);}
+	| Def{
+		$$=new ASTDeclarations($1, NULL);
+	}
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);
 		$$=new ASTArrayFieldDeclaration($1, $3);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
-		$$=new ASTIdentifier(yylval.string);
+		$$=new ASTIdentifier($1);
 	}
 
 Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
+		//$$=new ASTArrayIdentifier($1, $3);
+		//TEMPORARY:
+		$$=new ASTIdentifier($1);
+
 	} | IDENTIFIER {
-		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", yylval.string);
-		//$$=new ASTIdentifier(yylval.string);
+		$$=new ASTIdentifier($1);
+		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
 	}
 
 InExpression:
@@ -144,29 +155,30 @@ Expression:
 		fprintf(bison_fp, "INT ENCOUNTERED=%d\n", $1);
 	} 
 
-Expression_Right:
-	
+RUnary_Expr:
 	NOT  {
 		unary=2;
 	}  Expression_Right 
 	|  TMINUS {
 		unary=1;
-	}  Expression_Right  
-	|  Expression_Right TPLUS Expression_Right {
+	}  Expression_Right	
+
+RBinaryExpr:
+	Expression_Right TPLUS Expression_Right {
 		operatorOutput('+');
-	}
-	|   Expression_Right TMINUS Expression_Right {
+	} | Expression_Right TMINUS Expression_Right {
 		operatorOutput('-');
-	} | 
-		Expression_Right TMUL Expression_Right {
+	} | Expression_Right TMUL Expression_Right {
 		operatorOutput('*');
-	} | 
-	    Expression_Right TDIV Expression_Right {
+	} | Expression_Right TDIV Expression_Right {
 		operatorOutput('/');
-	}
-	|   Expression_Right MOD Expression_Right {
+	} | Expression_Right MOD Expression_Right {
 		operatorOutput('%');
 	}
+
+Expression_Right:
+	RUnary_Expr 
+	|   RBinaryExpr
 	|   Location 
 	|   Bool {
 		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
@@ -190,17 +202,35 @@ Expression_Right:
 
 Bool: TRUE {$$=1;}| FALSE{$$=0;}
 
-Statements: Statement SEMI_COLON Statements | 
+Statements: Statement SEMI_COLON Statements{
+	$$=$3;
+	$$->push_back($1);	
+} | {
+	$$=new list<ASTStatement*>();
+}
 
 Statement: Location TEQUAL Expression_Right {
-		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");	
+		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
+		$$=new AssignmentStatement($1);
 	} | CALLOUT TLROUND STRING_LITERAL  {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
-	} TCOMMA Callout_Arg TRROUND
+	} TCOMMA Callout_Args TRROUND {
+		//$$=new CalloutStatement($3, $5);
+	}
 
-Callout_Arg: Arguments | Arguments TCOMMA Callout_Arg
+Callout_Args: Arguments{
+		$$=new list<CalloutArg*>();
+	} | Arguments TCOMMA Callout_Args {
+		$$=$3;
+		$$->push_back(new CalloutArg($1));
+	}
 
-Arguments: Literals | Expression_Right
+Arguments: CHAR_LITERAL  {
+		fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", $1);
+		$$=new Argument($1);
+	} | STRING_LITERAL{
+		$$=new Argument($1);
+	} | Expression_Right
 
 Type: INT {
 		$$=new Type();
@@ -212,10 +242,6 @@ Type: INT {
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
   
-Literals: CHAR_LITERAL  {
-	fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", $1);
-} | STRING_LITERAL
-
 %%
 
 int main(int argc, char* argv[]) {

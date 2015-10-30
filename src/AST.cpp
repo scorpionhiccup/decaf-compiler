@@ -26,19 +26,7 @@ std::string ASTProgram::getId(){
 	this->id_=id;		
 }*/
 	
-ASTProgram::ASTProgram(std::string id){
-	this->id_=id;		
-}
-
-ASTBlockStatement::ASTBlockStatement(ASTStatement * stmtlist){
-	this->stmtlist_ = stmtlist;
-}
-
-
-ASTIntegerLiteralExpression::ASTIntegerLiteralExpression(int value){
-	this->value_=value;
-}
-
-void ASTIntegerLiteralExpression::setValue(int value){
-	this->value_=value;
+ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
+	this->id_=id;
+	this->aSTMain=aSTMain;		
 }

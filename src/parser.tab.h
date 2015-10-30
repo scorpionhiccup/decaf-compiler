@@ -46,8 +46,8 @@ extern int yydebug;
   enum yytokentype
   {
     T_INT = 258,
-    IDENTIFIER = 259,
-    STRING_LITERAL = 260,
+    STRING_LITERAL = 259,
+    IDENTIFIER = 260,
     PROG_ID = 261,
     CHAR_LITERAL = 262,
     BOOLEAN = 263,
@@ -92,20 +92,24 @@ union YYSTYPE
 	char string[100];
 	ASTMain *ast_main;
 	BaseDeclaration * _BaseDeclaration;
+	ASTStatement *_aSTStatement;
 	ASTIdentifier *identifier;
 	ASTField_Declaration *_ASTField_Declaration;
-	//ASTField_Declarations *fieldBaseDeclaration;
+	CalloutArg * _Callout_Arg;
+	Argument* _Arguments;
 	Def *Def_;
-	//Field_Declaration *Field_Declaration_;
-	//Field_Declarations *Field_Declarations_;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<CalloutArg*> *_Callout_Args; 
+	std::list<ASTStatement*>* _aSTStatements;
 	ASTDeclarations * Declarations_;
 	//IntType *intType;
 	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
+	ASTLocation* _ASTLocation;
 	Type *type;
+	std::string *_string;
 
-#line 109 "parser.tab.h" /* yacc.c:1909  */
+#line 113 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
