@@ -33,9 +33,9 @@ int unary=0;
 	Argument* _Arguments;
 	Def *Def_;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
-	std::list<CalloutArg*> *_Callout_Args; 
+	std::list<Argument*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
-	std::list<ExpressionRight *> _ExpressionRights;
+	std::list<ExpressionRight *> *_ExpressionRights;
 	ASTDeclarations * Declarations_;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
@@ -202,7 +202,7 @@ Expression_Right:
 	}
 	|   Location {
 		$$=new list<ExpressionRight *>();
-		$$->push_back(new Integer($1));
+		$$->push_back($1);
 	}
 	|   Bool {
 		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
@@ -249,7 +249,7 @@ Statement: Location TEQUAL Expression_Right {
 	}
 
 Callout_Args: Arguments{
-		$$=new list<CalloutArg*>();
+		$$=new list<Argument*>();
 	} | Arguments TCOMMA Callout_Args {
 		$$=$3;
 		$$->push_back($1);
@@ -261,7 +261,7 @@ Arguments: CHAR_LITERAL  {
 	} | STRING_LITERAL{
 		$$=new StringLiteral($1);
 	} | Expression_Right {
-		$$=new ExpressionRight($1);
+		$$=new ListExpressionRight($1);
 	}
 
 Type: INT {

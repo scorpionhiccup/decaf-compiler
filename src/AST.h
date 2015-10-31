@@ -123,10 +123,41 @@ public:
 	}
 };
 
+class Argument: public ASTnode{
+	std::string str;
+public:
+	Argument(std::string str): ASTnode(){
+		this->str=str;
+	}
+	Argument(){};
+};
+
+
+class ExpressionRight: public ASTnode{
+public:
+	ExpressionRight(){
+
+	} 
+};
+
+
+class ListExpressionRight: public Argument{
+	list<ExpressionRight *> *expressionRight;
+public:
+	ListExpressionRight(list<ExpressionRight*> *expressionRight1){
+		this->expressionRight=expressionRight1;
+	}
+};
+
+
 /*
 	Location
 */
-class ASTLocation: public ASTnode, public ExpressionRight{
+class ASTLocation: public ExpressionRight{
+public:
+	ASTLocation(){
+
+	}
 };
 
 /*
@@ -135,7 +166,7 @@ class ASTLocation: public ASTnode, public ExpressionRight{
 class ASTIdentifier: public ASTLocation, public BaseDeclaration{
 	std::string id_;
 public:
-	ASTIdentifier(std::string id);
+	ASTIdentifier(std::string id){};
 };
 
 /*
@@ -196,6 +227,7 @@ public:
 	Def(ASTIdentifier *Identifier_obj) {
 		dv1->Identifier=Identifier_obj;
 	}
+
 	Def(ASTIdentifier Identifier_obj, int InEpression){
 		dv1->v1->Identifier_=&Identifier_obj;
 		dv1->v1->InEpression_=InEpression;
@@ -216,27 +248,6 @@ public:
 	}
 };
 
-class Argument: public ASTnode{
-	std::string str;
-public:
-	Argument(std::string str){
-		this->str=str;
-	}
-};
-
-/*
-Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
-*/
-class CalloutStatement: public ASTStatement{
-	std::string name;
-	list<CalloutArg *> callout_args;
-public:
-	CalloutStatement(string name, list<CalloutArg *> callout_args){
-		this->name=name;
-		this->callout_args=callout_args;
-	}
-};
-
 
 class CalloutArg: public ASTnode{
 	Argument* argument;
@@ -246,14 +257,26 @@ public:
 	}
 };
 
-class Argument: public ASTnode{
 
+/*
+Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
+*/
+class CalloutStatement: public ASTStatement{
+	char *name;
+	list<Argument *> *args;
+public:
+	CalloutStatement(char *name, list<Argument *>* args){
+		this->name=name;
+		this->args=args;
+	}
 };
+
+
 //CharLiteral is taken as a string
 class CharLiteral: public Argument {
 	string charLiteral;
 public:
-	CharLiteral(string charLiteral1) {
+	CharLiteral(string charLiteral1): Argument(charLiteral1) {
 		this->charLiteral=charLiteral1;
 	}
 };
@@ -262,45 +285,29 @@ public:
 class StringLiteral: public Argument{
 	string stringLiteral;
 public:
-	StringLiteral(string stringLiteral1) {
+	StringLiteral(string stringLiteral1): Argument(stringLiteral1) {
 		this->stringLiteral=stringLiteral1;
 	}
 };
 
-class ExpressionRight: public Argument{
-
-};
-
-
-/*
-	Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
-*/
-class CalloutStatement: public ASTStatement{
-	std::string name;
-	list<CalloutArg *> callout_args;
-public:
-	CalloutStatement(string name, list<CalloutArg *> callout_args){
-		this->name=name;
-		this->callout_args=callout_args;
-	}
-};
-
-class RUnaryExpr: public Expression_Right{
+class RUnaryExpr: public ExpressionRight{
 	int type;
-	ExpressionRight* expressionRight;
-
+	std::list<ExpressionRight*> * expressionRight;
 public:
-	RUnaryExpr(int type1, ExpressionRight* expressionRight1) {
+	RUnaryExpr(int type1, std::list<ExpressionRight*> * expressionRight1):ExpressionRight() {
 		this->type=type1;
 		this->expressionRight=expressionRight1;
 	}
 };
+
 class RBinaryExpr: public ExpressionRight{
 	char type;
-	ExpressionRight* expressionRightL, expressionRightR;
-
+	std::list<ExpressionRight*> *  expressionRightL, *expressionRightR;
 public:
-	RBinaryExpr(char type1, ExpressionRight* expressionRightL1, ExpressionRight* expressionRightR1) {
+	RBinaryExpr(char type1, 
+		std::list<ExpressionRight*> * expressionRightL1, 
+		std::list<ExpressionRight*> * expressionRightR1) {
+		
 		this->type=type1;
 		this->expressionRightL=expressionRightL1;
 		this->expressionRightR=expressionRightR1;
@@ -313,12 +320,16 @@ class Bool: public ExpressionRight{
 		this->value=value1;
 	}
 };
+
 class Integer: public ExpressionRight{
 	int integer;
+public:
 	Integer(int integer1){
 		this->integer=integer1;
 	}
 };
+
+
 class Literal: public ASTnode{
 
 };
@@ -328,7 +339,11 @@ class AssignmentStatement: public ASTStatement{
 	ASTLocation* location;
 	list<ExpressionRight *> *expressionRight;
 public:
-
+	AssignmentStatement(ASTLocation* aSTLocation, 
+		list<ExpressionRight *> *expressionRight){
+		this->location=aSTLocation;
+		this->expressionRight=expressionRight;
+	}
 };
 
 /*

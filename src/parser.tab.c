@@ -171,9 +171,9 @@ union YYSTYPE
 	Argument* _Arguments;
 	Def *Def_;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
-	std::list<CalloutArg*> *_Callout_Args; 
+	std::list<Argument*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
-	std::list<ExpressionRight *> _ExpressionRights;
+	std::list<ExpressionRight *> *_ExpressionRights;
 	ASTDeclarations * Declarations_;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
@@ -1582,7 +1582,7 @@ yyreduce:
 #line 203 "parser.y" /* yacc.c:1646  */
     {
 		(yyval._ExpressionRights)=new list<ExpressionRight *>();
-		(yyval._ExpressionRights)->push_back(new Integer((yyvsp[0]._ASTLocation)));
+		(yyval._ExpressionRights)->push_back((yyvsp[0]._ASTLocation));
 	}
 #line 1588 "parser.tab.c" /* yacc.c:1646  */
     break;
@@ -1679,7 +1679,7 @@ yyreduce:
   case 42:
 #line 251 "parser.y" /* yacc.c:1646  */
     {
-		(yyval._Callout_Args)=new list<CalloutArg*>();
+		(yyval._Callout_Args)=new list<Argument*>();
 	}
 #line 1685 "parser.tab.c" /* yacc.c:1646  */
     break;
@@ -1713,7 +1713,7 @@ yyreduce:
   case 46:
 #line 263 "parser.y" /* yacc.c:1646  */
     {
-		(yyval._Arguments)=new ExpressionRight((yyvsp[0]._ExpressionRights));
+		(yyval._Arguments)=new ListExpressionRight((yyvsp[0]._ExpressionRights));
 	}
 #line 1719 "parser.tab.c" /* yacc.c:1646  */
     break;
