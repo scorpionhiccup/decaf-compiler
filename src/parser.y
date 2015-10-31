@@ -35,7 +35,7 @@ int unary=0;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<CalloutArg*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
-	std::list<ExpressionRight *> _ExpressionRights;
+	std::list<ExpressionRight *> *_ExpressionRights;
 	ASTDeclarations * Declarations_;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;

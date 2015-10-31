@@ -127,6 +127,10 @@ public:
 	Location
 */
 class ASTLocation: public ASTnode, public ExpressionRight{
+public:
+	ASTLocation(){
+
+	}
 };
 
 /*
@@ -196,6 +200,7 @@ public:
 	Def(ASTIdentifier *Identifier_obj) {
 		dv1->Identifier=Identifier_obj;
 	}
+
 	Def(ASTIdentifier Identifier_obj, int InEpression){
 		dv1->v1->Identifier_=&Identifier_obj;
 		dv1->v1->InEpression_=InEpression;
@@ -219,10 +224,20 @@ public:
 class Argument: public ASTnode{
 	std::string str;
 public:
-	Argument(std::string str){
+	Argument(std::string str): ASTnode(){
 		this->str=str;
 	}
+	Argument();
 };
+
+class CalloutArg: public ASTnode{
+	Argument* argument;
+public:
+	CalloutArg(Argument* argument1){
+		this->argument=argument1;
+	}
+};
+
 
 /*
 Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
@@ -238,22 +253,11 @@ public:
 };
 
 
-class CalloutArg: public ASTnode{
-	Argument* argument;
-public:
-	CalloutArg(Argument* argument1){
-		this->argument=argument1;
-	}
-};
-
-class Argument: public ASTnode{
-
-};
 //CharLiteral is taken as a string
 class CharLiteral: public Argument {
 	string charLiteral;
 public:
-	CharLiteral(string charLiteral1) {
+	CharLiteral(string charLiteral1): Argument(charLiteral1) {
 		this->charLiteral=charLiteral1;
 	}
 };
@@ -262,45 +266,36 @@ public:
 class StringLiteral: public Argument{
 	string stringLiteral;
 public:
-	StringLiteral(string stringLiteral1) {
+	StringLiteral(string stringLiteral1): Argument(stringLiteral1) {
 		this->stringLiteral=stringLiteral1;
 	}
 };
 
 class ExpressionRight: public Argument{
-
-};
-
-
-/*
-	Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
-*/
-class CalloutStatement: public ASTStatement{
-	std::string name;
-	list<CalloutArg *> callout_args;
 public:
-	CalloutStatement(string name, list<CalloutArg *> callout_args){
-		this->name=name;
-		this->callout_args=callout_args;
-	}
+	ExpressionRight(): Argument(){
+
+	} 
 };
 
 class RUnaryExpr: public Expression_Right{
 	int type;
-	ExpressionRight* expressionRight;
-
+	std::list<ExpressionRight*> * expressionRight;
 public:
-	RUnaryExpr(int type1, ExpressionRight* expressionRight1) {
+	RUnaryExpr(int type1, std::list<ExpressionRight*> * expressionRight1):ExpressionRight() {
 		this->type=type1;
 		this->expressionRight=expressionRight1;
 	}
 };
+
 class RBinaryExpr: public ExpressionRight{
 	char type;
-	ExpressionRight* expressionRightL, expressionRightR;
-
+	std::list<ExpressionRight*> *  expressionRightL, *expressionRightR;
 public:
-	RBinaryExpr(char type1, ExpressionRight* expressionRightL1, ExpressionRight* expressionRightR1) {
+	RBinaryExpr(char type1, 
+		std::list<ExpressionRight*> * expressionRightL1, 
+		std::list<ExpressionRight*> * expressionRightR1) {
+		
 		this->type=type1;
 		this->expressionRightL=expressionRightL1;
 		this->expressionRightR=expressionRightR1;
@@ -313,12 +308,16 @@ class Bool: public ExpressionRight{
 		this->value=value1;
 	}
 };
+
 class Integer: public ExpressionRight{
 	int integer;
+public:
 	Integer(int integer1){
 		this->integer=integer1;
 	}
 };
+
+
 class Literal: public ASTnode{
 
 };
