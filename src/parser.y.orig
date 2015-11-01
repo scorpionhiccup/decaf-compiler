@@ -36,8 +36,12 @@ int unary=0;
 	std::list<Argument*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
+<<<<<<< HEAD
 	std::list<ASTDeclarations *> *Declarations_;
-std::list<Expression *> *_Expressions;
+=======
+	std::list<Expression *> *_Expressions;
+	ASTDeclarations * Declarations_;
+>>>>>>> Expression
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
@@ -125,8 +129,12 @@ Declarations: Def TCOMMA Declarations {
 		$$->push_back(new ASTDeclarations($1));
 	}
 	| Def{
+<<<<<<< HEAD
 		$$=new list<ASTDeclarations*>();
 		$$->push_back(new ASTDeclarations($1));
+=======
+		$$=$1;
+>>>>>>> Expression
 	}
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
@@ -150,10 +158,9 @@ Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 	}
 
 InExpression:
-    T_INT{
+	T_INT{
 		$$=$1;
 	} 
-
 BinaryExpr: 
 	Expression TPLUS Expression {
 		operatorOutput('+');
