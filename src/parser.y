@@ -69,7 +69,7 @@ int unary=0;
 %type<Declarations_> Declarations
 //%type<fieldBaseDeclaration> Field_Declarations
 //%type<_BaseDeclaration> Def
-%type<_Def> Def
+%type<_BaseDeclaration> Def
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
 %type<_ASTLocation> Location
@@ -147,7 +147,7 @@ Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 	}
 
 InExpression:
-    T_INT{
+	T_INT{
 		$$=$1;
 	} 
 BinaryExpr: 
@@ -175,15 +175,17 @@ BinaryExpr:
 		operatorOutput('%');
 		$$=new BinaryExpr('%', $1, $3);
 	}
+
+
 Expression:
 	BinaryExpr {
 		$$->push_back($1);
-	}|
+	} |
 	Def {
 		$$=new list<Expression *>();
 		$$->push_back($1);	
 	} | 
-    T_INT{
+	T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERED=%d\n", $1);
 		$$=new list<Expression *>();
 		$$->push_back(new Integer($1));
@@ -291,12 +293,12 @@ Arguments: CHAR_LITERAL  {
 	}
 
 Type: INT {
-		$$=new Type();
-		//$$=new IntType();
+		//$$=new Type();
+		$$=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
 	} | BOOLEAN {
-		$$=new Type();
-		//$$=new BooleanType();
+		//$$=new Type();
+		$$=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
   

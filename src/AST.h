@@ -157,15 +157,6 @@ public:
 	} 
 };
 
-
-class ListExpression: public Argument{
-	list<Expression *> *expression;
-public:
-	ListExpression(list<Expression*> *expression1){
-		this->expression=expression1;
-	}
-};
-
 /*
 	Location
 */
@@ -215,27 +206,27 @@ public:
 };
 
 
+/*
+	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
+*/
+class Def: public Expression{	
+public:
+	Def() {
+		
+	}
+};
+
 
 /*
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
-class ASTArrayFieldDeclaration: public BaseDeclaration,public Def{
+class ASTArrayFieldDeclaration: public BaseDeclaration, public Def{
 	int size_;
 	ASTIdentifier* id_;
 public:
 	ASTArrayFieldDeclaration(std::string id, int size){
 		this->id_=new ASTIdentifier(id);
 		this->size_=size;
-	}
-};
-
-/*
-	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
-*/
-class Def: public ASTnode, public Expression{	
-public:
-	Def() {
-		
 	}
 };
 
@@ -325,7 +316,7 @@ class Bool: public ExpressionRight{
 	}
 };
 
-class Integer: public ExpressionRight{
+class Integer: public ExpressionRight, public Expression{
 	int integer;
 public:
 	Integer(int integer1){
@@ -337,7 +328,7 @@ class BinaryExpr: public Expression{
 	char type;
 	std::list<Expression*> *  expressionL, *expressionR;
 public:
-	RBinaryExpr(char type1, 
+	BinaryExpr(char type1, 
 		std::list<Expression*> * expressionL1, 
 		std::list<Expression*> * expressionR1) {
 		
