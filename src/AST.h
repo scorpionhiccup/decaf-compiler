@@ -162,6 +162,7 @@ public:
 
 /*
 	Location -> IDENTIFIER
+	Def -> IDENTIFIER
 */
 class ASTIdentifier: public ASTLocation, public BaseDeclaration{
 	std::string id_;
@@ -171,8 +172,9 @@ public:
 
 /*
 	Location -> IDENTIFIER TLSQUARE Expression TRSQUARE 
+	Def-> IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
-class ASTArrayIdentifier: public ASTLocation{
+class ASTArrayIdentifier: public ASTLocation, public BaseDeclaration{
 	ASTIdentifier* aSTIdentifier;
 	ASTExpression* aSTExpression;
 public:
@@ -358,6 +360,8 @@ public:
 		this->FieldBaseDeclaration_=FieldBaseDeclaration;
 		this->statements=statements;
 	}
+
+	void accept(Visitor* visitor){};
 };
 
 //Boolean
