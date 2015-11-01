@@ -11,7 +11,11 @@ Visitor::~Visitor(){
 void Visitor::visit(ASTProgram* aSTProgram){
 	//aSTProgram->accept(this);
 	fprintf(XML_fp, "<program>\n");
-	aSTProgram->aSTMain->accept(this);
+	
+	ASTMain* aSTMain=aSTProgram->getMain();
+
+	//aSTMain->print(this);
+	aSTMain->accept(this);
 
 	fprintf(XML_fp, "</program>\n");
 }
@@ -38,7 +42,7 @@ void Visitor::visit(ASTField_Declaration* aSTField_Declaration){
 void Visitor::visit(ASTLocation* aSTLocation){
 	fprintf(XML_fp, "<location>\n");
 
-	fprintf(XML_fp, "<location>\n");
+	fprintf(XML_fp, "</location>\n");
 }
 
 void Visitor::visit(BaseDeclaration* baseDeclaration){
@@ -98,7 +102,9 @@ void Visitor::visit(AssignmentStatement* assignmentStatement){
 
 
 void Visitor::visit(ASTMain* aSTMain){
-	fprintf(XML_fp, "<field_declarations count=\"%lu\">\n", (*aSTMain->FieldBaseDeclaration_).size());
+	cout<<"HERE3\n";
+
+	/*fprintf(XML_fp, "<field_declarations count=\"%lu\">\n", (*aSTMain->FieldBaseDeclaration_).size());
 
 	for (list<ASTField_Declaration*>::iterator it=aSTMain->FieldBaseDeclaration_->begin(); 
 		it!=aSTMain->FieldBaseDeclaration_->end(); ++it){
@@ -114,6 +120,6 @@ void Visitor::visit(ASTMain* aSTMain){
 		(*it)->accept(this);
 	}
 
-	fprintf(XML_fp, "<statement_declarations>\n");
+	fprintf(XML_fp, "<statement_declarations>\n");*/
 
 }

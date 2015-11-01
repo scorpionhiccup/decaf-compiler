@@ -6,6 +6,7 @@
 using namespace std;
 
 void ASTProgram::accept(Visitor* visitor){
+	cout<<"HERE\n";
 	visitor->visit(this);
 }
 
@@ -33,5 +34,10 @@ ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
 }
 
 void ASTMain::accept(Visitor* visitor){
-	visitor->visit(this);
+	cout<<"HERE2\n";
+	//visitor->visit(this);
+}
+
+void ASTMain::print(Visitor* visitor){
+	cout<<"Implemented\n";
 }

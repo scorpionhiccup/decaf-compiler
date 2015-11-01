@@ -21,15 +21,18 @@ public:
 
 class ASTStatement: public ASTnode{
 public:	
-	virtual void accept(Visitor* visitor);
+	void accept(Visitor* visitor);
 };
 
 class ASTProgram: public ASTnode{
 private:
 	std::string id_;
-public:
 	ASTMain* aSTMain;
-	virtual void accept(Visitor* visitor);
+public:
+	ASTMain* getMain(){
+		return aSTMain;
+	}
+	void accept(Visitor* visitor);
 	ASTProgram(std::string id, ASTMain* aSTMain);
 	std::string getId();
 
@@ -370,6 +373,8 @@ public:
 	}
 
 	void accept(Visitor* visitor);
+
+	void print(Visitor* visitor);
 };
 
 //Boolean
