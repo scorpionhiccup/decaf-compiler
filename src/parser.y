@@ -36,7 +36,7 @@ int unary=0;
 	std::list<Argument*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
-	ASTDeclarations * Declarations_;
+	std::list<ASTDeclarations *> *Declarations_;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
@@ -112,9 +112,12 @@ Field_Declaration: Type Declarations {
 }
 
 Declarations: Def TCOMMA Declarations { 
-		$$=new ASTDeclarations($1, $3);}
+		$$=$3;
+		$$->push_back(new ASTDeclarations($1));
+	}
 	| Def{
-		$$=new ASTDeclarations($1, NULL);
+		$$=new list<ASTDeclarations*>();
+		$$->push_back(new ASTDeclarations($1));
 	}
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {

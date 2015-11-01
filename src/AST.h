@@ -20,7 +20,8 @@ public:
 };
 
 class ASTStatement: public ASTnode{
-	virtual void accept();
+public:	
+	virtual void accept(Visitor* visitor);
 };
 
 class ASTProgram: public ASTnode{
@@ -44,11 +45,11 @@ public:
 
 class ASTField_Declaration: public ASTExpression{
 	Type* type;
-	ASTDeclarations* Declarations;
 public:
-	ASTField_Declaration(Type* type, ASTDeclarations* Declarations){
+	list<ASTDeclarations*> * Declarations;
+	ASTField_Declaration(Type* type, list<ASTDeclarations*> * declarations){
 		this->type = type;
-		this->Declarations = Declarations; 
+		this->Declarations=declarations;
 	}
 };
 
@@ -242,11 +243,9 @@ public:
 */
 class ASTDeclarations: public ASTnode{
 	BaseDeclaration *Def_;
-	ASTDeclarations *Declarations_;
 public:
-	ASTDeclarations(BaseDeclaration *Def1, ASTDeclarations *Declarations1) {
+	ASTDeclarations(BaseDeclaration *Def1) {
 		this->Def_=Def1;
-		this->Declarations_=Declarations1;
 	}
 };
 
@@ -264,9 +263,9 @@ public:
 Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
 */
 class CalloutStatement: public ASTStatement{
+public:
 	char *name;
 	list<Argument *> *args;
-public:
 	CalloutStatement(char *name, list<Argument *>* args){
 		this->name=name;
 		this->args=args;
@@ -338,9 +337,9 @@ class Literal: public ASTnode{
 
 
 class AssignmentStatement: public ASTStatement{
+public:
 	ASTLocation* location;
 	list<ExpressionRight *> *expressionRight;
-public:
 	AssignmentStatement(ASTLocation* aSTLocation, 
 		list<ExpressionRight *> *expressionRight){
 		this->location=aSTLocation;

@@ -14,7 +14,8 @@ void ASTnode::accept(Visitor* visitor){
 	std::cout<<"Accepted ASTNode\n";
 }
 
-void ASTStatement::accept(){
+void ASTStatement::accept(Visitor* visitor){
+	visitor->visit(this);
 	std::cout<<"Accepted ASTStatement\n";
 }
 
@@ -32,5 +33,5 @@ ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
 }
 
 void ASTMain::accept(Visitor* visitor){
-	visitor->accept(this);
+	visitor->visit(this);
 }

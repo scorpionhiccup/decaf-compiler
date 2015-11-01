@@ -102,7 +102,7 @@ union YYSTYPE
 	std::list<Argument*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
-	ASTDeclarations * Declarations_;
+	std::list<ASTDeclarations *> *Declarations_;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
