@@ -31,15 +31,18 @@ int unary=0;
 	ASTField_Declaration *_ASTField_Declaration;
 	CalloutArg * _Callout_Arg;
 	Argument* _Arguments;
-	Def *Def_;
+	Def* _Def;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<Argument*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
+	std::list<Expression *> *_Expressions;
 	ASTDeclarations * Declarations_;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
+	BinaryExpr* _BinaryExpr;
+	Expression* _Expression;
 	//IntType *intType;
 	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
@@ -60,22 +63,28 @@ int unary=0;
 %token FALSE TRUE  
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
-%type<number> Expression InExpression Bool
+//%type<number> Expression 
+%type<number>InExpression Bool
 %type<type> Type
 %type<Declarations_> Declarations
 //%type<fieldBaseDeclaration> Field_Declarations
-%type<_BaseDeclaration> Def
+//%type<_BaseDeclaration> Def
+%type<_Def> Def
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
 %type<_ASTLocation> Location
 %type<_Callout_Args> Callout_Args
 %type<_Arguments> Arguments
 %type<_ExpressionRights> Expression_Right
+%type<_Expressions> Expression
+
 %type<_aSTStatement> Statement
 %type<_aSTStatements> Statements
 %type<ast_main> Main
 %type<_RUnaryExpr> RUnary_Expr
 %type<_RBinaryExpr> RBinaryExpr
+%type<_BinaryExpr> BinaryExpr
+
 //%type<_string> STRING_LITERAL
 
 %left TEQUAL
@@ -114,7 +123,7 @@ Field_Declaration: Type Declarations {
 Declarations: Def TCOMMA Declarations { 
 		$$=new ASTDeclarations($1, $3);}
 	| Def{
-		$$=new ASTDeclarations($1, NULL);
+		$$=$1;
 	}
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
@@ -141,26 +150,43 @@ InExpression:
     T_INT{
 		$$=$1;
 	} 
-
-Expression:
+BinaryExpr: 
 	Expression TPLUS Expression {
 		operatorOutput('+');
+		$$=new BinaryExpr('+', $1, $3);
+
 	} | 
 	Expression TMINUS Expression {
 		operatorOutput('-');
+		$$=new BinaryExpr('-', $1, $3);
+
 	} | 
 	Expression TMUL Expression {
 		operatorOutput('*');
+		$$=new BinaryExpr('*', $1, $3);
+
 	} | 
 	Expression TDIV Expression {
 		operatorOutput('/');
+		$$=new BinaryExpr('/', $1, $3);
+
 	} | 
 	Expression MOD Expression {
 		operatorOutput('%');
-	} |
-	Def | 
+		$$=new BinaryExpr('%', $1, $3);
+	}
+Expression:
+	BinaryExpr {
+		$$->push_back($1);
+	}|
+	Def {
+		$$=new list<Expression *>();
+		$$->push_back($1);	
+	} | 
     T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERED=%d\n", $1);
+		$$=new list<Expression *>();
+		$$->push_back(new Integer($1));
 	} 
 
 RUnary_Expr:

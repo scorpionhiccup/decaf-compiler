@@ -150,6 +150,22 @@ public:
 };
 
 
+class Expression: public ASTnode{
+public:
+	Expression(){
+
+	} 
+};
+
+
+class ListExpression: public Argument{
+	list<Expression *> *expression;
+public:
+	ListExpression(list<Expression*> *expression1){
+		this->expression=expression1;
+	}
+};
+
 /*
 	Location
 */
@@ -203,7 +219,7 @@ public:
 /*
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
-class ASTArrayFieldDeclaration: public BaseDeclaration{
+class ASTArrayFieldDeclaration: public BaseDeclaration,public Def{
 	int size_;
 	ASTIdentifier* id_;
 public:
@@ -216,25 +232,11 @@ public:
 /*
 	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
 */
-class Def: public ASTnode{
-	struct value{
-			ASTIdentifier *Identifier_;
-			int InEpression_;
-		};
-	union def_value{
-		struct  value *v1;
-		ASTIdentifier *Identifier;
-	}*dv1;
+class Def: public ASTnode, public Expression{	
 public:
-	Def(ASTIdentifier *Identifier_obj) {
-		dv1->Identifier=Identifier_obj;
+	Def() {
+		
 	}
-
-	Def(ASTIdentifier Identifier_obj, int InEpression){
-		dv1->v1->Identifier_=&Identifier_obj;
-		dv1->v1->InEpression_=InEpression;
-	}
-
 };
 
 /*
@@ -328,6 +330,20 @@ class Integer: public ExpressionRight{
 public:
 	Integer(int integer1){
 		this->integer=integer1;
+	}
+};
+
+class BinaryExpr: public Expression{
+	char type;
+	std::list<Expression*> *  expressionL, *expressionR;
+public:
+	RBinaryExpr(char type1, 
+		std::list<Expression*> * expressionL1, 
+		std::list<Expression*> * expressionR1) {
+		
+		this->type=type1;
+		this->expressionL=expressionL1;
+		this->expressionR=expressionR1;
 	}
 };
 
