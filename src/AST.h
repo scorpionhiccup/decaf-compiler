@@ -168,11 +168,23 @@ public:
 	}
 };
 
+
+
+/*
+	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
+*/
+class Def: public Expression{	
+public:
+	Def() {
+		
+	}
+};
+
 /*
 	Location -> IDENTIFIER
 	Def -> IDENTIFIER
 */
-class ASTIdentifier: public ASTLocation, public BaseDeclaration{
+class ASTIdentifier: public ASTLocation, public BaseDeclaration, public Def{
 	std::string id_;
 public:
 	ASTIdentifier(std::string id){};
@@ -208,17 +220,6 @@ public:
 
 
 /*
-	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
-*/
-class Def: public Expression{	
-public:
-	Def() {
-		
-	}
-};
-
-
-/*
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
 class ASTArrayFieldDeclaration: public BaseDeclaration, public Def{
@@ -235,9 +236,9 @@ public:
 	Declarations: Def TCOMMA Declarations
 */
 class ASTDeclarations: public ASTnode{
-	BaseDeclaration *Def_;
+	Def *Def_;
 public:
-	ASTDeclarations(BaseDeclaration *Def1) {
+	ASTDeclarations(Def *Def1) {
 		this->Def_=Def1;
 	}
 };

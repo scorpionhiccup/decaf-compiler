@@ -69,7 +69,7 @@ std::list<Expression *> *_Expressions;
 %type<Declarations_> Declarations
 //%type<fieldBaseDeclaration> Field_Declarations
 //%type<_BaseDeclaration> Def
-%type<_BaseDeclaration> Def
+%type<_Def> Def
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
 %type<_ASTLocation> Location
@@ -142,7 +142,6 @@ Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 		//$$=new ASTArrayIdentifier($1, $3);
 		//TEMPORARY:
 		$$=new ASTIdentifier($1);
-
 	} | IDENTIFIER {
 		$$=new ASTIdentifier($1);
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);

@@ -97,15 +97,18 @@ union YYSTYPE
 	ASTField_Declaration *_ASTField_Declaration;
 	CalloutArg * _Callout_Arg;
 	Argument* _Arguments;
-	Def *Def_;
+	Def* _Def;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<Argument*> *_Callout_Args; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
 	std::list<ASTDeclarations *> *Declarations_;
+std::list<Expression *> *_Expressions;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
+	BinaryExpr* _BinaryExpr;
+	Expression* _Expression;
 	//IntType *intType;
 	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
@@ -113,7 +116,7 @@ union YYSTYPE
 	Type *type;
 	std::string *_string;
 
-#line 117 "parser.tab.h" /* yacc.c:1909  */
+#line 120 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
