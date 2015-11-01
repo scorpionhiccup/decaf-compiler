@@ -356,12 +356,13 @@ class ASTMain: public ASTnode{
 public:
 	std::list<ASTField_Declaration*> *FieldBaseDeclaration_;
 	std::list<ASTStatement*> *statements;
+
 	ASTMain(std::list<ASTField_Declaration*> *FieldBaseDeclaration, std::list<ASTStatement*> *statements){
 		this->FieldBaseDeclaration_=FieldBaseDeclaration;
 		this->statements=statements;
 	}
 
-	void accept(Visitor* visitor){};
+	void accept(Visitor* visitor);
 };
 
 //Boolean

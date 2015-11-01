@@ -30,3 +30,7 @@ ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
 	this->id_=id;
 	this->aSTMain=aSTMain;		
 }
+
+void ASTMain::accept(Visitor* visitor){
+	visitor->accept(this);
+}

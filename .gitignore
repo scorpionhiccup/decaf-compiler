@@ -38,3 +38,7 @@ src/lex.yy.c
 src/parser.tab.h 
 src/parser.output
 src/a.out
+src/flex_output.txt
+src/bison_output.txt
+src/XML_visitor.txt
+
