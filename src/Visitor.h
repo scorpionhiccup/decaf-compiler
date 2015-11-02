@@ -20,7 +20,9 @@ public:
 	void visit(ASTDeclarations* aSTDeclarations);
 	void visit(CalloutStatement* calloutStatement);
 	void visit(AssignmentStatement* assignmentStatement);
-	void visit(ASTMain* aSTMain);	
+	void visit(ASTMain* aSTMain);
+	void visit(Argument* argument);
+	void visit(ExpressionRight* expressionRight);
 };
 
 #endif
