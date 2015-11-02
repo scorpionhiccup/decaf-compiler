@@ -6,13 +6,12 @@
 using namespace std;
 
 void ASTProgram::accept(Visitor* visitor){
-	cout<<"HERE\n";
 	visitor->visit(this);
 }
 
 void ASTnode::accept(Visitor* visitor){
-	std::cout<<"Accepted ASTNode\n";
-	fflush(stdout);
+	//std::cout<<"Accepted ASTNode\n";
+	//fflush(stdout);
 	visitor->visit(this);
 }
 
@@ -25,9 +24,9 @@ std::string ASTProgram::getId(){
 	return id_;
 }
 
-/*ASTIdentifier::ASTIdentifier(std::string id){
+ASTIdentifier::ASTIdentifier(std::string id){
 	this->id_=id;		
-}*/
+}
 	
 ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
 	this->id_=id;
@@ -35,10 +34,45 @@ ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
 }
 
 void ASTMain::accept(Visitor* visitor){
-	//cout<<"HERE2\n";
 	visitor->visit(this);
 }
 
-void ASTMain::print(Visitor* visitor){
-	cout<<"Implemented\n";
-}
+void ASTField_Declaration::accept(Visitor* visitor){
+	visitor->visit(this);
+};
+
+void ASTDeclarations::accept(Visitor* visitor){
+	visitor->visit(this);	
+};
+
+void ASTIdentifier::accept(Visitor* visitor){
+	visitor->visit(this);
+};
+
+void ASTArrayIdentifier::accept(Visitor* visitor){
+	visitor->visit(this);	
+};
+
+void CalloutStatement::accept(Visitor* visitor){
+	visitor->visit(this);	
+};
+
+void AssignmentStatement::accept(Visitor* visitor){
+	visitor->visit(this);	
+};
+
+void Argument::accept(Visitor* visitor){
+	visitor->visit(this);	
+};
+
+void ExpressionRight::accept(Visitor* visitor){
+	visitor->visit(this);		
+};
+
+string ASTIdentifier::getId(){
+	return this->id_;
+};
+
+void ASTExpression::accept(Visitor* visitor){
+	visitor->visit(this);		
+};

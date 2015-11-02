@@ -45,6 +45,7 @@ public:
 	int getValue(){
 		return value_;
 	}
+	void accept(Visitor* visitor);
 };
 
 class ASTField_Declaration: public ASTExpression{
@@ -55,6 +56,7 @@ public:
 		this->type = type;
 		this->Declarations=declarations;
 	}
+	void accept(Visitor* visitor);
 };
 
 /*class ASTCallout: public ASTnode{
@@ -135,6 +137,7 @@ public:
 		this->str=str;
 	}
 	Argument(){};
+	void accept(Visitor* visitor);
 };
 
 
@@ -143,6 +146,7 @@ public:
 	ExpressionRight(){
 
 	} 
+	void accept(Visitor* visitor);
 };
 
 
@@ -191,7 +195,9 @@ public:
 class ASTIdentifier: public ASTLocation, public BaseDeclaration, public Def{
 	std::string id_;
 public:
-	ASTIdentifier(std::string id){};
+	ASTIdentifier(std::string id);
+	void accept(Visitor* visitor);
+	string getId();
 };
 
 /*
@@ -206,6 +212,16 @@ public:
 		this->aSTIdentifier=aSTIdentifier;
 		this->aSTExpression=aSTExpression;
 	}
+	
+	void accept(Visitor* visitor);
+	
+	string getId(){
+		return this->aSTIdentifier->getId();
+	};
+
+	ASTExpression* getExpression(){
+		return this->aSTExpression;
+	};
 };
 
 /*
@@ -245,6 +261,10 @@ public:
 	ASTDeclarations(Def *Def1) {
 		this->Def_=Def1;
 	}
+	void accept(Visitor* visitor);
+	Def* getDef(){
+		return this->Def_;
+	}; 
 };
 
 
@@ -268,6 +288,7 @@ public:
 		this->name=name;
 		this->args=args;
 	}
+	void accept(Visitor* visitor);
 };
 
 
@@ -357,6 +378,7 @@ public:
 		this->location=aSTLocation;
 		this->expressionRight=expressionRight;
 	}
+	void accept(Visitor* visitor);
 };
 
 /*
@@ -374,8 +396,6 @@ public:
 	}
 
 	void accept(Visitor* visitor);
-
-	void print(Visitor* visitor);
 };
 
 //Boolean

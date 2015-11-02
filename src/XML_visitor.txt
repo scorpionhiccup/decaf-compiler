@@ -1,3 +1,21 @@
 <program>
 <field_declarations count="7">
+</field_declarations>
+<statement_declarations count="3">
+<assignment>
+<location id="E" />
+<expr>
+</expr>
+</assignment>
+<assignment>
+<location id="F" />
+<expr>
+</expr>
+</assignment>
+<assignment>
+<location id="G" />
+<expr>
+</expr>
+</assignment>
+</statement_declarations>
 </program>
