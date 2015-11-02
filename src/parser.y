@@ -37,7 +37,7 @@ int unary=0;
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
 	std::list<ASTDeclarations *> *Declarations_;
-std::list<Expression *> *_Expressions;
+    std::list<Expression *> *_Expressions;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
@@ -106,6 +106,7 @@ Program: START PROG_ID LBRACE Main RBRACE {
 
 Main: Field_Declarations Statements {
 	ASTMain * ast_main = new ASTMain($1, $2);
+	$$=ast_main;
 }
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{

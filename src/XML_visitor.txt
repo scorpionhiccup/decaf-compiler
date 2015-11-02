@@ -1,0 +1,3 @@
+<program>
+<field_declarations count="7">
+</program>

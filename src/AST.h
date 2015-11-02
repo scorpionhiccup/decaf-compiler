@@ -17,6 +17,7 @@ extern FILE* XML_fp;
 class ASTnode{
 public:
 	virtual void accept(Visitor* visitor);
+
 };
 
 class ASTStatement: public ASTnode{
