@@ -62,50 +62,6 @@ public:
 	void accept(Visitor* visitor);
 };
 
-/*class ASTCallout: public ASTnode{
-	std::string id_;
-	CalloutArg[] CalloutArgs;
-public:
-	ASTCallout(std::string id, CalloutArg[] CalloutArgs){
-		this->id=id_;
-		this->CalloutArgs=CalloutArgs;
-	};
-};*/
-
-/*class ASTBinaryOperatorExpression: public ASTExpression {
-	ASTExpression *right_, *left_;
-	std::string operator_;
-public:
-	ASTBinaryOperatorExpression(ASTExpression *left, ASTExpression *right, std::string operator_){
-		this->left_ = left;
-		this->right_ = right;
-		this->operator_ = operator_;
-	}
-
-	ASTExpression left(){
-		return left_;
-	};
-
-	ASTExpression right(){
-		return right_;
-	};
-
-};
-
-class ASTUnaryOperatorExpression: public ASTExpression {
-	ASTExpression *expr_;
-	std::string operator_;
-public:
-	ASTUnaryOperatorExpression(ASTExpression *expr, std::string operator_){
-		this->expr_ = expr;
-		this->operator_ = operator_;
-	}
-
-	ASTExpression expr(){
-		return expr_;
-	};
-
-};*/
 
 class Type: public ASTnode{
 };
@@ -263,7 +219,9 @@ public:
 	}; 
 };
 
-
+/*
+	Callout_Args: Arguments | Arguments TCOMMA Callout_Args 
+*/
 class CalloutArg: public ASTnode{
 	Argument* argument;
 public:
@@ -274,13 +232,13 @@ public:
 
 
 /*
-Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
+	Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
 */
 class CalloutStatement: public ASTStatement{
 public:
-	char *name;
+	string name;
 	list<Argument *> *args;
-	CalloutStatement(char *name, list<Argument *>* args){
+	CalloutStatement(string name, list<Argument *>* args){
 		this->name=name;
 		this->args=args;
 	}
@@ -295,6 +253,10 @@ public:
 	CharLiteral(string charLiteral1): Argument(charLiteral1) {
 		this->charLiteral=charLiteral1;
 	}
+	void accept(Visitor* visitor);
+	string getLiteral(){
+		return this->charLiteral;
+	}
 };
 
 
@@ -303,6 +265,10 @@ class StringLiteral: public Argument{
 public:
 	StringLiteral(string stringLiteral1): Argument(stringLiteral1) {
 		this->stringLiteral=stringLiteral1;
+	}
+	void accept(Visitor* visitor);
+	string getLiteral(){
+		return this->stringLiteral;
 	}
 };
 
@@ -360,6 +326,7 @@ public:
 	void accept(Visitor* visitor);
 };
 
+
 class BinaryExpr: public Expression{
 	char type;
 	std::list<Expression*> *  expressionL, *expressionR;
@@ -376,11 +343,6 @@ public:
 };
 
 
-class Literal: public ASTnode{
-
-};
-
-
 class AssignmentStatement: public ASTStatement{
 public:
 	ASTLocation* location;
@@ -394,7 +356,7 @@ public:
 };
 
 /*
-Main: Field_Declarations Statements
+	Main: Field_Declarations Statements
 */
 
 class ASTMain: public ASTnode{
@@ -409,11 +371,5 @@ public:
 
 	void accept(Visitor* visitor);
 };
-
-//Boolean
-//Binary	
-//Unary
-//Symbol
-//Env
 
 #endif

@@ -112,3 +112,11 @@ void ASTLocation::accept(Visitor* visitor){
 void ASTArrayFieldDeclaration::accept(Visitor* visitor){
 	visitor->visit(this);	
 }
+
+void CharLiteral::accept(Visitor* visitor){
+	visitor->visit(this);	
+}
+
+void StringLiteral::accept(Visitor* visitor){
+	visitor->visit(this);	
+}

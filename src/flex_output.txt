@@ -22,3 +22,7 @@ ID: F
 INT: 6
 ID: G
 BOOLEAN: true
+CALLOUT
+STRING: "gdgsd"
+STRING: "sharvil"
+CHARACTER: 'v'

@@ -27,7 +27,9 @@ public:
 	void visit(Integer* integer);
 	void visit(Bool* bool_obj);
 	void visit(Expression* expr);
-	void visit(BinaryExpr* expr);	
+	void visit(BinaryExpr* expr);
+	void visit(CharLiteral* charLiteral);
+	void visit(StringLiteral* stringLiteral);
 };
 
 #endif

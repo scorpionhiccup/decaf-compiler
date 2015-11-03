@@ -64,7 +64,7 @@ void Visitor::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
 }
 
 void Visitor::visit(Def* def){
-	fprintf(XML_fp, "<def>\n");
+	//fprintf(XML_fp, "<def>\n");
 }
 
 void Visitor::visit(ASTDeclarations* aSTDeclarations){
@@ -73,9 +73,9 @@ void Visitor::visit(ASTDeclarations* aSTDeclarations){
 }
 
 void Visitor::visit(CalloutStatement* calloutStatement){
-	fprintf(XML_fp, "<callout function=\"%s\">\n", calloutStatement->name);
-
+	fprintf(XML_fp, "<callout function=\"%s\">\n", calloutStatement->name.c_str());
 	
+
 	for (list<Argument *>::iterator it=calloutStatement->args->begin(); 
 		it!=calloutStatement->args->end(); ++it){
 		(*it)->accept(this);
@@ -160,6 +160,14 @@ void Visitor::visit(Bool* bool_obj){
 	else
 		fprintf(XML_fp, "boolean value=\"false\"\n");
 }
+
+void Visitor::visit(CharLiteral* charLiteral){
+	fprintf(XML_fp, "<character value=\'%s\'' />\n", charLiteral->getLiteral().c_str());
+};
+
+void Visitor::visit(StringLiteral* stringLiteral){
+	fprintf(XML_fp, "<string value=%s />\n", stringLiteral->getLiteral().c_str());
+};
 
 void Visitor::visit(Expression* expr){
 	fprintf(XML_fp, "<expr2>\n");

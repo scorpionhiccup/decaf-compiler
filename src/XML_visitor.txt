@@ -14,7 +14,7 @@
 <location id="F" />
 <location id="G" />
 </field_declarations>
-<statement_declarations count="3">
+<statement_declarations count="4">
 <assignment>
 <location id="E" />
 <integer value="5" />
@@ -27,5 +27,8 @@
 <location id="G" />
 <integer value="1" />
 </assignment>
+<callout function=""gdgsd"">
+<string value="sharvil" />
+</callout>
 </statement_declarations>
 </program>
