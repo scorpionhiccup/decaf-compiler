@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/LLVMContext.h"
@@ -16,9 +15,12 @@
 #include "Visitor.h"
 #include "AST.h"
 
+#include <map>
+#include <stdlib.h>
 
 using namespace std;
 using namespace llvm;
+
 
 /*static llvm::Module *TheModule = new llvm::Module("main", 
 	llvm::getGlobalContext());;
