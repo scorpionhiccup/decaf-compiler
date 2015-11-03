@@ -52,7 +52,14 @@ void Visitor::visit(ASTIdentifier* aSTIdentifier){
 void Visitor::visit(ASTArrayIdentifier* aSTArrayIdentifier){
 	fprintf(XML_fp, "<location id=\"%s\" />\n", aSTArrayIdentifier->getId().c_str());
 	fprintf(XML_fp, "<position>\n");
-	aSTArrayIdentifier->getExpression()->accept(this);
+	
+	std::list<Expression*>* exprs = aSTArrayIdentifier->getExpression();
+
+	for (list<Expression*>::reverse_iterator it=exprs->rbegin();
+		it!=exprs->rend(); ++it){
+		(*it)->accept(this);
+	}
+
 	fprintf(XML_fp, "</position>\n");
 }
 
