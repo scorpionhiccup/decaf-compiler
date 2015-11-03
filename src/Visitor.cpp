@@ -90,7 +90,7 @@ void Visitor::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
 }
 
 void Visitor::visit(Def* def){
-	//fprintf(XML_fp, "<def>\n");
+	fprintf(XML_fp, "<def>\n");
 }
 
 void Visitor::visit(ASTDeclarations* aSTDeclarations){
@@ -159,18 +159,28 @@ void Visitor::visit(RUnaryExpr* rUnaryExpr){
 		(*it)->evaluate(this);
 
 	}
-	
+
 	fprintf(XML_fp, "<unary_expression>\n");		
 }
 
 void Visitor::visit(RBinaryExpr* rBinaryExpr){
-	fprintf(XML_fp, "<binary_expression type=\"x\"\n");
+	fprintf(XML_fp, "<binary_expression type=\"%c\"\n", rBinaryExpr->getType());
+
+	std::list<ExpressionRight*>* exprs=rBinaryExpr->getLeftExprs();
 
 	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
 		(*it)->evaluate(this);
 
 	}
+
+	exprs=rBinaryExpr->getRightExprs();
+
+	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
+		it!=exprs->rend(); ++it){
+		(*it)->evaluate(this);
+
+	}	
 
 	fprintf(XML_fp, "<binary_expression>\n");		
 }
@@ -206,6 +216,22 @@ void Visitor::visit(Expression* expr){
 }
 
 void Visitor::visit(BinaryExpr* expr){
-	fprintf(XML_fp, "<expr2>\n");
-	fprintf(XML_fp, "</expr>\n");	
+	fprintf(XML_fp, "<binary_expression type=\"%c\"\n", expr->getType());
+
+	std::list<Expression*>* exprs=expr->getLeftExprs();
+
+	for (list<Expression*>::reverse_iterator it=exprs->rbegin();
+		it!=exprs->rend(); ++it){
+		(*it)->evaluate(this);
+	}
+
+	exprs=expr->getRightExprs();
+
+	for (list<Expression*>::reverse_iterator it=exprs->rbegin();
+		it!=exprs->rend(); ++it){
+		(*it)->evaluate(this);
+
+	}	
+
+	fprintf(XML_fp, "<binary_expression>\n");		
 }

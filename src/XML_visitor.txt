@@ -17,7 +17,9 @@
 <statement_declarations count="3">
 <assignment>
 <location id="E" />
-<binary_expression type="x"
+<binary_expression type="+"
+<integer value="5" />
+<integer value="1" />
 <binary_expression>
 </assignment>
 <assignment>

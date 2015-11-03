@@ -292,6 +292,15 @@ public:
 		this->expressionRightR=expressionRightR1;
 	}
 	void evaluate(Visitor* visitor);
+	list<ExpressionRight*>* getLeftExprs(){
+		return this->expressionRightL;
+	}
+	list<ExpressionRight*>* getRightExprs(){
+		return this->expressionRightR;
+	}
+	char getType(){
+		return this->type;
+	}
 };
 
 class Bool: public ExpressionRight{
@@ -332,6 +341,15 @@ public:
 		this->type=type1;
 		this->expressionL=expressionL1;
 		this->expressionR=expressionR1;
+	}
+	list<Expression*>* getLeftExprs(){
+		return this->expressionL;
+	}
+	list<Expression*>* getRightExprs(){
+		return this->expressionR;
+	}
+	char getType(){
+		return this->type;
 	}
 };
 
