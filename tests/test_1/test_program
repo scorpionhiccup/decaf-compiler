@@ -8,7 +8,7 @@ class Program
 	int F;
 	int G;
 
-	E = 5 + 1;
+	E = 5 + 1>=3;
 	F = 6;
 	G = true;
 }

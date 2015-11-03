@@ -280,10 +280,10 @@ public:
 };
 
 class RBinaryExpr: public ExpressionRight{
-	char type;
+	string type;
 	std::list<ExpressionRight*> *  expressionRightL, *expressionRightR;
 public:
-	RBinaryExpr(char type1, 
+	RBinaryExpr(string type1, 
 		std::list<ExpressionRight*> * expressionRightL1, 
 		std::list<ExpressionRight*> * expressionRightR1) {
 		
@@ -298,7 +298,7 @@ public:
 	list<ExpressionRight*>* getRightExprs(){
 		return this->expressionRightR;
 	}
-	char getType(){
+	string getType(){
 		return this->type;
 	}
 };
@@ -330,11 +330,11 @@ public:
 
 
 class BinaryExpr: public Expression{
-	char type;
+	string type;
 	std::list<Expression*> *  expressionL, *expressionR;
 public:
 	void evaluate(Visitor* visitor);
-	BinaryExpr(char type1, 
+	BinaryExpr(string type1, 
 		std::list<Expression*> * expressionL1, 
 		std::list<Expression*> * expressionR1) {
 		
@@ -348,7 +348,7 @@ public:
 	list<Expression*>* getRightExprs(){
 		return this->expressionR;
 	}
-	char getType(){
+	string getType(){
 		return this->type;
 	}
 };

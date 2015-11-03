@@ -17,10 +17,13 @@
 <statement_declarations count="3">
 <assignment>
 <location id="E" />
-<binary_expression type="+"
+<binary_expression type=+ >
 <integer value="5" />
+<binary_expression type=>= >
 <integer value="1" />
-<binary_expression>
+<integer value="3" />
+</binary_expression>
+</binary_expression>
 </assignment>
 <assignment>
 <location id="F" />

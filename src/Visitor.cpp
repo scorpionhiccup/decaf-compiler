@@ -164,7 +164,7 @@ void Visitor::visit(RUnaryExpr* rUnaryExpr){
 }
 
 void Visitor::visit(RBinaryExpr* rBinaryExpr){
-	fprintf(XML_fp, "<binary_expression type=\"%c\"\n", rBinaryExpr->getType());
+	fprintf(XML_fp, "<binary_expression type=%s >\n", rBinaryExpr->getType().c_str());
 
 	std::list<ExpressionRight*>* exprs=rBinaryExpr->getLeftExprs();
 
@@ -182,7 +182,7 @@ void Visitor::visit(RBinaryExpr* rBinaryExpr){
 
 	}	
 
-	fprintf(XML_fp, "<binary_expression>\n");		
+	fprintf(XML_fp, "</binary_expression>\n");		
 }
 
 void Visitor::visit(ExpressionRight* expressionRight){
@@ -216,7 +216,7 @@ void Visitor::visit(Expression* expr){
 }
 
 void Visitor::visit(BinaryExpr* expr){
-	fprintf(XML_fp, "<binary_expression type=\"%c\"\n", expr->getType());
+	fprintf(XML_fp, "<binary_expression type=%s >\n", expr->getType().c_str());
 
 	std::list<Expression*>* exprs=expr->getLeftExprs();
 
@@ -233,5 +233,5 @@ void Visitor::visit(BinaryExpr* expr){
 
 	}	
 
-	fprintf(XML_fp, "<binary_expression>\n");		
+	fprintf(XML_fp, "</binary_expression>\n");		
 }

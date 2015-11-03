@@ -65,17 +65,22 @@ extern int yydebug;
     T_NEWLINE = 275,
     T_QUIT = 276,
     START = 277,
-    TLROUND = 278,
-    TRROUND = 279,
-    TLSQUARE = 280,
-    TRSQUARE = 281,
-    FALSE = 282,
-    TRUE = 283,
-    TLESS = 284,
-    TGREAT = 285,
-    SEMI_COLON = 286,
-    TCOMMA = 287,
-    NOT_EQUAL = 288
+    LE = 278,
+    GE = 279,
+    AND = 280,
+    EQ = 281,
+    OR = 282,
+    TLROUND = 283,
+    TRROUND = 284,
+    TLSQUARE = 285,
+    TRSQUARE = 286,
+    FALSE = 287,
+    TRUE = 288,
+    TLESS = 289,
+    TGREAT = 290,
+    SEMI_COLON = 291,
+    TCOMMA = 292,
+    NOT_EQUAL = 293
   };
 #endif
 
@@ -116,7 +121,7 @@ union YYSTYPE
 	Type *type;
 	std::string *_string;
 
-#line 120 "parser.tab.h" /* yacc.c:1909  */
+#line 125 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

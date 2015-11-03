@@ -13,7 +13,7 @@ FILE *XML_fp;
 FILE* bison_fp;
 
 void yyerror(const char* s);
-void operatorOutput(char op);
+void operatorOutput(string op);
 
 int unary=0;
 %}
@@ -58,7 +58,7 @@ int unary=0;
 
 %token<string> CALLOUT 
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
-%token T_NEWLINE T_QUIT START 
+%token T_NEWLINE T_QUIT START LE GE AND EQ OR 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
 %token FALSE TRUE  
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
@@ -154,30 +154,45 @@ InExpression:
 		$$=$1;
 	} 
 
-BinaryExpr: 
+BinaryExpr:
+	Expression LE Expression{
+		$$=new BinaryExpr("<=", $1, $3);	
+	} |
+	Expression GE Expression{
+		$$=new BinaryExpr("<=", $1, $3);	
+	} |
+	Expression EQ Expression{
+		$$=new BinaryExpr("==", $1, $3);	
+	} |
+	Expression AND Expression{
+		$$=new BinaryExpr("&&", $1, $3);	
+	} |
+	Expression OR Expression{
+		$$=new BinaryExpr("||", $1, $3);	
+	} |
 	Expression TPLUS Expression {
-		operatorOutput('+');
-		$$=new BinaryExpr('+', $1, $3);
+		operatorOutput("+");
+		$$=new BinaryExpr("+", $1, $3);
 
 	} | 
 	Expression TMINUS Expression {
-		operatorOutput('-');
-		$$=new BinaryExpr('-', $1, $3);
+		operatorOutput("-");
+		$$=new BinaryExpr("-", $1, $3);
 
 	} | 
 	Expression TMUL Expression {
-		operatorOutput('*');
-		$$=new BinaryExpr('*', $1, $3);
+		operatorOutput("*");
+		$$=new BinaryExpr("*", $1, $3);
 
 	} | 
 	Expression TDIV Expression {
-		operatorOutput('/');
-		$$=new BinaryExpr('/', $1, $3);
+		operatorOutput("/");
+		$$=new BinaryExpr("/", $1, $3);
 
 	} | 
 	Expression MOD Expression {
-		operatorOutput('%');
-		$$=new BinaryExpr('%', $1, $3);
+		operatorOutput("%");
+		$$=new BinaryExpr("%", $1, $3);
 	}
 
 
@@ -209,21 +224,31 @@ RUnary_Expr:
 	}	
 
 RBinaryExpr:
-	Expression_Right TPLUS Expression_Right {
-		operatorOutput('+');
-		$$=new RBinaryExpr('+', $1, $3);
+	Expression_Right LE Expression_Right{
+		$$=new RBinaryExpr("<=", $1, $3);	
+	} | Expression_Right GE Expression_Right{
+		$$=new RBinaryExpr(">=", $1, $3);	
+	} | Expression_Right EQ Expression_Right{
+		$$=new RBinaryExpr("==", $1, $3);	
+	} | Expression_Right AND Expression_Right{
+		$$=new RBinaryExpr("&&", $1, $3);	
+	} | Expression_Right OR Expression_Right{
+		$$=new RBinaryExpr("||", $1, $3);	
+	} | Expression_Right TPLUS Expression_Right {
+		operatorOutput("+");
+		$$=new RBinaryExpr("+", $1, $3);
 	} | Expression_Right TMINUS Expression_Right {
-		operatorOutput('-');
-		$$=new RBinaryExpr('-', $1, $3);
+		operatorOutput("-");
+		$$=new RBinaryExpr("-", $1, $3);
 	} | Expression_Right TMUL Expression_Right {
-		operatorOutput('*');
-		$$=new RBinaryExpr('*', $1, $3);
+		operatorOutput("*");
+		$$=new RBinaryExpr("*", $1, $3);
 	} | Expression_Right TDIV Expression_Right {
-		operatorOutput('/');
-		$$=new RBinaryExpr('/', $1, $3);
+		operatorOutput("/");
+		$$=new RBinaryExpr("/", $1, $3);
 	} | Expression_Right MOD Expression_Right {
-		operatorOutput('%');
-		$$=new RBinaryExpr('%', $1, $3);
+		operatorOutput("%");
+		$$=new RBinaryExpr("%", $1, $3);
 	}
 
 Expression_Right:
@@ -313,9 +338,9 @@ Type: INT {
 
 int main(int Argsc, char* Argsv[]) {
 	char infile[100] = "stdin";
-	char *outfile = (char *)"flex_output.txt";		
-	char *bison_outfile = (char *)"bison_output.txt";
-	char *xml_outfile = (char *)"XML_visitor.txt";
+	const char *outfile = "flex_output.txt";		
+	const char *bison_outfile = "bison_output.txt";
+	const char *xml_outfile = "XML_visitor.txt";
 
 	if (Argsc>=2){
 		yyin = fopen( Argsv[1], "r");
@@ -370,8 +395,8 @@ void yyerror( const char *msg) {
 	cerr.flush();
 }
 
-void operatorOutput(char op) {
-	switch(op){
+void operatorOutput(string op) {
+	switch(op.at(0)){
 		case '/': 
 				fprintf(bison_fp, "DIVISION ENCOUNTERED\n");
 				break;
