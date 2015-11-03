@@ -6,7 +6,7 @@
 class Visitor{
 public:
 	virtual ~Visitor();
-	
+
 	void visit(Args* args);
 	void visit(ASTProgram* aSTProgram);
 	void visit(ASTLocation* aSTLocation);
@@ -29,6 +29,30 @@ public:
 	void visit(BinaryExpr* expr);
 	void visit(CharLiteral* charLiteral);
 	void visit(StringLiteral* stringLiteral);
+
+	/*llvm::Value* CodeGen(Args* args);
+	llvm::Value* CodeGen(ASTProgram* aSTProgram);
+	llvm::Value* CodeGen(StringLiteral* stringLiteral);
+	llvm::Value* CodeGen(CharLiteral* charLiteral);
+	llvm::Value* CodeGen(BinaryExpr* expr);
+	llvm::Value* CodeGen(Expression* expr);
+	llvm::Value* CodeGen(Bool* bool_obj);
+	llvm::Value* CodeGen(Integer* integer);
+	llvm::Value* CodeGen(ASTnode* aSTnode);
+	llvm::Value* CodeGen(ExpressionRight* expressionRight);
+	llvm::Value* CodeGen(RUnaryExpr* rUnaryExpr);
+	llvm::Value* CodeGen(RBinaryExpr* rBinaryExpr);
+	llvm::Value* CodeGen(ASTMain* aSTMain);
+	llvm::Value* CodeGen(AssignmentStatement* assignmentStatement);
+	llvm::Value* CodeGen(CalloutStatement* calloutStatement);
+	llvm::Value* CodeGen(ASTDeclarations* aSTDeclarations);
+	llvm::Value* CodeGen(Def* def);
+	llvm::Value* CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
+	llvm::Value* CodeGen(ASTLocation* aSTLocation);
+	llvm::Value* CodeGen(ASTIdentifier* aSTIdentifier);
+	llvm::Value* CodeGen(ASTField_Declaration* aSTField_Declaration);
+	llvm::Value* CodeGen(ASTArrayIdentifier* aSTArrayIdentifier);*/
+	
 };
 
 #endif

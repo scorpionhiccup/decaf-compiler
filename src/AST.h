@@ -277,6 +277,9 @@ public:
 		return this->expressionRight;
 	}
 	void evaluate(Visitor* visitor);
+	int getType(){
+		return this->type;
+	}
 };
 
 class RBinaryExpr: public ExpressionRight{
