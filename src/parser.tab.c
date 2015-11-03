@@ -167,11 +167,11 @@ union YYSTYPE
 	ASTIdentifier *identifier;
 	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
-	CalloutArg * _Callout_Arg;
-	Argument* _Arguments;
+	CalloutArgs * _Callout_Args;
+	Args* _Argss;
 	Def* _Def;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
-	std::list<Argument*> *_Callout_Args; 
+	std::list<Args*> *_Callout_Argss; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
 	std::list<ASTDeclarations *> *Declarations_;
@@ -525,7 +525,7 @@ static const char *const yytname[] =
   "Field_Declaration", "Declarations", "Def", "Location", "InExpression",
   "BinaryExpr", "Expression", "RUnary_Expr", "$@1", "$@2", "RBinaryExpr",
   "Expression_Right", "Bool", "Statements", "Statement", "$@3",
-  "Callout_Args", "Arguments", "Type", YY_NULLPTR
+  "Callout_Argss", "Argss", "Type", YY_NULLPTR
 };
 #endif
 
@@ -1338,7 +1338,7 @@ yyreduce:
     {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram((yyvsp[-3].string), (yyvsp[-1].ast_main));
-		//ast_prog->evaluate(new Visitor());
+		ast_prog->evaluate(new Visitor());
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
 #line 1345 "parser.tab.c" /* yacc.c:1646  */
@@ -1708,7 +1708,7 @@ yyreduce:
   case 42:
 #line 282 "parser.y" /* yacc.c:1646  */
     {
-		(yyval._aSTStatement)=new CalloutStatement((yyvsp[-4].string), (yyvsp[-1]._Callout_Args));
+		(yyval._aSTStatement)=new CalloutStatement((yyvsp[-4].string), (yyvsp[-1]._Callout_Argss));
 	}
 #line 1714 "parser.tab.c" /* yacc.c:1646  */
     break;
@@ -1716,7 +1716,7 @@ yyreduce:
   case 43:
 #line 286 "parser.y" /* yacc.c:1646  */
     {
-		(yyval._Callout_Args)=new list<Argument*>();
+		(yyval._Callout_Argss)=new list<Args*>();
 	}
 #line 1722 "parser.tab.c" /* yacc.c:1646  */
     break;
@@ -1724,8 +1724,8 @@ yyreduce:
   case 44:
 #line 288 "parser.y" /* yacc.c:1646  */
     {
-		(yyval._Callout_Args)=(yyvsp[0]._Callout_Args);
-		(yyval._Callout_Args)->push_back((yyvsp[-2]._Arguments));
+		(yyval._Callout_Argss)=(yyvsp[0]._Callout_Argss);
+		(yyval._Callout_Argss)->push_back((yyvsp[-2]._Argss));
 	}
 #line 1731 "parser.tab.c" /* yacc.c:1646  */
     break;
@@ -1734,7 +1734,7 @@ yyreduce:
 #line 293 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", (yyvsp[0].string));
-		(yyval._Arguments)=new CharLiteral((yyvsp[0].string));
+		(yyval._Argss)=new CharLiteral((yyvsp[0].string));
 	}
 #line 1740 "parser.tab.c" /* yacc.c:1646  */
     break;
@@ -1742,7 +1742,7 @@ yyreduce:
   case 46:
 #line 296 "parser.y" /* yacc.c:1646  */
     {
-		(yyval._Arguments)=new StringLiteral((yyvsp[0].string));
+		(yyval._Argss)=new StringLiteral((yyvsp[0].string));
 	}
 #line 1748 "parser.tab.c" /* yacc.c:1646  */
     break;
@@ -1750,7 +1750,7 @@ yyreduce:
   case 47:
 #line 298 "parser.y" /* yacc.c:1646  */
     {
-		(yyval._Arguments)=new ListExpressionRight((yyvsp[0]._ExpressionRights));
+		(yyval._Argss)=new ListExpressionRight((yyvsp[0]._ExpressionRights));
 	}
 #line 1756 "parser.tab.c" /* yacc.c:1646  */
     break;
@@ -2007,21 +2007,22 @@ yyreturn:
 #line 312 "parser.y" /* yacc.c:1906  */
 
 
-int main(int argc, char* argv[]) {
+int main(int Argsc, char* Argsv[]) {
 	char infile[100] = "stdin";
 	char *outfile = (char *)"flex_output.txt";		
 	char *bison_outfile = (char *)"bison_output.txt";
 	char *xml_outfile = (char *)"XML_visitor.txt";
 
-	if (argc>=2){
-		yyin = fopen( argv[1], "r");
-		strcpy(infile, argv[1]);
+	if (Argsc>=2){
+		yyin = fopen( Argsv[1], "r");
+		strcpy(infile, Argsv[1]);
 	}else{
 		yyin = stdin;
 	}
 
-	yyout = fopen(outfile, "w");		\
-	bison_fp = fopen(bison_outfile, "w");	XML_fp = fopen(xml_outfile, "w");
+	yyout = fopen(outfile, "w");
+	bison_fp = fopen(bison_outfile, "w");	
+	XML_fp = fopen(xml_outfile, "w");
 
 	if(!yyin){
 		printf("Error in opening '%s' for reading!", infile);
@@ -2055,12 +2056,9 @@ int main(int argc, char* argv[]) {
 
 	fprintf(stdout, "Success\n");
 	
-
 	fclose(bison_fp);
 	fclose(yyout);
 	
-	cout<<"SARANGI";
-	fflush(stdout);
 }
 
 void yyerror( const char *msg) {

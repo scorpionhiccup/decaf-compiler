@@ -1,21 +1,24 @@
 #include <bits/stdc++.h>
 
-/*#include "llvm/Analysis/Passes.h"
+#include "llvm/ADT/STLExtras.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+#include "llvm/Analysis/Passes.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/ExecutionEngine/SectionMemoryManager.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/IRBuilder.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/Module.h"
 #include "llvm/PassManager.h"
 #include "llvm/Support/TargetSelect.h"
-#include "llvm/Transforms/Scalar.h"*/
+#include "llvm/Transforms/Scalar.h"
+#include "llvm/Analysis/Verifier.h"
 #include "Visitor.h"
 #include "AST.h"
 
+
 using namespace std;
-//using namespace llvm;
+using namespace llvm;
 
 /*static llvm::Module *TheModule = new llvm::Module("main", 
 	llvm::getGlobalContext());;
@@ -98,7 +101,7 @@ void Visitor::visit(ASTDeclarations* aSTDeclarations){
 void Visitor::visit(CalloutStatement* calloutStatement){
 	fprintf(XML_fp, "<callout function=%s>\n", calloutStatement->name.c_str());
 	
-	for (list<Argument *>::iterator it=calloutStatement->args->begin(); it!=calloutStatement->args->end(); ++it){
+	for (list<Args *>::iterator it=calloutStatement->Argss->begin(); it!=calloutStatement->Argss->end(); ++it){
 		(*it)->evaluate(this);
 	}
 	
@@ -141,9 +144,9 @@ void Visitor::visit(ASTMain* aSTMain){
 }
 
 
-void Visitor::visit(Argument* argument){
-	fprintf(XML_fp, "<argument>\n");	
-	fprintf(XML_fp, "</argument>\n");		
+void Visitor::visit(Args* Args){
+	fprintf(XML_fp, "<Args>\n");	
+	fprintf(XML_fp, "</Args>\n");		
 }
 
 void Visitor::visit(RUnaryExpr* rUnaryExpr){
@@ -156,11 +159,18 @@ void Visitor::visit(RUnaryExpr* rUnaryExpr){
 		(*it)->evaluate(this);
 
 	}
+	
 	fprintf(XML_fp, "<unary_expression>\n");		
 }
 
 void Visitor::visit(RBinaryExpr* rBinaryExpr){
 	fprintf(XML_fp, "<binary_expression type=\"x\"\n");
+
+	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
+		it!=exprs->rend(); ++it){
+		(*it)->evaluate(this);
+
+	}
 
 	fprintf(XML_fp, "<binary_expression>\n");		
 }

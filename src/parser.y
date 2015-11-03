@@ -29,11 +29,11 @@ int unary=0;
 	ASTIdentifier *identifier;
 	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
-	CalloutArg * _Callout_Arg;
-	Argument* _Arguments;
+	CalloutArgs * _Callout_Args;
+	Args* _Argss;
 	Def* _Def;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
-	std::list<Argument*> *_Callout_Args; 
+	std::list<Args*> *_Callout_Argss; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
 	std::list<ASTDeclarations *> *Declarations_;
@@ -73,8 +73,8 @@ int unary=0;
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
 %type<_ASTLocation> Location
-%type<_Callout_Args> Callout_Args
-%type<_Arguments> Arguments
+%type<_Callout_Argss> Callout_Argss
+%type<_Argss> Argss
 %type<_ExpressionRights> Expression_Right
 %type<_Expressions> Expression
 
@@ -100,7 +100,7 @@ int unary=0;
 Program: START PROG_ID LBRACE Main RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($2, $4);
-		//ast_prog->evaluate(new Visitor());
+		ast_prog->evaluate(new Visitor());
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
 
@@ -279,18 +279,18 @@ Statement: Location TEQUAL Expression_Right {
 		$$=new AssignmentStatement($1, $3);
 	} | CALLOUT TLROUND STRING_LITERAL  {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
-	} TCOMMA Callout_Args TRROUND {
+	} TCOMMA Callout_Argss TRROUND {
 		$$=new CalloutStatement($3, $6);
 	}
 
-Callout_Args: Arguments{
-		$$=new list<Argument*>();
-	} | Arguments TCOMMA Callout_Args {
+Callout_Argss: Argss{
+		$$=new list<Args*>();
+	} | Argss TCOMMA Callout_Argss {
 		$$=$3;
 		$$->push_back($1);
 	}
 
-Arguments: CHAR_LITERAL  {
+Argss: CHAR_LITERAL  {
 		fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", $1);
 		$$=new CharLiteral($1);
 	} | STRING_LITERAL{
@@ -311,15 +311,15 @@ Type: INT {
   
 %%
 
-int main(int argc, char* argv[]) {
+int main(int Argsc, char* Argsv[]) {
 	char infile[100] = "stdin";
 	char *outfile = (char *)"flex_output.txt";		
 	char *bison_outfile = (char *)"bison_output.txt";
 	char *xml_outfile = (char *)"XML_visitor.txt";
 
-	if (argc>=2){
-		yyin = fopen( argv[1], "r");
-		strcpy(infile, argv[1]);
+	if (Argsc>=2){
+		yyin = fopen( Argsv[1], "r");
+		strcpy(infile, Argsv[1]);
 	}else{
 		yyin = stdin;
 	}

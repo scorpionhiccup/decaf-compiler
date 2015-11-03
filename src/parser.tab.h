@@ -95,11 +95,11 @@ union YYSTYPE
 	ASTIdentifier *identifier;
 	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
-	CalloutArg * _Callout_Arg;
-	Argument* _Arguments;
+	CalloutArgs * _Callout_Args;
+	Args* _Argss;
 	Def* _Def;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
-	std::list<Argument*> *_Callout_Args; 
+	std::list<Args*> *_Callout_Argss; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
 	std::list<ASTDeclarations *> *Declarations_;

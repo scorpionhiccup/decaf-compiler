@@ -61,7 +61,7 @@ void AssignmentStatement::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void Argument::evaluate(Visitor* visitor){
+void Args::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 

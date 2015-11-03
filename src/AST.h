@@ -82,13 +82,13 @@ public:
 	}
 };
 
-class Argument: public ASTnode{
+class Args: public ASTnode{
 	std::string str;
 public:
-	Argument(std::string str): ASTnode(){
+	Args(std::string str): ASTnode(){
 		this->str=str;
 	}
-	Argument(){};
+	Args(){};
 	void evaluate(Visitor* visitor);
 };
 
@@ -102,7 +102,7 @@ public:
 };
 
 
-class ListExpressionRight: public Argument{
+class ListExpressionRight: public Args{
 	list<ExpressionRight *> *expressionRight;
 public:
 	ListExpressionRight(list<ExpressionRight*> *expressionRight1){
@@ -213,37 +213,37 @@ public:
 };
 
 /*
-	Callout_Args: Arguments | Arguments TCOMMA Callout_Args 
+	Callout_Argss: Argss | Argss TCOMMA Callout_Argss 
 */
-class CalloutArg: public ASTnode{
-	Argument* argument;
+class CalloutArgs: public ASTnode{
+	Args* args;
 public:
-	CalloutArg(Argument* argument1){
-		this->argument=argument1;
+	CalloutArgs(Args* Args1){
+		this->args=Args1;
 	}
 };
 
 
 /*
-	Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Arg TRROUND
+	Statement: CALLOUT TLROUND STRING_LITERAL TCOMMA Callout_Args TRROUND
 */
 class CalloutStatement: public ASTStatement{
 public:
 	string name;
-	list<Argument *> *args;
-	CalloutStatement(string name, list<Argument *>* args){
+	list<Args *> *Argss;
+	CalloutStatement(string name, list<Args *>* Argss){
 		this->name=name;
-		this->args=args;
+		this->Argss=Argss;
 	}
 	void evaluate(Visitor* visitor);
 };
 
 
 //CharLiteral is taken as a string
-class CharLiteral: public Argument {
+class CharLiteral: public Args {
 	string charLiteral;
 public:
-	CharLiteral(string charLiteral1): Argument(charLiteral1) {
+	CharLiteral(string charLiteral1): Args(charLiteral1) {
 		this->charLiteral=charLiteral1;
 	}
 	void evaluate(Visitor* visitor);
@@ -253,10 +253,10 @@ public:
 };
 
 
-class StringLiteral: public Argument{
+class StringLiteral: public Args{
 	string stringLiteral;
 public:
-	StringLiteral(string stringLiteral1): Argument(stringLiteral1) {
+	StringLiteral(string stringLiteral1): Args(stringLiteral1) {
 		this->stringLiteral=stringLiteral1;
 	}
 	void evaluate(Visitor* visitor);
