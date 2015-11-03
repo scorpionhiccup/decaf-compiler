@@ -28,6 +28,7 @@ int unary=0;
 	BaseDeclaration * _BaseDeclaration;
 	ASTStatement *_aSTStatement;
 	ASTIdentifier *identifier;
+	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
 	CalloutArg * _Callout_Arg;
 	Argument* _Arguments;
@@ -140,9 +141,9 @@ Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 
 Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
-		//$$=new ASTArrayIdentifier($1, $3);
+		$$=new ASTArrayIdentifier(new ASTIdentifier($1), $3);
 		//TEMPORARY:
-		$$=new ASTIdentifier($1);
+		//$$=new ASTIdentifier($1);
 	} | IDENTIFIER {
 		$$=new ASTIdentifier($1);
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
@@ -183,6 +184,7 @@ BinaryExpr:
 
 Expression:
 	BinaryExpr {
+		$$=new list<Expression *>();
 		$$->push_back($1);
 	} |
 	Def {
@@ -227,9 +229,11 @@ RBinaryExpr:
 
 Expression_Right:
 	RUnary_Expr {
+		$$=new list<ExpressionRight *>();
 		$$->push_back($1);
 	}
 	|   RBinaryExpr {
+		$$=new list<ExpressionRight *>();
 		$$->push_back($1);
 	}
 	|   Location {

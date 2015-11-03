@@ -129,7 +129,7 @@ public:
 /*
 	Location
 */
-class ASTLocation: public ExpressionRight{
+class ASTLocation: public ExpressionRight, public ASTStatement{
 public:
 	ASTLocation(){
 
@@ -166,11 +166,11 @@ public:
 */
 class ASTArrayIdentifier: public ASTLocation{
 	ASTIdentifier* aSTIdentifier;
-	ASTExpression* aSTExpression;
+	std::list<Expression*>* expression;
 public:
-	ASTArrayIdentifier(ASTIdentifier* aSTIdentifier, ASTExpression* aSTExpression){
+	ASTArrayIdentifier(ASTIdentifier* aSTIdentifier, std::list<Expression*>* expression){
 		this->aSTIdentifier=aSTIdentifier;
-		this->aSTExpression=aSTExpression;
+		this->expression=expression;
 	}
 	
 	void evaluate(Visitor* visitor);
@@ -179,8 +179,8 @@ public:
 		return this->aSTIdentifier->getId();
 	};
 
-	ASTExpression* getExpression(){
-		return this->aSTExpression;
+	std::list<Expression*>* getExpression(){
+		return this->expression;
 	};
 };
 

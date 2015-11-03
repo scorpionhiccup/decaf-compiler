@@ -1,15 +1,4 @@
 class Program
 {
-	int A;
-	int B[10];
-	boolean C;
-	boolean D[10];
-	int E;
-	int F;
-	int G;
-
-	E = 5;
-	F = 6;
-	G = true;
-	callout("gdgsd","sharvil",'v');	
+	B[2+3]=2+3*4;
 }
