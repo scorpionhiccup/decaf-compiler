@@ -20,7 +20,4 @@ ID: E
 INT: 5
 INT: 1
 INT: 3
-ID: F
-INT: 6
-ID: G
-BOOLEAN: true
+ID: E
