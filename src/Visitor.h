@@ -7,9 +7,9 @@ class Visitor{
 public:
 	virtual ~Visitor();
 
+	void visit(Argument* argument);
 	void visit(ASTProgram* aSTProgram);
 	void visit(ASTLocation* aSTLocation);
-	void visit(BaseDeclaration* baseDeclaration);
 	void visit(ASTIdentifier* aSTIdentifier);
 	void visit(ASTField_Declaration* aSTField_Declaration);
 	void visit(ASTArrayIdentifier* aSTArrayIdentifier);
@@ -19,7 +19,6 @@ public:
 	void visit(CalloutStatement* calloutStatement);
 	void visit(AssignmentStatement* assignmentStatement);
 	void visit(ASTMain* aSTMain);
-	//void visit(Argument* argument);
 	void visit(RBinaryExpr* rBinaryExpr);
 	void visit(RUnaryExpr* rUnaryExpr);
 	void visit(ExpressionRight* expressionRight);

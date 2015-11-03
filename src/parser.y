@@ -25,7 +25,6 @@ int unary=0;
 	char character;
 	char string[100];
 	ASTMain *ast_main;
-	BaseDeclaration * _BaseDeclaration;
 	ASTStatement *_aSTStatement;
 	ASTIdentifier *identifier;
 	ASTArrayIdentifier *arrayIdentifier;
@@ -101,7 +100,7 @@ int unary=0;
 Program: START PROG_ID LBRACE Main RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($2, $4);
-		ast_prog->evaluate(new Visitor());
+		//ast_prog->evaluate(new Visitor());
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
 
@@ -229,8 +228,8 @@ RBinaryExpr:
 
 Expression_Right:
 	RUnary_Expr {
-		$$=new list<ExpressionRight *>();
-		$$->push_back($1);
+		//$$=new list<ExpressionRight *>();
+		//$$->push_back($1);
 	}
 	|   RBinaryExpr {
 		$$=new list<ExpressionRight *>();
@@ -313,40 +312,39 @@ Type: INT {
 %%
 
 int main(int argc, char* argv[]) {
-	string infile = "stdin";
+	char infile[100] = "stdin";
+	char *outfile = (char *)"flex_output.txt";		
+	char *bison_outfile = (char *)"bison_output.txt";
+	char *xml_outfile = (char *)"XML_visitor.txt";
 
-	string outfile = "flex_output.txt";
-	string bison_outfile = "bison_output.txt";
-	string xml_outfile = "XML_visitor.txt";
-	
 	if (argc>=2){
 		yyin = fopen( argv[1], "r");
-		strcpy(&infile[0u], argv[1]);
+		strcpy(infile, argv[1]);
 	}else{
 		yyin = stdin;
 	}
 
-	yyout = fopen(outfile.c_str(), "w");
-	bison_fp = fopen(bison_outfile.c_str(), "w");
-	XML_fp = fopen(xml_outfile.c_str(), "w");
+	yyout = fopen(outfile, "w");
+	bison_fp = fopen(bison_outfile, "w");	
+	XML_fp = fopen(xml_outfile, "w");
 
 	if(!yyin){
-		printf("Error in opening '%s' for reading!", infile.c_str());
+		printf("Error in opening '%s' for reading!", infile);
 		exit(0);
 	}
 
 	if(!yyout){
-		printf("Error in opening '%s' for writing!", outfile.c_str());
+		printf("Error in opening '%s' for writing!", outfile);
 		exit(0);
 	}
 
 	if(!bison_fp){
-		printf("Error in opening '%s' for writing!", bison_outfile.c_str());
+		printf("Error in opening '%s' for writing!", bison_outfile);
 		exit(0);
 	}	
 
 	if(!XML_fp){
-		printf("Error in opening '%s' for writing!", xml_outfile.c_str());
+		printf("Error in opening '%s' for writing!", xml_outfile);
 		exit(0);
 	}	
 
@@ -364,6 +362,7 @@ int main(int argc, char* argv[]) {
 	
 	fclose(bison_fp);
 	fclose(yyout);
+	
 }
 
 void yyerror( const char *msg) {

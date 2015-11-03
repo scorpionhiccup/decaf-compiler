@@ -91,7 +91,6 @@ union YYSTYPE
 	char character;
 	char string[100];
 	ASTMain *ast_main;
-	BaseDeclaration * _BaseDeclaration;
 	ASTStatement *_aSTStatement;
 	ASTIdentifier *identifier;
 	ASTArrayIdentifier *arrayIdentifier;
@@ -117,7 +116,7 @@ union YYSTYPE
 	Type *type;
 	std::string *_string;
 
-#line 121 "parser.tab.h" /* yacc.c:1909  */
+#line 120 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

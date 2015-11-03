@@ -82,13 +82,6 @@ public:
 	}
 };
 
-class BaseDeclaration: public ASTnode{
-public:
-	BaseDeclaration(){
-		
-	}
-};
-
 class Argument: public ASTnode{
 	std::string str;
 public:
