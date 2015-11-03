@@ -6,7 +6,7 @@
 class Visitor{
 public:
 	virtual ~Visitor();
-
+	
 	void visit(Args* args);
 	void visit(ASTProgram* aSTProgram);
 	void visit(ASTLocation* aSTLocation);
