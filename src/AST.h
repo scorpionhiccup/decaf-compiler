@@ -48,6 +48,9 @@ public:
 	void accept(Visitor* visitor);
 };
 
+/*
+	Field_Declaration: Type Declarations
+*/
 class ASTField_Declaration: public ASTExpression{
 	Type* type;
 public:
@@ -146,7 +149,7 @@ public:
 	ExpressionRight(){
 
 	} 
-	void accept(Visitor* visitor);
+	virtual void accept(Visitor* visitor);
 };
 
 
@@ -164,6 +167,7 @@ public:
 	Expression(){
 
 	} 
+	void accept(Visitor* visitor);	
 };
 
 /*
@@ -174,9 +178,8 @@ public:
 	ASTLocation(){
 
 	}
+	void accept(Visitor* visitor);	
 };
-
-
 
 /*
 	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
@@ -186,13 +189,14 @@ public:
 	Def() {
 		
 	}
+	void accept(Visitor* visitor);
 };
 
 /*
 	Location -> IDENTIFIER
 	Def -> IDENTIFIER
 */
-class ASTIdentifier: public ASTLocation, public BaseDeclaration, public Def{
+class ASTIdentifier: public ASTLocation, public Def{
 	std::string id_;
 public:
 	ASTIdentifier(std::string id);
@@ -204,7 +208,7 @@ public:
 	Location -> IDENTIFIER TLSQUARE Expression TRSQUARE 
 	Def-> IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
-class ASTArrayIdentifier: public ASTLocation, public BaseDeclaration{
+class ASTArrayIdentifier: public ASTLocation{
 	ASTIdentifier* aSTIdentifier;
 	ASTExpression* aSTExpression;
 public:
@@ -225,30 +229,22 @@ public:
 };
 
 /*
-	Field_Declaration: Type Declarations
-*/
-class BaseFieldDeclaration: public ASTnode{
-	Type *type_;
-	BaseDeclaration *FieldDeclaration_;
-public:
-	BaseFieldDeclaration(Type *type_, BaseDeclaration *FieldDeclaration_){
-		this->type_=type_;
-		this->FieldDeclaration_=FieldDeclaration_;
-	}
-
-};
-
-
-/*
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
-class ASTArrayFieldDeclaration: public BaseDeclaration, public Def{
+class ASTArrayFieldDeclaration: public Def{
 	int size_;
-	ASTIdentifier* id_;
+	ASTIdentifier* aSTIdentifier;
 public:
 	ASTArrayFieldDeclaration(std::string id, int size){
-		this->id_=new ASTIdentifier(id);
+		this->aSTIdentifier=new ASTIdentifier(id);
 		this->size_=size;
+	}
+	void accept(Visitor* visitor);
+	string getId(){
+		return this->aSTIdentifier->getId();
+	};
+	int getExpression(){
+		return size_;
 	}
 };
 
@@ -318,6 +314,10 @@ public:
 		this->type=type1;
 		this->expressionRight=expressionRight1;
 	}
+	list<ExpressionRight*> * getExpressions(){
+		return this->expressionRight;
+	}
+	void accept(Visitor* visitor);
 };
 
 class RBinaryExpr: public ExpressionRight{
@@ -332,13 +332,20 @@ public:
 		this->expressionRightL=expressionRightL1;
 		this->expressionRightR=expressionRightR1;
 	}
+	void accept(Visitor* visitor);
 };
 
 class Bool: public ExpressionRight{
 	int value;
+public:
 	Bool(int value1) {
 		this->value=value1;
 	}
+	bool getValue(){
+		if (this->value) return true;
+		return false;
+	}
+	void accept(Visitor* visitor);
 };
 
 class Integer: public ExpressionRight, public Expression{
@@ -347,12 +354,17 @@ public:
 	Integer(int integer1){
 		this->integer=integer1;
 	}
+	int getValue(){
+		return integer;
+	}
+	void accept(Visitor* visitor);
 };
 
 class BinaryExpr: public Expression{
 	char type;
 	std::list<Expression*> *  expressionL, *expressionR;
 public:
+	void accept(Visitor* visitor);
 	BinaryExpr(char type1, 
 		std::list<Expression*> * expressionL1, 
 		std::list<Expression*> * expressionR1) {
@@ -387,11 +399,11 @@ Main: Field_Declarations Statements
 
 class ASTMain: public ASTnode{
 public:
-	std::list<ASTField_Declaration*> *FieldBaseDeclaration_;
+	std::list<ASTField_Declaration*> *FieldDeclarations_;
 	std::list<ASTStatement*> *statements;
 
-	ASTMain(std::list<ASTField_Declaration*> *FieldBaseDeclaration, std::list<ASTStatement*> *statements){
-		this->FieldBaseDeclaration_=FieldBaseDeclaration;
+	ASTMain(std::list<ASTField_Declaration*> *FieldDeclarations_, std::list<ASTStatement*> *statements){
+		this->FieldDeclarations_=FieldDeclarations_;
 		this->statements=statements;
 	}
 

@@ -52,16 +52,15 @@ void Visitor::visit(ASTIdentifier* aSTIdentifier){
 void Visitor::visit(ASTArrayIdentifier* aSTArrayIdentifier){
 	fprintf(XML_fp, "<location id=\"%s\" />\n", aSTArrayIdentifier->getId().c_str());
 	fprintf(XML_fp, "<position>\n");
-	//aSTArrayIdentifier->getExpression()->accept(this);
+	aSTArrayIdentifier->getExpression()->accept(this);
 	fprintf(XML_fp, "</position>\n");
 }
 
-void Visitor::visit(BaseFieldDeclaration* baseFieldDeclaration){
-	fprintf(XML_fp, "<BaseFieldDeclaration>\n");
-}
-
 void Visitor::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
-	fprintf(XML_fp, "<program>\n");
+	fprintf(XML_fp, "<location id=\"%s\" />\n", aSTArrayFieldDeclaration->getId().c_str());
+	fprintf(XML_fp, "<position>\n");
+	fprintf(XML_fp, "<integer value=\"%d\" />\n", aSTArrayFieldDeclaration->getExpression());
+	fprintf(XML_fp, "</position>\n");
 }
 
 void Visitor::visit(Def* def){
@@ -69,8 +68,8 @@ void Visitor::visit(Def* def){
 }
 
 void Visitor::visit(ASTDeclarations* aSTDeclarations){
-	//Def *def=aSTDeclarations->getDef();
-	//def->accept(this);
+	Def *def=aSTDeclarations->getDef();
+	def->accept(this);
 }
 
 void Visitor::visit(CalloutStatement* calloutStatement){
@@ -100,12 +99,11 @@ void Visitor::visit(AssignmentStatement* assignmentStatement){
 
 
 void Visitor::visit(ASTMain* aSTMain){
-	//cout<<"HERE3\n";
 
-	fprintf(XML_fp, "<field_declarations count=\"%lu\">\n", (*aSTMain->FieldBaseDeclaration_).size());
+	fprintf(XML_fp, "<field_declarations count=\"%lu\">\n", (*aSTMain->FieldDeclarations_).size());
 
-	for (list<ASTField_Declaration*>::reverse_iterator it=aSTMain->FieldBaseDeclaration_->rbegin(); 
-		it!=aSTMain->FieldBaseDeclaration_->rend(); ++it){
+	for (list<ASTField_Declaration*>::reverse_iterator it=aSTMain->FieldDeclarations_->rbegin(); 
+		it!=aSTMain->FieldDeclarations_->rend(); ++it){
 		(*it)->accept(this);
 	}
 
@@ -127,7 +125,48 @@ void Visitor::visit(Argument* argument){
 	fprintf(XML_fp, "</argument>\n");		
 }
 
+void Visitor::visit(RUnaryExpr* rUnaryExpr){
+	fprintf(XML_fp, "<unary_expression type=\"x\"\n");
+
+	std::list<ExpressionRight*> * exprs = rUnaryExpr->getExpressions();
+
+	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
+		it!=exprs->rend(); ++it){
+		(*it)->accept(this);
+
+	}
+	fprintf(XML_fp, "<unary_expression>\n");		
+}
+
+void Visitor::visit(RBinaryExpr* rBinaryExpr){
+	fprintf(XML_fp, "<binary_expression type=\"x\"\n");
+
+	fprintf(XML_fp, "<binary_expression>\n");		
+}
+
 void Visitor::visit(ExpressionRight* expressionRight){
 	fprintf(XML_fp, "<expr>\n");
+	//expressionRight->accept(this);
 	fprintf(XML_fp, "</expr>\n");	
 };
+
+void Visitor::visit(Integer* integer){
+	fprintf(XML_fp, "<integer value=\"%d\" />\n", integer->getValue());
+};
+
+void Visitor::visit(Bool* bool_obj){
+	if (bool_obj->getValue())
+		fprintf(XML_fp, "boolean value=\"true\"\n");
+	else
+		fprintf(XML_fp, "boolean value=\"false\"\n");
+}
+
+void Visitor::visit(Expression* expr){
+	fprintf(XML_fp, "<expr2>\n");
+	fprintf(XML_fp, "</expr>\n");
+}
+
+void Visitor::visit(BinaryExpr* expr){
+	fprintf(XML_fp, "<expr2>\n");
+	fprintf(XML_fp, "</expr>\n");	
+}

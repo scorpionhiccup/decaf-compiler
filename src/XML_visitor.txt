@@ -1,21 +1,31 @@
 <program>
 <field_declarations count="7">
+<location id="A" />
+<location id="B" />
+<position>
+<integer value="10" />
+</position>
+<location id="C" />
+<location id="D" />
+<position>
+<integer value="10" />
+</position>
+<location id="E" />
+<location id="F" />
+<location id="G" />
 </field_declarations>
 <statement_declarations count="3">
 <assignment>
 <location id="E" />
-<expr>
-</expr>
+<integer value="5" />
 </assignment>
 <assignment>
 <location id="F" />
-<expr>
-</expr>
+<integer value="6" />
 </assignment>
 <assignment>
 <location id="G" />
-<expr>
-</expr>
+<integer value="1" />
 </assignment>
 </statement_declarations>
 </program>
