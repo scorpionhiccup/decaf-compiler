@@ -21,4 +21,4 @@ INT: 5
 ID: F
 INT: 6
 ID: G
-INT: 7
+BOOLEAN: true

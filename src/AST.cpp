@@ -66,7 +66,7 @@ void Argument::accept(Visitor* visitor){
 };
 
 void ExpressionRight::accept(Visitor* visitor){
-	visitor->visit(this);		
+	visitor->visit(this);	
 };
 
 string ASTIdentifier::getId(){
@@ -76,3 +76,39 @@ string ASTIdentifier::getId(){
 void ASTExpression::accept(Visitor* visitor){
 	visitor->visit(this);		
 };
+
+void RUnaryExpr::accept(Visitor* visitor){
+	visitor->visit(this);
+}
+
+void RBinaryExpr::accept(Visitor* visitor){
+	visitor->visit(this);
+}
+
+void Integer::accept(Visitor* visitor){
+	visitor->visit(this);	
+}
+
+void Bool::accept(Visitor* visitor){
+	visitor->visit(this);	
+}
+
+void Expression::accept(Visitor* visitor){
+	visitor->visit(this);	
+}
+
+void BinaryExpr::accept(Visitor* visitor){
+	visitor->visit(this);	
+}
+
+void Def::accept(Visitor* visitor){
+	visitor->visit(this);	
+}
+
+void ASTLocation::accept(Visitor* visitor){
+	visitor->visit(this);	
+}
+
+void ASTArrayFieldDeclaration::accept(Visitor* visitor){
+	visitor->visit(this);	
+}
