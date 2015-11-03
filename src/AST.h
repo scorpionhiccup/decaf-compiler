@@ -16,13 +16,13 @@ extern FILE* XML_fp;
 
 class ASTnode{
 public:
-	virtual void accept(Visitor* visitor);
+	virtual void evaluate(Visitor* visitor);
 
 };
 
 class ASTStatement: public ASTnode{
 public:	
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 class ASTProgram: public ASTnode{
@@ -33,7 +33,7 @@ public:
 	ASTMain* getMain(){
 		return aSTMain;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 	ASTProgram(std::string id, ASTMain* aSTMain);
 	std::string getId();
 
@@ -45,7 +45,7 @@ public:
 	int getValue(){
 		return value_;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 /*
@@ -59,7 +59,7 @@ public:
 		this->type = type;
 		this->Declarations=declarations;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 
@@ -96,7 +96,7 @@ public:
 		this->str=str;
 	}
 	Argument(){};
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 
@@ -105,7 +105,7 @@ public:
 	ExpressionRight(){
 
 	} 
-	virtual void accept(Visitor* visitor);
+	virtual void evaluate(Visitor* visitor);
 };
 
 
@@ -123,7 +123,7 @@ public:
 	Expression(){
 
 	} 
-	void accept(Visitor* visitor);	
+	void evaluate(Visitor* visitor);	
 };
 
 /*
@@ -134,7 +134,7 @@ public:
 	ASTLocation(){
 
 	}
-	void accept(Visitor* visitor);	
+	void evaluate(Visitor* visitor);	
 };
 
 /*
@@ -145,7 +145,7 @@ public:
 	Def() {
 		
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 /*
@@ -156,7 +156,7 @@ class ASTIdentifier: public ASTLocation, public Def{
 	std::string id_;
 public:
 	ASTIdentifier(std::string id);
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 	string getId();
 };
 
@@ -173,7 +173,7 @@ public:
 		this->aSTExpression=aSTExpression;
 	}
 	
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 	
 	string getId(){
 		return this->aSTIdentifier->getId();
@@ -195,7 +195,7 @@ public:
 		this->aSTIdentifier=new ASTIdentifier(id);
 		this->size_=size;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 	string getId(){
 		return this->aSTIdentifier->getId();
 	};
@@ -213,7 +213,7 @@ public:
 	ASTDeclarations(Def *Def1) {
 		this->Def_=Def1;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 	Def* getDef(){
 		return this->Def_;
 	}; 
@@ -242,7 +242,7 @@ public:
 		this->name=name;
 		this->args=args;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 
@@ -253,7 +253,7 @@ public:
 	CharLiteral(string charLiteral1): Argument(charLiteral1) {
 		this->charLiteral=charLiteral1;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 	string getLiteral(){
 		return this->charLiteral;
 	}
@@ -266,7 +266,7 @@ public:
 	StringLiteral(string stringLiteral1): Argument(stringLiteral1) {
 		this->stringLiteral=stringLiteral1;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 	string getLiteral(){
 		return this->stringLiteral;
 	}
@@ -283,7 +283,7 @@ public:
 	list<ExpressionRight*> * getExpressions(){
 		return this->expressionRight;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 class RBinaryExpr: public ExpressionRight{
@@ -298,7 +298,7 @@ public:
 		this->expressionRightL=expressionRightL1;
 		this->expressionRightR=expressionRightR1;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 class Bool: public ExpressionRight{
@@ -311,7 +311,7 @@ public:
 		if (this->value) return true;
 		return false;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 class Integer: public ExpressionRight, public Expression{
@@ -323,7 +323,7 @@ public:
 	int getValue(){
 		return integer;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 
@@ -331,7 +331,7 @@ class BinaryExpr: public Expression{
 	char type;
 	std::list<Expression*> *  expressionL, *expressionR;
 public:
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 	BinaryExpr(char type1, 
 		std::list<Expression*> * expressionL1, 
 		std::list<Expression*> * expressionR1) {
@@ -352,7 +352,7 @@ public:
 		this->location=aSTLocation;
 		this->expressionRight=expressionRight;
 	}
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 /*
@@ -369,7 +369,7 @@ public:
 		this->statements=statements;
 	}
 
-	void accept(Visitor* visitor);
+	void evaluate(Visitor* visitor);
 };
 
 #endif

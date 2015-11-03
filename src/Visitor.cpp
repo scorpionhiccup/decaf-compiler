@@ -1,8 +1,28 @@
 #include <bits/stdc++.h>
+
+#include "llvm/Analysis/Passes.h"
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+#include "llvm/ExecutionEngine/SectionMemoryManager.h"
+#include "llvm/IR/DataLayout.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+#include "llvm/PassManager.h"
+#include "llvm/Support/TargetSelect.h"
+#include "llvm/Transforms/Scalar.h"
 #include "Visitor.h"
 #include "AST.h"
 
 using namespace std;
+using namespace llvm;
+
+static llvm::Module *TheModule = new llvm::Module("main", 
+	llvm::getGlobalContext());;
+static llvm::LLVMContext &Context = llvm::getGlobalContext();
+static llvm::IRBuilder<> Builder(Context);
+static std::map<std::string, llvm::AllocaInst * > NamedValues;
+static llvm::FunctionPassManager *TheFPM;
 
 Visitor::~Visitor(){
 
@@ -13,7 +33,7 @@ void Visitor::visit(ASTProgram* aSTProgram){
 	
 	ASTMain* aSTMain=aSTProgram->getMain();
 
-	aSTMain->accept(this);
+	aSTMain->evaluate(this);
 
 	fprintf(XML_fp, "</program>\n");
 }
@@ -21,7 +41,7 @@ void Visitor::visit(ASTProgram* aSTProgram){
 void Visitor::visit(ASTnode* aSTnode){
 	fprintf(XML_fp, "<node>\n");
 
-	aSTnode->accept(this);
+	aSTnode->evaluate(this);
 
 	fprintf(XML_fp, "</node>\n");
 }
@@ -29,7 +49,7 @@ void Visitor::visit(ASTnode* aSTnode){
 void Visitor::visit(ASTField_Declaration* aSTField_Declaration){
 	for (list<ASTDeclarations*>::iterator it=aSTField_Declaration->Declarations->begin(); 
 		it!=aSTField_Declaration->Declarations->end(); ++it){
-			(*it)->accept(this);
+			(*it)->evaluate(this);
 	}	
 }
 
@@ -52,7 +72,7 @@ void Visitor::visit(ASTIdentifier* aSTIdentifier){
 void Visitor::visit(ASTArrayIdentifier* aSTArrayIdentifier){
 	fprintf(XML_fp, "<location id=\"%s\" />\n", aSTArrayIdentifier->getId().c_str());
 	fprintf(XML_fp, "<position>\n");
-	aSTArrayIdentifier->getExpression()->accept(this);
+	aSTArrayIdentifier->getExpression()->evaluate(this);
 	fprintf(XML_fp, "</position>\n");
 }
 
@@ -69,17 +89,15 @@ void Visitor::visit(Def* def){
 
 void Visitor::visit(ASTDeclarations* aSTDeclarations){
 	Def *def=aSTDeclarations->getDef();
-	def->accept(this);
+	def->evaluate(this);
 }
 
 void Visitor::visit(CalloutStatement* calloutStatement){
-	fprintf(XML_fp, "<callout function=\"%s\">\n", calloutStatement->name.c_str());
+	fprintf(XML_fp, "<callout function=%s>\n", calloutStatement->name.c_str());
 	
-
-	for (list<Argument *>::iterator it=calloutStatement->args->begin(); 
-		it!=calloutStatement->args->end(); ++it){
-		(*it)->accept(this);
-	}
+	/*for (list<Argument *>::iterator it=calloutStatement->args->begin(); it!=calloutStatement->args->end(); ++it){
+		(*it)->evaluate(this);
+	}*/
 	
 	fprintf(XML_fp, "</callout>\n");
 }
@@ -87,11 +105,11 @@ void Visitor::visit(CalloutStatement* calloutStatement){
 void Visitor::visit(AssignmentStatement* assignmentStatement){
 	fprintf(XML_fp, "<assignment>\n");
 
-	assignmentStatement->location->accept(this);
+	assignmentStatement->location->evaluate(this);
 
 	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
 		it!=assignmentStatement->expressionRight->end(); ++it){
-		(*it)->accept(this);
+		(*it)->evaluate(this);
 	}
 
 	fprintf(XML_fp, "</assignment>\n");	
@@ -104,7 +122,7 @@ void Visitor::visit(ASTMain* aSTMain){
 
 	for (list<ASTField_Declaration*>::reverse_iterator it=aSTMain->FieldDeclarations_->rbegin(); 
 		it!=aSTMain->FieldDeclarations_->rend(); ++it){
-		(*it)->accept(this);
+		(*it)->evaluate(this);
 	}
 
 	fprintf(XML_fp, "</field_declarations>\n");
@@ -113,17 +131,17 @@ void Visitor::visit(ASTMain* aSTMain){
 
 	for (list<ASTStatement*>::reverse_iterator it=aSTMain->statements->rbegin(); 
 		it!=aSTMain->statements->rend(); ++it){
-		(*it)->accept(this);
+		(*it)->evaluate(this);
 	}
 	
 	fprintf(XML_fp, "</statement_declarations>\n");
 }
 
 
-void Visitor::visit(Argument* argument){
+/*void Visitor::visit(Argument* argument){
 	fprintf(XML_fp, "<argument>\n");	
 	fprintf(XML_fp, "</argument>\n");		
-}
+}*/
 
 void Visitor::visit(RUnaryExpr* rUnaryExpr){
 	fprintf(XML_fp, "<unary_expression type=\"x\"\n");
@@ -132,7 +150,7 @@ void Visitor::visit(RUnaryExpr* rUnaryExpr){
 
 	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		(*it)->accept(this);
+		(*it)->evaluate(this);
 
 	}
 	fprintf(XML_fp, "<unary_expression>\n");		
@@ -146,7 +164,7 @@ void Visitor::visit(RBinaryExpr* rBinaryExpr){
 
 void Visitor::visit(ExpressionRight* expressionRight){
 	fprintf(XML_fp, "<expr>\n");
-	//expressionRight->accept(this);
+	//expressionRight->evaluate(this);
 	fprintf(XML_fp, "</expr>\n");	
 };
 

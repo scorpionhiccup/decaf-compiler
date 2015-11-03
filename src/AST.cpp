@@ -5,17 +5,17 @@
 
 using namespace std;
 
-void ASTProgram::accept(Visitor* visitor){
+void ASTProgram::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void ASTnode::accept(Visitor* visitor){
+void ASTnode::evaluate(Visitor* visitor){
 	//std::cout<<"Accepted ASTNode\n";
 	//fflush(stdout);
 	visitor->visit(this);
 }
 
-void ASTStatement::accept(Visitor* visitor){
+void ASTStatement::evaluate(Visitor* visitor){
 	visitor->visit(this);
 	std::cout<<"Accepted ASTStatement\n";
 }
@@ -33,39 +33,39 @@ ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
 	this->aSTMain=aSTMain;		
 }
 
-void ASTMain::accept(Visitor* visitor){
+void ASTMain::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void ASTField_Declaration::accept(Visitor* visitor){
+void ASTField_Declaration::evaluate(Visitor* visitor){
 	visitor->visit(this);
 };
 
-void ASTDeclarations::accept(Visitor* visitor){
+void ASTDeclarations::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void ASTIdentifier::accept(Visitor* visitor){
+void ASTIdentifier::evaluate(Visitor* visitor){
 	visitor->visit(this);
 };
 
-void ASTArrayIdentifier::accept(Visitor* visitor){
+void ASTArrayIdentifier::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void CalloutStatement::accept(Visitor* visitor){
+void CalloutStatement::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void AssignmentStatement::accept(Visitor* visitor){
+void AssignmentStatement::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void Argument::accept(Visitor* visitor){
+void Argument::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void ExpressionRight::accept(Visitor* visitor){
+void ExpressionRight::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
@@ -73,50 +73,50 @@ string ASTIdentifier::getId(){
 	return this->id_;
 };
 
-void ASTExpression::accept(Visitor* visitor){
+void ASTExpression::evaluate(Visitor* visitor){
 	visitor->visit(this);		
 };
 
-void RUnaryExpr::accept(Visitor* visitor){
+void RUnaryExpr::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void RBinaryExpr::accept(Visitor* visitor){
+void RBinaryExpr::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void Integer::accept(Visitor* visitor){
+void Integer::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void Bool::accept(Visitor* visitor){
+void Bool::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void Expression::accept(Visitor* visitor){
+void Expression::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void BinaryExpr::accept(Visitor* visitor){
+void BinaryExpr::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void Def::accept(Visitor* visitor){
+void Def::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void ASTLocation::accept(Visitor* visitor){
+void ASTLocation::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void ASTArrayFieldDeclaration::accept(Visitor* visitor){
+void ASTArrayFieldDeclaration::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void CharLiteral::accept(Visitor* visitor){
+void CharLiteral::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void StringLiteral::accept(Visitor* visitor){
+void StringLiteral::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }

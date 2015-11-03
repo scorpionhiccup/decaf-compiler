@@ -1338,7 +1338,7 @@ yyreduce:
     {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram((yyvsp[-3].string), (yyvsp[-1].ast_main));
-		ast_prog->accept(new Visitor());
+		ast_prog->evaluate(new Visitor());
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
 #line 1345 "parser.tab.c" /* yacc.c:1646  */
@@ -2005,51 +2005,52 @@ yyreturn:
 
 
 int main(int argc, char* argv[]) {
-	char infile[100] = "stdin";
-	char *outfile = (char *)"flex_output.txt";
-	char *bison_outfile = (char *)"bison_output.txt";
-	char *xml_outfile = (char *)"XML_visitor.txt";
+	string infile = "stdin";
+
+	string outfile = "flex_output.txt";
+	string bison_outfile = "bison_output.txt";
+	string xml_outfile = "XML_visitor.txt";
 	
 	if (argc>=2){
 		yyin = fopen( argv[1], "r");
-		strcpy(infile, argv[1]);
+		strcpy(&infile[0u], argv[1]);
 	}else{
 		yyin = stdin;
 	}
 
-	yyout = fopen(outfile, "w");
-	bison_fp = fopen(bison_outfile, "w");
-	XML_fp = fopen(xml_outfile, "w");
+	yyout = fopen(outfile.c_str(), "w");
+	bison_fp = fopen(bison_outfile.c_str(), "w");
+	XML_fp = fopen(xml_outfile.c_str(), "w");
 
 	if(!yyin){
-		printf("Error in opening '%s' for reading!", infile);
+		printf("Error in opening '%s' for reading!", infile.c_str());
 		exit(0);
 	}
 
 	if(!yyout){
-		printf("Error in opening '%s' for writing!", outfile);
+		printf("Error in opening '%s' for writing!", outfile.c_str());
 		exit(0);
 	}
 
 	if(!bison_fp){
-		printf("Error in opening '%s' for writing!", bison_outfile);
+		printf("Error in opening '%s' for writing!", bison_outfile.c_str());
 		exit(0);
 	}	
 
 	if(!XML_fp){
-		printf("Error in opening '%s' for writing!", xml_outfile);
+		printf("Error in opening '%s' for writing!", xml_outfile.c_str());
 		exit(0);
 	}	
 
-	clock_t start, end;
-	start = clock();
+	//clock_t start, end;
+	//start = clock();
 	
 	do { 
 		yyparse();
 	} while(!feof(yyin));
 	
-	end = clock();
-	printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+	//end = clock();
+	//printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
 
 	fprintf(stdout, "Success\n");
 	

@@ -27,7 +27,7 @@
 <location id="G" />
 <integer value="1" />
 </assignment>
-<callout function=""gdgsd"">
+<callout function="gdgsd">
 <string value="sharvil" />
 </callout>
 </statement_declarations>
