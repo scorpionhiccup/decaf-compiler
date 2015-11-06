@@ -1,6 +1,6 @@
 CC=g++
-#CFLAGS=-Wall -g
-CFLAGS= -g -std=c++11
+#CFLAGS=-Wall -g  -std=c++11
+CFLAGS= -g
 
 all: clean syntax_analyser
 
