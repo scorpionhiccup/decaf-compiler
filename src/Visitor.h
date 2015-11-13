@@ -2,7 +2,8 @@
 #define VISITOR_H
 
 #include "AST.h"
-	
+#include "codegen.h"
+
 class Visitor{
 public:
 	virtual ~Visitor();
@@ -30,7 +31,10 @@ public:
 	void visit(CharLiteral* charLiteral);
 	void visit(StringLiteral* stringLiteral);
 
-	/*llvm::Value* CodeGen(Args* args);
+	CodeGenContext * codeGenContext;
+
+	/*
+	llvm::Value* CodeGen(Args* args);
 	llvm::Value* CodeGen(ASTProgram* aSTProgram);
 	llvm::Value* CodeGen(StringLiteral* stringLiteral);
 	llvm::Value* CodeGen(CharLiteral* charLiteral);

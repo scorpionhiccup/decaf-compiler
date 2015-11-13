@@ -193,7 +193,7 @@ union YYSTYPE
 	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
 	ASTLocation* _ASTLocation;
-	Type *type;
+	LangType *type;
 	std::string *_string;
 
 #line 200 "parser.tab.c" /* yacc.c:355  */

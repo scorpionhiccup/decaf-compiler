@@ -50,7 +50,7 @@ int unary=0;
 	//BooleanType *booleanType;	
 	ASTDeclarations * _ASTDeclarations;
 	ASTLocation* _ASTLocation;
-	Type *type;
+	LangType *type;
 	std::string *_string;
 }
 

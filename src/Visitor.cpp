@@ -1,33 +1,10 @@
 #include <bits/stdc++.h>
-#include "llvm/ADT/STLExtras.h"
-#include "llvm/IR/IRBuilder.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/Module.h"
-#include "llvm/Analysis/Passes.h"
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvm/ExecutionEngine/SectionMemoryManager.h"
-#include "llvm/IR/DataLayout.h"
-#include "llvm/IR/DerivedTypes.h"
-#include "llvm/PassManager.h"
-#include "llvm/Support/TargetSelect.h"
-#include "llvm/Transforms/Scalar.h"
-#include "llvm/Analysis/Verifier.h"
+
 #include "Visitor.h"
 #include "AST.h"
-
-#include <map>
-#include <stdlib.h>
+#include "codegen.h"
 
 using namespace std;
-using namespace llvm;
-
-
-/*static llvm::Module *TheModule = new llvm::Module("main", 
-	llvm::getGlobalContext());;
-static llvm::LLVMContext &Context = llvm::getGlobalContext();
-static llvm::IRBuilder<> Builder(Context);
-static std::map<std::string, llvm::AllocaInst * > NamedValues;
-static llvm::FunctionPassManager *TheFPM;*/
 
 Visitor::~Visitor(){
 

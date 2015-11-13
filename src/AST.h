@@ -8,7 +8,7 @@ using namespace std;
 
 class Visitor;
 
-class Type;
+class LangType;
 class ASTDeclarations;
 class ASTMain;
 
@@ -52,10 +52,10 @@ public:
 	Field_Declaration: Type Declarations
 */
 class ASTField_Declaration: public ASTExpression{
-	Type* type;
+	LangType* type;
 public:
 	list<ASTDeclarations*> * Declarations;
-	ASTField_Declaration(Type* type, list<ASTDeclarations*> * declarations){
+	ASTField_Declaration(LangType* type, list<ASTDeclarations*> * declarations){
 		this->type = type;
 		this->Declarations=declarations;
 	}
@@ -63,10 +63,10 @@ public:
 };
 
 
-class Type: public ASTnode{
+class LangType: public ASTnode{
 };
 
-class IntType: public Type{
+class IntType: public LangType{
 	//std::string s;
 public:
 	IntType(){
@@ -74,7 +74,7 @@ public:
 	}
 };
 
-class BooleanType: public Type{
+class BooleanType: public LangType{
 	//std::string s;
 public:
 	BooleanType(){
