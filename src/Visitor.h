@@ -33,29 +33,28 @@ public:
 
 	CodeGenContext * codeGenContext;
 
-	/*
-	llvm::Value* CodeGen(Args* args);
-	llvm::Value* CodeGen(ASTProgram* aSTProgram);
-	llvm::Value* CodeGen(StringLiteral* stringLiteral);
-	llvm::Value* CodeGen(CharLiteral* charLiteral);
-	llvm::Value* CodeGen(BinaryExpr* expr);
-	llvm::Value* CodeGen(Expression* expr);
-	llvm::Value* CodeGen(Bool* bool_obj);
-	llvm::Value* CodeGen(Integer* integer);
-	llvm::Value* CodeGen(ASTnode* aSTnode);
-	llvm::Value* CodeGen(ExpressionRight* expressionRight);
-	llvm::Value* CodeGen(RUnaryExpr* rUnaryExpr);
-	llvm::Value* CodeGen(RBinaryExpr* rBinaryExpr);
-	llvm::Value* CodeGen(ASTMain* aSTMain);
-	llvm::Value* CodeGen(AssignmentStatement* assignmentStatement);
-	llvm::Value* CodeGen(CalloutStatement* calloutStatement);
-	llvm::Value* CodeGen(ASTDeclarations* aSTDeclarations);
-	llvm::Value* CodeGen(Def* def);
-	llvm::Value* CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
-	llvm::Value* CodeGen(ASTLocation* aSTLocation);
-	llvm::Value* CodeGen(ASTIdentifier* aSTIdentifier);
-	llvm::Value* CodeGen(ASTField_Declaration* aSTField_Declaration);
-	llvm::Value* CodeGen(ASTArrayIdentifier* aSTArrayIdentifier);*/
+	void CodeGen(Args* args);
+	void CodeGen(ASTProgram* aSTProgram);
+	void CodeGen(StringLiteral* stringLiteral);
+	void CodeGen(CharLiteral* charLiteral);
+	void CodeGen(BinaryExpr* expr);
+	void CodeGen(Expression* expr);
+	void CodeGen(Bool* bool_obj);
+	void CodeGen(Integer* integer);
+	void CodeGen(ASTnode* aSTnode);
+	void CodeGen(ExpressionRight* expressionRight);
+	void CodeGen(RUnaryExpr* rUnaryExpr);
+	void CodeGen(RBinaryExpr* rBinaryExpr);
+	void CodeGen(ASTMain* aSTMain);
+	void CodeGen(AssignmentStatement* assignmentStatement);
+	void CodeGen(CalloutStatement* calloutStatement);
+	void CodeGen(ASTDeclarations* aSTDeclarations);
+	void CodeGen(Def* def);
+	void CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
+	void CodeGen(ASTLocation* aSTLocation);
+	void CodeGen(ASTIdentifier* aSTIdentifier);
+	void CodeGen(ASTField_Declaration* aSTField_Declaration);
+	void CodeGen(ASTArrayIdentifier* aSTArrayIdentifier);
 	
 };
 
