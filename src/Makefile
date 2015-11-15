@@ -5,7 +5,7 @@ CFLAGS= -g
 all: clean syntax_analyser
 
 parser.tab.c parser.tab.h:	parser.y
-	bison -d -Wother -Wconflicts-sr -Wconflicts-rr --verbose parser.y
+	bison -d -v -Wother -Wconflicts-sr -Wconflicts-rr --verbose parser.y
 
 lex.yy.c: lexical_analyser.l parser.tab.h
 	flex -d lexical_analyser.l

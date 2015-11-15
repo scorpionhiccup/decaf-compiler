@@ -61,7 +61,7 @@ int unary=0;
 
 %token<string> CALLOUT 
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
-%token T_NEWLINE T_QUIT START LE GE AND EQ OR 
+%token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
 %token FALSE TRUE  
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
@@ -90,12 +90,12 @@ int unary=0;
 
 //%type<_string> STRING_LITERAL
 
-%left TEQUAL
-%left TGREAT TLESS
+%left AND OR
+%left TEQUAL NOT_EQUAL TEQ
+%left TLE GE TGREAT TLESS
 %left TPLUS TMINUS  
 %left TMUL TDIV MOD
-//%left NOT
-%nonassoc NOT
+%left NOT
 %left TLROUND TRROUND
 
 %start Program 
@@ -179,13 +179,13 @@ InExpression:
 	} 
 
 BinaryExpr:
-	Expression LE Expression{
+	Expression TLE Expression{
 		$$=new BinaryExpr("<=", $1, $3);	
 	} |
 	Expression GE Expression{
 		$$=new BinaryExpr("<=", $1, $3);	
 	} |
-	Expression EQ Expression{
+	Expression TEQ Expression{
 		$$=new BinaryExpr("==", $1, $3);	
 	} |
 	Expression AND Expression{
@@ -248,11 +248,11 @@ RUnary_Expr:
 	}	
 
 RBinaryExpr:
-	Expression_Right LE Expression_Right{
+	Expression_Right TLE Expression_Right{
 		$$=new RBinaryExpr("<=", $1, $3);	
 	} | Expression_Right GE Expression_Right{
 		$$=new RBinaryExpr(">=", $1, $3);	
-	} | Expression_Right EQ Expression_Right{
+	} | Expression_Right TEQ Expression_Right{
 		$$=new RBinaryExpr("==", $1, $3);	
 	} | Expression_Right AND Expression_Right{
 		$$=new RBinaryExpr("&&", $1, $3);	

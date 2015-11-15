@@ -1102,7 +1102,7 @@ YY_RULE_SETUP
 case 17:
 YY_RULE_SETUP
 #line 40 "lexical_analyser.l"
-{return LE;}
+{return TLE;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
@@ -1112,7 +1112,7 @@ YY_RULE_SETUP
 case 19:
 YY_RULE_SETUP
 #line 42 "lexical_analyser.l"
-{return EQ;}
+{return TEQ;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
