@@ -3,6 +3,7 @@
 #include "Visitor.h"
 #include "AST.h"
 #include "Visitor.h"
+#include "codegen.h"
 
 using namespace std;
 
@@ -30,7 +31,7 @@ void Visitor::visit(ASTProgram* aSTProgram){
 
 
 void Visitor::CodeGen(ASTProgram* aSTProgram){
-	//llvm::Value *V = llvm::ConstantInt::get(getGlobalContext(), llvm::APInt(32,0));
+	//llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
 	ASTMain* aSTMain=aSTProgram->getMain();
 	aSTMain->GenCode(this);
 	//return V;

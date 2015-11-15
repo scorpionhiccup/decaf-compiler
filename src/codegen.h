@@ -1,9 +1,7 @@
 #ifndef CODEGEN_H
 #define CODEGEN_H
 
-#include <llvm/ADT/STLExtras.h>
-#include <llvm/IR/IRBuilder.h>
-#include <llvm/IR/LLVMContext.h>
+#include <stack>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/Function.h>
 #include <llvm/IR/Type.h>
@@ -16,18 +14,11 @@
 #include <llvm/Analysis/Verifier.h>
 #include <llvm/Assembly/PrintModulePass.h>
 #include <llvm/IR/IRBuilder.h>
+//#include <llvm/ModuleProvider.h>
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/Support/raw_ostream.h>
-#include <llvm/Analysis/Passes.h>
-#include <llvm/ExecutionEngine/ExecutionEngine.h>
-#include <llvm/ExecutionEngine/SectionMemoryManager.h>
-#include <llvm/IR/DataLayout.h>
-#include <llvm/IR/DerivedTypes.h>
-#include <llvm/PassManager.h>
-#include <llvm/Support/TargetSelect.h>
-#include <llvm/Transforms/Scalar.h>
-#include <llvm/Analysis/Verifier.h>
+#include <llvm/IR/LLVMContext.h>
 
 using namespace llvm;
 
