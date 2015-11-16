@@ -2,8 +2,10 @@
 
 #include "AST.h"
 #include "Visitor.h"
+#include <llvm/ExecutionEngine/GenericValue.h>
 
 using namespace std;
+using namespace llvm;
 
 void ASTProgram::evaluate(Visitor* visitor){
 	visitor->visit(this);
@@ -64,24 +66,24 @@ void ASTDeclarations::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void ASTDeclarations::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+void ASTDeclarations::GenCode(Visitor* visitor, Type * type){
+	visitor->CodeGen(this, type);	
 };
 
 void ASTIdentifier::evaluate(Visitor* visitor){
 	visitor->visit(this);
 };
 
-void ASTIdentifier::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);
+Value* ASTIdentifier::GenCode(Visitor* visitor, Type *type){
+	return visitor->CodeGen(this, type);
 };
 
 void ASTArrayIdentifier::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void ASTArrayIdentifier::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value* ASTArrayIdentifier::GenCode(Visitor* visitor, Type *type){
+	visitor->CodeGen(this, type);	
 };
 
 void CalloutStatement::evaluate(Visitor* visitor){
@@ -164,24 +166,24 @@ void Expression::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void Expression::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value * Expression::GenCode(Visitor* visitor, Type * type){
+	visitor->CodeGen(this, type);	
 }
 
 void BinaryExpr::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void BinaryExpr::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value * BinaryExpr::GenCode(Visitor* visitor, Type * type){
+	visitor->CodeGen(this, type);	
 }
 
 void Def::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void Def::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+void Def::GenCode(Visitor* visitor, Type * type){
+	visitor->CodeGen(this, type);	
 }
 
 void ASTLocation::evaluate(Visitor* visitor){
@@ -214,4 +216,16 @@ void StringLiteral::evaluate(Visitor* visitor){
 
 void StringLiteral::GenCode(Visitor* visitor){
 	visitor->CodeGen(this);	
+}
+
+Type * IntType::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
+}
+
+Type * BooleanType::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
+}
+
+Type * LangType::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
 }

@@ -1,9 +1,24 @@
-#include <bits/stdc++.h>
-
 #ifndef AST_H
 #define AST_H
 
+#include <bits/stdc++.h>
+#include <llvm/IR/Type.h>
+#include <llvm/IR/DerivedTypes.h>
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/PassManager.h>
+#include <llvm/IR/Instructions.h>
+#include <llvm/IR/CallingConv.h>
+#include <llvm/Bitcode/ReaderWriter.h>
+#include <llvm/Analysis/Verifier.h>
+#include <llvm/Assembly/PrintModulePass.h>
+#include <llvm/IR/IRBuilder.h>
+//#include <llvm/ModuleProvider.h>
+#include <llvm/Support/TargetSelect.h>
+#include <llvm/ExecutionEngine/GenericValue.h>
+#include <llvm/Support/raw_ostream.h>
+
 using namespace std;
+using namespace llvm;
 
 class Visitor;
 
@@ -55,8 +70,8 @@ public:
 	Field_Declaration: Type Declarations
 */
 class ASTField_Declaration: public ASTExpression{
-	LangType* type;
 public:
+	LangType* type;
 	list<ASTDeclarations*> * Declarations;
 	ASTField_Declaration(LangType* type, list<ASTDeclarations*> * declarations){
 		this->type = type;
@@ -68,6 +83,8 @@ public:
 
 
 class LangType: public ASTnode{
+public:
+	Type* GenCode(Visitor* visitor);	
 };
 
 class IntType: public LangType{
@@ -76,6 +93,7 @@ public:
 	IntType(){
 		//this->s=s;
 	}
+	Type* GenCode(Visitor* visitor);
 };
 
 class BooleanType: public LangType{
@@ -84,6 +102,7 @@ public:
 	BooleanType(){
 		//this->s=s;
 	}
+	Type* GenCode(Visitor* visitor);
 };
 
 class Args: public ASTnode{
@@ -123,7 +142,7 @@ public:
 
 	} 
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);	
+	Value* GenCode(Visitor* visitor, Type * type);	
 };
 
 /*
@@ -147,7 +166,7 @@ public:
 		
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	void GenCode(Visitor* visitor, Type * type);
 };
 
 /*
@@ -155,11 +174,11 @@ public:
 	Def -> IDENTIFIER
 */
 class ASTIdentifier: public ASTLocation, public Def{
-	std::string id_;
 public:
+	std::string id_;
 	ASTIdentifier(std::string id);
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value* GenCode(Visitor* visitor, Type * type);
 	string getId();
 };
 
@@ -177,7 +196,7 @@ public:
 	}
 	
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value* GenCode(Visitor* visitor, Type * type);
 	
 	string getId(){
 		return this->aSTIdentifier->getId();
@@ -219,7 +238,7 @@ public:
 		this->Def_=Def1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	void GenCode(Visitor* visitor, Type * type);
 	Def* getDef(){
 		return this->Def_;
 	}; 
@@ -357,7 +376,7 @@ class BinaryExpr: public Expression{
 	std::list<Expression*> *  expressionL, *expressionR;
 public:
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value* GenCode(Visitor* visitor, Type* type);
 	BinaryExpr(string type1, 
 		std::list<Expression*> * expressionL1, 
 		std::list<Expression*> * expressionR1) {

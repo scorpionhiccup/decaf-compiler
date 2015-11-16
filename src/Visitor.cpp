@@ -23,17 +23,18 @@ void Visitor::visit(ASTProgram* aSTProgram){
 	fprintf(XML_fp, "<program>\n");
 	
 	ASTMain* aSTMain=aSTProgram->getMain();
-
 	aSTMain->evaluate(this);
 
 	fprintf(XML_fp, "</program>\n");
 }
 
 
-Value *Visitor::CodeGen(ASTProgram* aSTProgram){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ASTProgram* aSTProgram){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	
 	ASTMain* aSTMain=aSTProgram->getMain();
 	aSTMain->GenCode(this);
+	
 	return V;
 }
 
@@ -58,8 +59,8 @@ void Visitor::visit(ASTMain* aSTMain){
 	fprintf(XML_fp, "</statement_declarations>\n");
 }
 
-Value *Visitor::CodeGen(ASTMain* aSTMain){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ASTMain* aSTMain){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	for(list<ASTField_Declaration*>::reverse_iterator it=aSTMain->FieldDeclarations_->rbegin(); 
 		it!=aSTMain->FieldDeclarations_->rend(); ++it){
@@ -78,15 +79,18 @@ void Visitor::visit(ASTField_Declaration* aSTField_Declaration){
 	for (list<ASTDeclarations*>::iterator it=aSTField_Declaration->Declarations->begin(); 
 		it!=aSTField_Declaration->Declarations->end(); ++it){
 			(*it)->evaluate(this);
-	}	
+	}
 }
 
-Value *Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
+	LangType langType=(*aSTField_Declaration->type);
+	Type * type = langType.GenCode(this);
+	
 	for (list<ASTDeclarations*>::iterator it=aSTField_Declaration->Declarations->begin(); 
 		it!=aSTField_Declaration->Declarations->end(); ++it){
-			(*it)->GenCode(this);
+			(*it)->GenCode(this, type);
 	}
 	return V;
 }
@@ -97,10 +101,10 @@ void Visitor::visit(ASTDeclarations* aSTDeclarations){
 	def->evaluate(this);
 }
 
-Value *Visitor::CodeGen(ASTDeclarations* aSTDeclarations){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ASTDeclarations* aSTDeclarations, Type * type){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	Def *def=aSTDeclarations->getDef();
-	def->GenCode(this);
+	def->GenCode(this, type);
 	return V;
 }
 
@@ -108,7 +112,7 @@ void Visitor::visit(Def* def){
 	fprintf(XML_fp, "<def>\n");
 }
 
-Value *Visitor::CodeGen(Def* def){
+Value * Visitor::CodeGen(Def* def, Type * type){
 	return ConstantInt::get(getGlobalContext(), APInt(32,0));
 }
 
@@ -121,8 +125,8 @@ void Visitor::visit(ASTnode* aSTnode){
 }
 
 
-Value *Visitor::CodeGen(ASTnode* aSTnode){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ASTnode* aSTnode){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	aSTnode->GenCode(this);
 	return V;
 }
@@ -133,7 +137,7 @@ void Visitor::visit(ASTLocation* aSTLocation){
 	fprintf(XML_fp, "</location>\n");
 }
 
-Value *Visitor::CodeGen(ASTLocation* aSTLocation){
+Value * Visitor::CodeGen(ASTLocation* aSTLocation){
 	//TODO
 }
 
@@ -141,15 +145,19 @@ void Visitor::visit(ASTIdentifier* aSTIdentifier){
 	fprintf(XML_fp, "<location id=\"%s\" />\n", aSTIdentifier->getId().c_str());
 }
 
-Value *Visitor::CodeGen(ASTIdentifier* aSTIdentifier){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ASTIdentifier* aSTIdentifier, Type * type){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	
+	AllocaInst *alloc = new AllocaInst(type, aSTIdentifier->getId(), this->currentBlock());
+	V=this->locals()[aSTIdentifier->id_]=alloc;
+	
 	return V ? V : GenerateError::ErrorMsg("Unknown variable name");
 }
 
 void Visitor::visit(ASTArrayIdentifier* aSTArrayIdentifier){
 	fprintf(XML_fp, "<location id=\"%s\" />\n", aSTArrayIdentifier->getId().c_str());
 	fprintf(XML_fp, "<position>\n");
-	
+
 	std::list<Expression*>* exprs = aSTArrayIdentifier->getExpression();
 
 	for (list<Expression*>::reverse_iterator it=exprs->rbegin();
@@ -160,13 +168,16 @@ void Visitor::visit(ASTArrayIdentifier* aSTArrayIdentifier){
 	fprintf(XML_fp, "</position>\n");
 }
 
-Value *Visitor::CodeGen(ASTArrayIdentifier* aSTArrayIdentifier){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ASTArrayIdentifier* aSTArrayIdentifier, Type* type){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	std::list<Expression*>* exprs = aSTArrayIdentifier->getExpression();
 
+	AllocaInst *alloc = new AllocaInst(type, aSTArrayIdentifier->getId(), this->currentBlock());
+	V=this->locals()[aSTArrayIdentifier->getId()]=alloc;
+	
 	for (list<Expression*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		(*it)->GenCode(this);
+		V=(*it)->GenCode(this, type);
 	}
 
 	return V ? V : GenerateError::ErrorMsg("Unknown variable name");
@@ -179,8 +190,8 @@ void Visitor::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
 	fprintf(XML_fp, "</position>\n");
 }
 
-Value *Visitor::CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	return V ? V : GenerateError::ErrorMsg("Unknown variable name");
 }
 
@@ -194,8 +205,8 @@ void Visitor::visit(CalloutStatement* calloutStatement){
 	fprintf(XML_fp, "</callout>\n");
 }
 
-Value *Visitor::CodeGen(CalloutStatement* calloutStatement){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(CalloutStatement* calloutStatement){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	for (list<Args *>::iterator it=calloutStatement->Argss->begin(); it!=calloutStatement->Argss->end(); ++it){
 		(*it)->GenCode(this);
@@ -217,8 +228,8 @@ void Visitor::visit(AssignmentStatement* assignmentStatement){
 	fprintf(XML_fp, "</assignment>\n");
 }
 
-Value *Visitor::CodeGen(AssignmentStatement* assignmentStatement){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(AssignmentStatement* assignmentStatement){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	assignmentStatement->location->GenCode(this);
 
 	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
@@ -233,8 +244,8 @@ void Visitor::visit(Args* Args){
 	fprintf(XML_fp, "</Args>\n");
 }
 
-Value *Visitor::CodeGen(Args* args){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(Args* args){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	return V;
 }
 
@@ -256,8 +267,8 @@ void Visitor::visit(RUnaryExpr* rUnaryExpr){
 }
 
 
-Value *Visitor::CodeGen(RUnaryExpr* rUnaryExpr){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(RUnaryExpr* rUnaryExpr){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	std::list<ExpressionRight*> * exprs = rUnaryExpr->getExpressions();
 
@@ -291,8 +302,8 @@ void Visitor::visit(RBinaryExpr* rBinaryExpr){
 	fprintf(XML_fp, "</binary_expression>\n");
 }
 
-Value *Visitor::CodeGen(RBinaryExpr* rBinaryExpr){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(RBinaryExpr* rBinaryExpr){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	std::list<ExpressionRight*>* exprs=rBinaryExpr->getLeftExprs();
 
@@ -318,8 +329,8 @@ void Visitor::visit(ExpressionRight* expressionRight){
 	fprintf(XML_fp, "</expr>\n");
 };
 
-Value *Visitor::CodeGen(ExpressionRight* expressionRight){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ExpressionRight* expressionRight){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	return V;
 }
@@ -328,8 +339,8 @@ void Visitor::visit(Integer* integer){
 	fprintf(XML_fp, "<integer value=\"%d\" />\n", integer->getValue());
 };
 
-Value *Visitor::CodeGen(Integer* integer){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(Integer* integer){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	return V;
 }
@@ -341,8 +352,8 @@ void Visitor::visit(Bool* bool_obj){
 		fprintf(XML_fp, "boolean value=\"false\"\n");
 }
 
-Value *Visitor::CodeGen(Bool* bool_obj){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(Bool* bool_obj){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	return V;
 }
@@ -352,8 +363,8 @@ void Visitor::visit(CharLiteral* charLiteral){
 	fprintf(XML_fp, "<character value=\'%s\'' />\n", charLiteral->getLiteral().c_str());
 };
 
-Value *Visitor::CodeGen(CharLiteral* charLiteral){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(CharLiteral* charLiteral){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	return V;
 }
@@ -363,8 +374,8 @@ void Visitor::visit(StringLiteral* stringLiteral){
 	fprintf(XML_fp, "<string value=%s />\n", stringLiteral->getLiteral().c_str());
 };
 
-Value *Visitor::CodeGen(StringLiteral* stringLiteral){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(StringLiteral* stringLiteral){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	return V;
 }
@@ -374,8 +385,8 @@ void Visitor::visit(Expression* expr){
 	fprintf(XML_fp, "</expr>\n");
 }
 
-Value *Visitor::CodeGen(Expression* expr){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(Expression* expr, Type * type){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	return V;
 }
@@ -401,21 +412,21 @@ void Visitor::visit(BinaryExpr* expr){
 	fprintf(XML_fp, "</binary_expression>\n");
 }
 
-Value *Visitor::CodeGen(BinaryExpr* expr){
-	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(BinaryExpr* expr, Type * type){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	std::list<Expression*>* exprs=expr->getLeftExprs();
 
 	for (list<Expression*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		(*it)->GenCode(this);
+		(*it)->GenCode(this, type);
 	}
 
 	exprs=expr->getRightExprs();
 
 	for (list<Expression*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		(*it)->GenCode(this);
+		(*it)->GenCode(this, type);
 
 	}
 	

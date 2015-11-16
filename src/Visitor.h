@@ -20,7 +20,6 @@
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/Support/raw_ostream.h>
-#include <llvm/IR/LLVMContext.h>
 
 using namespace llvm; 
 
@@ -64,29 +63,41 @@ public:
 		module = new Module("main", getGlobalContext()); 
 	}
 
-	llvm::Value * CodeGen(Args* args);
-	llvm::Value * CodeGen(ASTProgram* aSTProgram);
-	llvm::Value * CodeGen(StringLiteral* stringLiteral);
-	llvm::Value * CodeGen(CharLiteral* charLiteral);
-	llvm::Value * CodeGen(BinaryExpr* expr);
-	llvm::Value * CodeGen(Expression* expr);
-	llvm::Value * CodeGen(Bool* bool_obj);
-	llvm::Value * CodeGen(Integer* integer);
-	llvm::Value * CodeGen(ASTnode* aSTnode);
-	llvm::Value * CodeGen(ExpressionRight* expressionRight);
-	llvm::Value * CodeGen(RUnaryExpr* rUnaryExpr);
-	llvm::Value * CodeGen(RBinaryExpr* rBinaryExpr);
-	llvm::Value * CodeGen(ASTMain* aSTMain);
-	llvm::Value * CodeGen(AssignmentStatement* assignmentStatement);
-	llvm::Value * CodeGen(CalloutStatement* calloutStatement);
-	llvm::Value * CodeGen(ASTDeclarations* aSTDeclarations);
-	llvm::Value * CodeGen(Def* def);
-	llvm::Value * CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
-	llvm::Value * CodeGen(ASTLocation* aSTLocation);
-	llvm::Value * CodeGen(ASTIdentifier* aSTIdentifier);
-	llvm::Value * CodeGen(ASTField_Declaration* aSTField_Declaration);
-	llvm::Value * CodeGen(ASTArrayIdentifier* aSTArrayIdentifier);
+	Value * CodeGen(Args* args);
+	Value * CodeGen(ASTProgram* aSTProgram);
+	Value * CodeGen(StringLiteral* stringLiteral);
+	Value * CodeGen(CharLiteral* charLiteral);
+	Value * CodeGen(BinaryExpr* expr, Type * type);
+	Value * CodeGen(Expression* expr, Type * type);
+	Value * CodeGen(Bool* bool_obj);
+	Value * CodeGen(Integer* integer);
+	Value * CodeGen(ASTnode* aSTnode);
+	Value * CodeGen(ExpressionRight* expressionRight);
+	Value * CodeGen(RUnaryExpr* rUnaryExpr);
+	Value * CodeGen(RBinaryExpr* rBinaryExpr);
+	Value * CodeGen(ASTMain* aSTMain);
+	Value * CodeGen(AssignmentStatement* assignmentStatement);
+	Value * CodeGen(CalloutStatement* calloutStatement);
+	Value * CodeGen(ASTDeclarations* aSTDeclarations, Type* type);
+	Value * CodeGen(Def* def, Type *type);
+	Value * CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
+	Value * CodeGen(ASTLocation* aSTLocation);
+	Value * CodeGen(ASTIdentifier* aSTIdentifier, Type * type);
+	Value * CodeGen(ASTField_Declaration* aSTField_Declaration);
+	Value * CodeGen(ASTArrayIdentifier* aSTArrayIdentifier, Type * type);
 	
+	static Type * CodeGen(IntType* intType){
+		return Type::getInt64Ty(getGlobalContext());
+	};
+	
+	static Type * CodeGen(BooleanType* booleanType){
+		return Type::getInt1Ty(getGlobalContext());
+	};
+
+	static Type * CodeGen(LangType* langType){
+		return Type::getVoidTy(getGlobalContext());
+	};
+
 	std::map<std::string, Value*>& locals();
 	
 	BasicBlock *currentBlock();
