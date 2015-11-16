@@ -26,13 +26,13 @@ using namespace llvm;
 
 class CodeGenBlock {
 public:
-    BasicBlock *block;
-    std::map<std::string, Value*> locals;
+	BasicBlock *block;
+	std::map<std::string, Value*> locals;
 };
 
 class Visitor{
-    std::stack<CodeGenBlock *> blocks;
-    Function *mainFunction;
+	std::stack<CodeGenBlock *> blocks;
+	Function *mainFunction;
 public:
 	virtual ~Visitor();
 
@@ -60,9 +60,9 @@ public:
 	void visit(StringLiteral* stringLiteral);
 
 	Module *module;
-    Visitor() { 
-        module = new Module("main", getGlobalContext()); 
-    }
+	Visitor() { 
+		module = new Module("main", getGlobalContext()); 
+	}
 
 	llvm::Value * CodeGen(Args* args);
 	llvm::Value * CodeGen(ASTProgram* aSTProgram);
@@ -87,12 +87,15 @@ public:
 	llvm::Value * CodeGen(ASTField_Declaration* aSTField_Declaration);
 	llvm::Value * CodeGen(ASTArrayIdentifier* aSTArrayIdentifier);
 	
-    std::map<std::string, Value*>& locals() { return blocks.top()->locals; }
-    BasicBlock *currentBlock() { return blocks.top()->block; }
-    void pushBlock(BasicBlock *block) { blocks.push(new CodeGenBlock()); blocks.top()->block = block; }
-    void popBlock() { CodeGenBlock *top = blocks.top(); blocks.pop(); delete top; }
+	std::map<std::string, Value*>& locals();
+	
+	BasicBlock *currentBlock();
+	
+	void pushBlock(BasicBlock *block);
 
-	//void 
+	void popBlock();
+
+	void generateCode(ASTProgram *aSTProgram);
 
 };
 

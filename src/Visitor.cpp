@@ -421,3 +421,34 @@ Value *Visitor::CodeGen(BinaryExpr* expr){
 	
 	return V;
 }
+
+std::map<std::string, Value*>& Visitor::locals() { 
+	return blocks.top()->locals;
+}
+
+BasicBlock * Visitor::currentBlock() { 
+	return blocks.top()->block; 
+}
+
+void Visitor::pushBlock(BasicBlock *block) { 
+	blocks.push(new CodeGenBlock()); blocks.top()->block = block;
+}
+
+void Visitor::popBlock() { 
+	CodeGenBlock *top = blocks.top(); blocks.pop(); delete top; 
+}
+
+void Visitor::generateCode(ASTProgram *aSTProgram){
+	vector<Type*> argTypes;
+	FunctionType *ftype = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
+	mainFunction = Function::Create(ftype, GlobalValue::InternalLinkage, "Class Program", this->module);
+	BasicBlock *bblock = BasicBlock::Create(getGlobalContext(), "entry", mainFunction, 0);
+
+	pushBlock(bblock);
+	aSTProgram->GenCode(this);
+	popBlock();
+
+	PassManager pm;
+	pm.add(createPrintModulePass(&outs()));
+	pm.run(*module);
+}
