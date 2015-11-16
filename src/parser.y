@@ -18,6 +18,9 @@ string type;
 void yyerror(const char* s);
 void operatorOutput(string op);
 
+enum VERSION{DEBUG, RELEASE};
+VERSION version=DEBUG;
+
 int unary=0;
 %}
 
@@ -399,15 +402,19 @@ int main(int Argsc, char* Argsv[]) {
 		exit(0);
 	}	
 
-	//clock_t start, end;
-	//start = clock();
+	clock_t start, end;
+	if (version == DEBUG){
+		start = clock();		
+	}
 	
 	do { 
 		yyparse();
 	} while(!feof(yyin));
 	
-	//end = clock();
-	//printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+	if (version == DEBUG){
+		end = clock();
+		printf("Elapsed Time: %f\n", (double)(end - start) / CLOCKS_PER_SEC);
+	}
 
 	fprintf(stdout, "Success\n");
 	

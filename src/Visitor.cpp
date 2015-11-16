@@ -13,10 +13,10 @@ Visitor::~Visitor(){
 
 class GenerateError{
 public:
-    static llvm::Value* ErrorMsg(string str) { 
-        cout<<"Error: "<<str<<endl;
-        return 0;
-    }
+	static Value* ErrorMsg(string str) { 
+		cout<<"Error: "<<str<<endl;
+		return 0;
+	}
 };
 
 void Visitor::visit(ASTProgram* aSTProgram){
@@ -30,8 +30,8 @@ void Visitor::visit(ASTProgram* aSTProgram){
 }
 
 
-llvm::Value *Visitor::CodeGen(ASTProgram* aSTProgram){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(ASTProgram* aSTProgram){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	ASTMain* aSTMain=aSTProgram->getMain();
 	aSTMain->GenCode(this);
 	return V;
@@ -58,8 +58,8 @@ void Visitor::visit(ASTMain* aSTMain){
 	fprintf(XML_fp, "</statement_declarations>\n");
 }
 
-llvm::Value *Visitor::CodeGen(ASTMain* aSTMain){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(ASTMain* aSTMain){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	for(list<ASTField_Declaration*>::reverse_iterator it=aSTMain->FieldDeclarations_->rbegin(); 
 		it!=aSTMain->FieldDeclarations_->rend(); ++it){
@@ -81,8 +81,8 @@ void Visitor::visit(ASTField_Declaration* aSTField_Declaration){
 	}	
 }
 
-llvm::Value *Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	for (list<ASTDeclarations*>::iterator it=aSTField_Declaration->Declarations->begin(); 
 		it!=aSTField_Declaration->Declarations->end(); ++it){
@@ -97,10 +97,10 @@ void Visitor::visit(ASTDeclarations* aSTDeclarations){
 	def->evaluate(this);
 }
 
-llvm::Value *Visitor::CodeGen(ASTDeclarations* aSTDeclarations){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(ASTDeclarations* aSTDeclarations){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	Def *def=aSTDeclarations->getDef();
-	def->GenCode(this);	
+	def->GenCode(this);
 	return V;
 }
 
@@ -108,8 +108,8 @@ void Visitor::visit(Def* def){
 	fprintf(XML_fp, "<def>\n");
 }
 
-llvm::Value *Visitor::CodeGen(Def* def){
-	return llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(Def* def){
+	return ConstantInt::get(getGlobalContext(), APInt(32,0));
 }
 
 void Visitor::visit(ASTnode* aSTnode){
@@ -121,8 +121,8 @@ void Visitor::visit(ASTnode* aSTnode){
 }
 
 
-llvm::Value *Visitor::CodeGen(ASTnode* aSTnode){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(ASTnode* aSTnode){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	aSTnode->GenCode(this);
 	return V;
 }
@@ -133,7 +133,7 @@ void Visitor::visit(ASTLocation* aSTLocation){
 	fprintf(XML_fp, "</location>\n");
 }
 
-llvm::Value *Visitor::CodeGen(ASTLocation* aSTLocation){
+Value *Visitor::CodeGen(ASTLocation* aSTLocation){
 	//TODO
 }
 
@@ -141,8 +141,8 @@ void Visitor::visit(ASTIdentifier* aSTIdentifier){
 	fprintf(XML_fp, "<location id=\"%s\" />\n", aSTIdentifier->getId().c_str());
 }
 
-llvm::Value *Visitor::CodeGen(ASTIdentifier* aSTIdentifier){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(ASTIdentifier* aSTIdentifier){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	return V ? V : GenerateError::ErrorMsg("Unknown variable name");
 }
 
@@ -160,8 +160,8 @@ void Visitor::visit(ASTArrayIdentifier* aSTArrayIdentifier){
 	fprintf(XML_fp, "</position>\n");
 }
 
-llvm::Value *Visitor::CodeGen(ASTArrayIdentifier* aSTArrayIdentifier){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(ASTArrayIdentifier* aSTArrayIdentifier){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	std::list<Expression*>* exprs = aSTArrayIdentifier->getExpression();
 
 	for (list<Expression*>::reverse_iterator it=exprs->rbegin();
@@ -179,8 +179,8 @@ void Visitor::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
 	fprintf(XML_fp, "</position>\n");
 }
 
-llvm::Value *Visitor::CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	return V ? V : GenerateError::ErrorMsg("Unknown variable name");
 }
 
@@ -194,8 +194,8 @@ void Visitor::visit(CalloutStatement* calloutStatement){
 	fprintf(XML_fp, "</callout>\n");
 }
 
-llvm::Value *Visitor::CodeGen(CalloutStatement* calloutStatement){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(CalloutStatement* calloutStatement){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	for (list<Args *>::iterator it=calloutStatement->Argss->begin(); it!=calloutStatement->Argss->end(); ++it){
 		(*it)->GenCode(this);
@@ -214,11 +214,11 @@ void Visitor::visit(AssignmentStatement* assignmentStatement){
 		(*it)->evaluate(this);
 	}
 
-	fprintf(XML_fp, "</assignment>\n");	
+	fprintf(XML_fp, "</assignment>\n");
 }
 
-llvm::Value *Visitor::CodeGen(AssignmentStatement* assignmentStatement){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(AssignmentStatement* assignmentStatement){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	assignmentStatement->location->GenCode(this);
 
 	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
@@ -229,12 +229,12 @@ llvm::Value *Visitor::CodeGen(AssignmentStatement* assignmentStatement){
 }
 
 void Visitor::visit(Args* Args){
-	fprintf(XML_fp, "<Args>\n");	
-	fprintf(XML_fp, "</Args>\n");		
+	fprintf(XML_fp, "<Args>\n");
+	fprintf(XML_fp, "</Args>\n");
 }
 
-llvm::Value *Visitor::CodeGen(Args* args){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(Args* args){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	return V;
 }
 
@@ -252,12 +252,12 @@ void Visitor::visit(RUnaryExpr* rUnaryExpr){
 
 	}
 
-	fprintf(XML_fp, "<unary_expression>\n");		
+	fprintf(XML_fp, "<unary_expression>\n");
 }
 
 
-llvm::Value *Visitor::CodeGen(RUnaryExpr* rUnaryExpr){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(RUnaryExpr* rUnaryExpr){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	std::list<ExpressionRight*> * exprs = rUnaryExpr->getExpressions();
 
@@ -266,7 +266,7 @@ llvm::Value *Visitor::CodeGen(RUnaryExpr* rUnaryExpr){
 		(*it)->GenCode(this);
 	}
 
-	return V;	
+	return V;
 }
 
 void Visitor::visit(RBinaryExpr* rBinaryExpr){
@@ -288,11 +288,11 @@ void Visitor::visit(RBinaryExpr* rBinaryExpr){
 
 	}	
 
-	fprintf(XML_fp, "</binary_expression>\n");		
+	fprintf(XML_fp, "</binary_expression>\n");
 }
 
-llvm::Value *Visitor::CodeGen(RBinaryExpr* rBinaryExpr){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(RBinaryExpr* rBinaryExpr){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	std::list<ExpressionRight*>* exprs=rBinaryExpr->getLeftExprs();
 
@@ -315,23 +315,23 @@ llvm::Value *Visitor::CodeGen(RBinaryExpr* rBinaryExpr){
 void Visitor::visit(ExpressionRight* expressionRight){
 	fprintf(XML_fp, "<expr>\n");
 	//expressionRight->evaluate(this);
-	fprintf(XML_fp, "</expr>\n");	
+	fprintf(XML_fp, "</expr>\n");
 };
 
-llvm::Value *Visitor::CodeGen(ExpressionRight* expressionRight){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(ExpressionRight* expressionRight){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	return V;	
+	return V;
 }
 
 void Visitor::visit(Integer* integer){
 	fprintf(XML_fp, "<integer value=\"%d\" />\n", integer->getValue());
 };
 
-llvm::Value *Visitor::CodeGen(Integer* integer){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(Integer* integer){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
-	return V;	
+	return V;
 }
 
 void Visitor::visit(Bool* bool_obj){
@@ -341,10 +341,10 @@ void Visitor::visit(Bool* bool_obj){
 		fprintf(XML_fp, "boolean value=\"false\"\n");
 }
 
-llvm::Value *Visitor::CodeGen(Bool* bool_obj){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(Bool* bool_obj){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	return V;		
+	return V;
 }
 
 
@@ -352,10 +352,10 @@ void Visitor::visit(CharLiteral* charLiteral){
 	fprintf(XML_fp, "<character value=\'%s\'' />\n", charLiteral->getLiteral().c_str());
 };
 
-llvm::Value *Visitor::CodeGen(CharLiteral* charLiteral){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(CharLiteral* charLiteral){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	return V;		
+	return V;
 }
 
 
@@ -363,10 +363,10 @@ void Visitor::visit(StringLiteral* stringLiteral){
 	fprintf(XML_fp, "<string value=%s />\n", stringLiteral->getLiteral().c_str());
 };
 
-llvm::Value *Visitor::CodeGen(StringLiteral* stringLiteral){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(StringLiteral* stringLiteral){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	return V;		
+	return V;
 }
 
 void Visitor::visit(Expression* expr){
@@ -374,10 +374,10 @@ void Visitor::visit(Expression* expr){
 	fprintf(XML_fp, "</expr>\n");
 }
 
-llvm::Value *Visitor::CodeGen(Expression* expr){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(Expression* expr){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	return V;		
+	return V;
 }
 
 void Visitor::visit(BinaryExpr* expr){
@@ -398,11 +398,11 @@ void Visitor::visit(BinaryExpr* expr){
 
 	}	
 
-	fprintf(XML_fp, "</binary_expression>\n");		
+	fprintf(XML_fp, "</binary_expression>\n");
 }
 
-llvm::Value *Visitor::CodeGen(BinaryExpr* expr){
-	llvm::Value *V = llvm::ConstantInt::get(llvm::getGlobalContext(), llvm::APInt(32,0));
+Value *Visitor::CodeGen(BinaryExpr* expr){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	std::list<Expression*>* exprs=expr->getLeftExprs();
 
@@ -417,8 +417,7 @@ llvm::Value *Visitor::CodeGen(BinaryExpr* expr){
 		it!=exprs->rend(); ++it){
 		(*it)->GenCode(this);
 
-	}	
+	}
 	
-	return V;		
-
+	return V;
 }
