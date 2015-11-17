@@ -1,0 +1,31 @@
+Inside Main Block
+Inside ASTProgram
+Inside ASTMain
+Inside ASTField_Declaration
+Inside ASTDeclarations
+Inside ASTIdentifier
+Inside ASTField_Declaration
+Inside ASTDeclarations
+Inside ASTIdentifier
+Inside ASTField_Declaration
+Inside ASTDeclarations
+Inside ASTIdentifier
+Inside ASTField_Declaration
+Inside ASTDeclarations
+Inside ASTIdentifier
+Inside ASTField_Declaration
+Inside ASTDeclarations
+Inside ASTIdentifier
+Inside ASTField_Declaration
+Inside ASTDeclarations
+Inside ASTIdentifier
+Inside ASTStatements
+Inside AssignmentStatement
+
+Inside ASTLocation
+Inside AssignmentStatement
+
+Inside ASTLocation
+Inside AssignmentStatement
+
+Inside ASTLocation

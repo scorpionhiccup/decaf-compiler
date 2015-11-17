@@ -28,7 +28,7 @@ void ASTStatement::evaluate(Visitor* visitor){
 	std::cout<<"Accepted ASTStatement\n";
 }
 
-void ASTStatement::GenCode(Visitor* visitor){
+Value * ASTStatement::GenCode(Visitor* visitor){
 	visitor->CodeGen(this);
 	std::cout<<"Accepted ASTStatement\n";
 }
@@ -90,16 +90,16 @@ void CalloutStatement::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void CalloutStatement::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value * CalloutStatement::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);	
 };
 
 void AssignmentStatement::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void AssignmentStatement::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value * AssignmentStatement::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);	
 };
 
 void Args::evaluate(Visitor* visitor){
@@ -182,24 +182,24 @@ void Def::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void Def::GenCode(Visitor* visitor, Type * type){
-	visitor->CodeGen(this, type);	
+Value *Def::GenCode(Visitor* visitor, Type * type){
+	return visitor->CodeGen(this, type);	
 }
 
 void ASTLocation::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void ASTLocation::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value * ASTLocation::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);	
 }
 
 void ASTArrayFieldDeclaration::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void ASTArrayFieldDeclaration::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value *  ASTArrayFieldDeclaration::GenCode(Visitor* visitor, Type * type){
+	return visitor->CodeGen(this, type);
 }
 
 void CharLiteral::evaluate(Visitor* visitor){

@@ -9,17 +9,16 @@ using namespace std;
 extern int yylex(), yylineno;
 extern int yyparse();
 extern FILE* yyin, *yyout;
-FILE *XML_fp;
-FILE* bison_fp;
+FILE *XML_fp, *bison_fp, *LLVM_fp;
 
-map<string,string> tcheck;
+map<string, string> tcheck;
 string type;
 
 void yyerror(const char* s);
 void operatorOutput(string op);
 
 enum VERSION{DEBUG, RELEASE};
-VERSION version=DEBUG;
+int version=DEBUG;
 
 int unary=0;
 %}
@@ -372,7 +371,8 @@ int main(int Argsc, char* Argsv[]) {
 	const char *outfile = "flex_output.txt";		
 	const char *bison_outfile = "bison_output.txt";
 	const char *xml_outfile = "XML_visitor.txt";
-
+	const char *llvm_outfile = "llvm_debug.txt";
+	
 	if (Argsc>=2){
 		yyin = fopen( Argsv[1], "r");
 		strcpy(infile, Argsv[1]);
@@ -383,6 +383,7 @@ int main(int Argsc, char* Argsv[]) {
 	yyout = fopen(outfile, "w");
 	bison_fp = fopen(bison_outfile, "w");	
 	XML_fp = fopen(xml_outfile, "w");
+	LLVM_fp = fopen(llvm_outfile, "w");
 
 	if(!yyin){
 		printf("Error in opening '%s' for reading!", infile);
@@ -403,6 +404,11 @@ int main(int Argsc, char* Argsv[]) {
 		printf("Error in opening '%s' for writing!", xml_outfile);
 		exit(0);
 	}	
+
+	if (!LLVM_fp){
+		printf("Error in opening '%s' for writing!", llvm_outfile);
+		exit(0);
+	}
 
 	clock_t start, end;
 	if (version == DEBUG){
@@ -428,6 +434,7 @@ int main(int Argsc, char* Argsv[]) {
 void yyerror( const char *msg) {
 	cerr << "Line: " << yylineno << ": " << msg << endl; 
 	cerr.flush();
+	exit(1);
 }
 
 void operatorOutput(string op) {

@@ -79,8 +79,7 @@ public:
 	Value * CodeGen(AssignmentStatement* assignmentStatement);
 	Value * CodeGen(CalloutStatement* calloutStatement);
 	Value * CodeGen(ASTDeclarations* aSTDeclarations, Type* type);
-	Value * CodeGen(Def* def, Type *type);
-	Value * CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
+	Value * CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration, Type * type);
 	Value * CodeGen(ASTLocation* aSTLocation);
 	Value * CodeGen(ASTIdentifier* aSTIdentifier, Type * type);
 	Value * CodeGen(ASTField_Declaration* aSTField_Declaration);

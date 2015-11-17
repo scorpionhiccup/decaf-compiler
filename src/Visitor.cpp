@@ -6,9 +6,20 @@
 using namespace std;
 
 static IRBuilder<> Builder(getGlobalContext());
+static bool in_field=true, is_debug=true;
+
+extern FILE* LLVM_fp;
+extern int version;
 
 Visitor::~Visitor(){
 
+}
+
+void printDebug(string str){
+	if (version==0){
+		cout<<str<<"\n";
+		fprintf( LLVM_fp, "%s\n", str.c_str());
+	}
 }
 
 class GenerateError{
@@ -33,7 +44,7 @@ Value * Visitor::CodeGen(ASTProgram* aSTProgram){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	ASTMain* aSTMain=aSTProgram->getMain();
-	cout<<"Inside ASTProgram\n";
+	printDebug("Inside ASTProgram");
 	aSTMain->GenCode(this);
 	
 	return V;
@@ -63,14 +74,16 @@ void Visitor::visit(ASTMain* aSTMain){
 Value * Visitor::CodeGen(ASTMain* aSTMain){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	cout<<"Inside ASTMain\n";
+	printDebug("Inside ASTMain");
 	
 	for(list<ASTField_Declaration*>::reverse_iterator it=aSTMain->FieldDeclarations_->rbegin(); 
 		it!=aSTMain->FieldDeclarations_->rend(); ++it){
 		(*it)->GenCode(this);
 	}
 
-	cout<<"Inside ASTStatements\n";
+	in_field=false;
+
+	printDebug("Inside ASTStatements");
 
 	for (list<ASTStatement*>::reverse_iterator it=aSTMain->statements->rbegin(); 
 		it!=aSTMain->statements->rend(); ++it){
@@ -90,13 +103,15 @@ void Visitor::visit(ASTField_Declaration* aSTField_Declaration){
 Value * Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	LangType langType=(*aSTField_Declaration->type);
-	Type * type = langType.GenCode(this);
+	printDebug("Inside ASTField_Declaration");
+	LangType * langType=aSTField_Declaration->getType();
+	Type * type = langType->GenCode(this);
 	
 	for (list<ASTDeclarations*>::iterator it=aSTField_Declaration->Declarations->begin(); 
 		it!=aSTField_Declaration->Declarations->end(); ++it){
 			(*it)->GenCode(this, type);
 	}
+
 	return V;
 }
 
@@ -107,18 +122,15 @@ void Visitor::visit(ASTDeclarations* aSTDeclarations){
 }
 
 Value * Visitor::CodeGen(ASTDeclarations* aSTDeclarations, Type * type){
+	printDebug("Inside ASTDeclarations");
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	Def *def=aSTDeclarations->getDef();
-	def->GenCode(this, type);
+	V=def->GenCode(this, type);
 	return V;
 }
 
 void Visitor::visit(Def* def){
 	fprintf(XML_fp, "<def>\n");
-}
-
-Value * Visitor::CodeGen(Def* def, Type * type){
-	return ConstantInt::get(getGlobalContext(), APInt(32,0));
 }
 
 void Visitor::visit(ASTnode* aSTnode){
@@ -132,7 +144,9 @@ void Visitor::visit(ASTnode* aSTnode){
 
 Value * Visitor::CodeGen(ASTnode* aSTnode){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+
 	aSTnode->GenCode(this);
+
 	return V;
 }
 
@@ -143,7 +157,11 @@ void Visitor::visit(ASTLocation* aSTLocation){
 }
 
 Value * Visitor::CodeGen(ASTLocation* aSTLocation){
-	//TODO
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	
+	printDebug("Inside ASTLocation");
+
+	return V;
 }
 
 void Visitor::visit(ASTIdentifier* aSTIdentifier){
@@ -151,7 +169,14 @@ void Visitor::visit(ASTIdentifier* aSTIdentifier){
 }
 
 Value * Visitor::CodeGen(ASTIdentifier* aSTIdentifier, Type * type){
-	
+	printDebug("Inside ASTIdentifier");
+	if (in_field){
+		Value *v;
+		AllocaInst *alloc = new AllocaInst(type, aSTIdentifier->getId(), this->currentBlock());
+		v=this->locals()[aSTIdentifier->getId()]=alloc;
+    	return v;
+	}
+
 	if (this->locals().find(aSTIdentifier->getId()) == this->locals().end()){
 		return GenerateError::ErrorMsg("Unknown variable name");
 	}
@@ -177,6 +202,7 @@ Value * Visitor::CodeGen(ASTArrayIdentifier* aSTArrayIdentifier, Type* type){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	std::list<Expression*>* exprs = aSTArrayIdentifier->getExpression();
 
+	printDebug("Inside ASTArrayIdentifier");
 	AllocaInst *alloc = new AllocaInst(type, aSTArrayIdentifier->getId(), this->currentBlock());
 	V=this->locals()[aSTArrayIdentifier->getId()]=alloc;
 	
@@ -195,8 +221,11 @@ void Visitor::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
 	fprintf(XML_fp, "</position>\n");
 }
 
-Value * Visitor::CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Value * Visitor::CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration, Type * type){
+	Value * V;
+
+	V = aSTArrayFieldDeclaration->getIdentifier()->GenCode(this, type);
+
 	return V ? V : GenerateError::ErrorMsg("Unknown variable name");
 }
 
@@ -234,10 +263,12 @@ void Visitor::visit(AssignmentStatement* assignmentStatement){
 }
 
 Value * Visitor::CodeGen(AssignmentStatement* assignmentStatement){
+	
+	printDebug("Inside AssignmentStatement\n");
+
+		
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-
-	cout<<"Inside AssignmentStatement\n";	
-
+	
 	assignmentStatement->location->GenCode(this);
 
 	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
@@ -463,7 +494,7 @@ void Visitor::generateCode(ASTProgram *aSTProgram){
 	mainFunction = Function::Create(ftype, GlobalValue::InternalLinkage, "Class Program", this->module);
 	BasicBlock *bblock = BasicBlock::Create(getGlobalContext(), "entry", mainFunction, 0);
 
-	cout<<"Inside Block\n";
+	printDebug("Inside Main Block");
 
 	pushBlock(bblock);
 	aSTProgram->GenCode(this);
