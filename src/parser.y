@@ -66,7 +66,7 @@ int unary=0;
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
-%token FALSE TRUE  
+%token FALSE TRUE  VOID
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
 //%type<number> Expression 
@@ -103,12 +103,16 @@ int unary=0;
 
 %start Program 
 %%
-Program: START PROG_ID LBRACE Main RBRACE {	
+Program: START PROG_ID LBRACE Field_Declarations Method_Declarations RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($2, $4);
 		ast_prog->evaluate(new Visitor());
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	}
+
+Method_Declarations: M_Type IDENTIFIER TLROUND Block TRROUND | M_Type MAIN TLROUND Block TRROUND
+
+M_Type: Type | VOID
 
 Main: Field_Declarations Statements {
 	ASTMain * ast_main = new ASTMain($1, $2);
