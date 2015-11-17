@@ -33,6 +33,7 @@ Value * Visitor::CodeGen(ASTProgram* aSTProgram){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	ASTMain* aSTMain=aSTProgram->getMain();
+	cout<<"Inside ASTProgram\n";
 	aSTMain->GenCode(this);
 	
 	return V;
@@ -61,11 +62,15 @@ void Visitor::visit(ASTMain* aSTMain){
 
 Value * Visitor::CodeGen(ASTMain* aSTMain){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+
+	cout<<"Inside ASTMain\n";
 	
 	for(list<ASTField_Declaration*>::reverse_iterator it=aSTMain->FieldDeclarations_->rbegin(); 
 		it!=aSTMain->FieldDeclarations_->rend(); ++it){
 		(*it)->GenCode(this);
 	}
+
+	cout<<"Inside ASTStatements\n";
 
 	for (list<ASTStatement*>::reverse_iterator it=aSTMain->statements->rbegin(); 
 		it!=aSTMain->statements->rend(); ++it){
@@ -146,12 +151,12 @@ void Visitor::visit(ASTIdentifier* aSTIdentifier){
 }
 
 Value * Visitor::CodeGen(ASTIdentifier* aSTIdentifier, Type * type){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
-	AllocaInst *alloc = new AllocaInst(type, aSTIdentifier->getId(), this->currentBlock());
-	V=this->locals()[aSTIdentifier->id_]=alloc;
+	if (this->locals().find(aSTIdentifier->getId()) == this->locals().end()){
+		return GenerateError::ErrorMsg("Unknown variable name");
+	}
 	
-	return V ? V : GenerateError::ErrorMsg("Unknown variable name");
+	return new LoadInst(this->locals()[aSTIdentifier->getId()], "", false, this->currentBlock());
 }
 
 void Visitor::visit(ASTArrayIdentifier* aSTArrayIdentifier){
@@ -230,6 +235,9 @@ void Visitor::visit(AssignmentStatement* assignmentStatement){
 
 Value * Visitor::CodeGen(AssignmentStatement* assignmentStatement){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+
+	cout<<"Inside AssignmentStatement\n";	
+
 	assignmentStatement->location->GenCode(this);
 
 	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
@@ -454,6 +462,8 @@ void Visitor::generateCode(ASTProgram *aSTProgram){
 	FunctionType *ftype = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
 	mainFunction = Function::Create(ftype, GlobalValue::InternalLinkage, "Class Program", this->module);
 	BasicBlock *bblock = BasicBlock::Create(getGlobalContext(), "entry", mainFunction, 0);
+
+	cout<<"Inside Block\n";
 
 	pushBlock(bblock);
 	aSTProgram->GenCode(this);

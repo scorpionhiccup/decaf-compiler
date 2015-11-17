@@ -106,8 +106,10 @@ int unary=0;
 Program: START PROG_ID LBRACE Main RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($2, $4);
-		ast_prog->evaluate(new Visitor());
+		Visitor* visitor=new Visitor();
+		ast_prog->evaluate(visitor);
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
+		visitor->generateCode(ast_prog);
 	}
 
 Main: Field_Declarations Statements {
