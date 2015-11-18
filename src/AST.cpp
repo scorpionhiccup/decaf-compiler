@@ -11,16 +11,16 @@ void ASTProgram::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void ASTProgram::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);
+Value * ASTProgram::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
 }
 
 void ASTnode::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void ASTnode::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);
+Value * ASTnode::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
 }
 
 void ASTStatement::evaluate(Visitor* visitor){
@@ -29,8 +29,7 @@ void ASTStatement::evaluate(Visitor* visitor){
 }
 
 Value * ASTStatement::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);
-	std::cout<<"Accepted ASTStatement\n";
+	return visitor->CodeGen(this);
 }
 
 std::string ASTProgram::getId(){
@@ -50,24 +49,25 @@ void ASTMain::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void ASTMain::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);
+Value * ASTMain::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
 }
 
 void ASTField_Declaration::evaluate(Visitor* visitor){
 	visitor->visit(this);
 };
 
-void ASTField_Declaration::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);
+
+Value * ASTField_Declaration::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
 };
 
 void ASTDeclarations::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void ASTDeclarations::GenCode(Visitor* visitor, Type * type){
-	visitor->CodeGen(this, type);	
+Value * ASTDeclarations::GenCode(Visitor* visitor, Type * type){
+	return visitor->CodeGen(this, type);	
 };
 
 void ASTIdentifier::evaluate(Visitor* visitor){
@@ -106,16 +106,20 @@ void Args::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void Args::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value * Args::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);	
 };
 
 void ExpressionRight::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-void ExpressionRight::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value * ExpressionRight::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);	
+};
+
+string ASTLocation::getId(){
+	return "";
 };
 
 string ASTIdentifier::getId(){
@@ -126,36 +130,36 @@ void ASTExpression::evaluate(Visitor* visitor){
 	visitor->visit(this);		
 };
 
-void ASTExpression::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);		
+Value * ASTExpression::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);		
 };
 
 void RUnaryExpr::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void RUnaryExpr::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);
+Value * RUnaryExpr::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
 }
 
-void RBinaryExpr::GenCode(Visitor* visitor){
-	visitor->visit(this);
+Value * RBinaryExpr::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
 }
 
 void RBinaryExpr::evaluate(Visitor* visitor){
 	visitor->CodeGen(this);
 }
 
-void Integer::GenCode(Visitor* visitor){
-	visitor->visit(this);	
+Value * Integer::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);	
 }
 
 void Integer::evaluate(Visitor* visitor){
 	visitor->CodeGen(this);	
 }
 
-void Bool::GenCode(Visitor* visitor){
-	visitor->visit(this);	
+Value * Bool::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);	
 }
 
 void Bool::evaluate(Visitor* visitor){
@@ -167,7 +171,7 @@ void Expression::evaluate(Visitor* visitor){
 }
 
 Value * Expression::GenCode(Visitor* visitor, Type * type){
-	visitor->CodeGen(this, type);	
+	return visitor->CodeGen(this, type);	
 }
 
 void BinaryExpr::evaluate(Visitor* visitor){
@@ -175,14 +179,14 @@ void BinaryExpr::evaluate(Visitor* visitor){
 }
 
 Value * BinaryExpr::GenCode(Visitor* visitor, Type * type){
-	visitor->CodeGen(this, type);	
+	return visitor->CodeGen(this, type);	
 }
 
 void Def::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-Value *Def::GenCode(Visitor* visitor, Type * type){
+Value * Def::GenCode(Visitor* visitor, Type * type){
 	return visitor->CodeGen(this, type);	
 }
 
@@ -206,16 +210,16 @@ void CharLiteral::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void CharLiteral::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value * CharLiteral::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);	
 }
 
 void StringLiteral::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-void StringLiteral::GenCode(Visitor* visitor){
-	visitor->CodeGen(this);	
+Value * StringLiteral::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);	
 }
 
 Type * IntType::GenCode(Visitor* visitor){

@@ -10,7 +10,7 @@
 <location id="F" />
 <location id="G" />
 </field_declarations>
-<statement_declarations count="3">
+<statement_declarations count="4">
 <assignment>
 <location id="E" />
 </assignment>
@@ -19,6 +19,9 @@
 </assignment>
 <assignment>
 <location id="G" />
+</assignment>
+<assignment>
+<location id="H" />
 </assignment>
 </statement_declarations>
 </program>

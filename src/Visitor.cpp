@@ -6,7 +6,7 @@
 using namespace std;
 
 static IRBuilder<> Builder(getGlobalContext());
-static bool in_field=true, is_debug=true;
+static bool in_field=true, is_debug=true, is_error=false;
 
 extern FILE* LLVM_fp;
 extern int version;
@@ -264,17 +264,29 @@ void Visitor::visit(AssignmentStatement* assignmentStatement){
 
 Value * Visitor::CodeGen(AssignmentStatement* assignmentStatement){
 	
-	printDebug("Inside AssignmentStatement\n");
+	printDebug("Inside AssignmentStatement");
 
-		
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
-	assignmentStatement->location->GenCode(this);
+	ASTLocation * location = assignmentStatement->getLocation();
+	string id=location->getId();
+
+	if (this->locals().find(id) == this->locals().end()){
+		string error_str="Undeclared Variable in assignment statement: ";
+		cerr<<error_str<<id<<"\n";
+		is_error=1;
+		return NULL;
+	}
+
 
 	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
 		it!=assignmentStatement->expressionRight->end(); ++it){
-		(*it)->GenCode(this);
+		V=(*it)->GenCode(this);
+		if (V!=NULL){
+			V=new StoreInst(V, this->locals()[id], this->currentBlock());
+		}
 	}
+
 	return V;
 }
 
@@ -500,7 +512,12 @@ void Visitor::generateCode(ASTProgram *aSTProgram){
 	aSTProgram->GenCode(this);
 	popBlock();
 
-	PassManager pm;
-	pm.add(createPrintModulePass(&outs()));
-	pm.run(*module);
+	if (!is_error){
+		PassManager pm;
+		pm.add(createPrintModulePass(&outs()));
+		pm.run(*module);
+	}else{
+		cout<<"Failure\n";
+	}
+	
 }

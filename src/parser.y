@@ -139,41 +139,21 @@ Declarations: Def TCOMMA Declarations {
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);
-		tcheck[yylval.string]=type+"array";
 		$$=new ASTArrayFieldDeclaration($1, $3);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
-		tcheck[yylval.string]=type;
 		$$=new ASTIdentifier($1);
 	}
 
-Location: IDENTIFIER {if(tcheck.count(yylval.string)==0) {
-			cout<<"Variable "<<yylval.string<<"  not declared\n";
-			exit(0);
-		}
-		if(tcheck[yylval.string]!="intarray"&&tcheck[yylval.string]!="booleanarray") {
-			cout<<"Variable "<<yylval.string<<" is not an array\n";
-			exit(0);
-		}
-		}TLSQUARE Expression TRSQUARE {
+Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
-		$$=new ASTArrayIdentifier(new ASTIdentifier($1), $4);
+		$$=new ASTArrayIdentifier(new ASTIdentifier($1), $3);
 		
 		//TEMPORARY:
 		//$$=new ASTIdentifier($1);
 	} | IDENTIFIER {
 		$$=new ASTIdentifier($1);
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
-		if(tcheck.count(yylval.string)==0) {
-			cout<<"Variable "<<yylval.string<<" not declared\n";
-			exit(0);
-		}
-		cout<<tcheck[yylval.string]<<endl;
-		
-		if(tcheck[yylval.string]!="int"&& tcheck[yylval.string]!="boolean") {
-			cout<<"Variable "<<yylval.string<<" is an array\n";
-			exit(0);
-		}
 		//$$=new ASTIdentifier(yylval.string);
 	}
 

@@ -32,7 +32,7 @@ extern FILE* XML_fp;
 class ASTnode{
 public:
 	virtual void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 
 };
 
@@ -51,7 +51,7 @@ public:
 		return aSTMain;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 	ASTProgram(std::string id, ASTMain* aSTMain);
 	std::string getId();
 
@@ -64,7 +64,7 @@ public:
 		return value_;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 /*
@@ -79,7 +79,7 @@ public:
 		this->Declarations=declarations;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 	LangType * getType(){
 		return this->type;
 	}
@@ -117,7 +117,7 @@ public:
 	}
 	Args(){};
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 
@@ -127,7 +127,7 @@ public:
 
 	} 
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 
@@ -154,11 +154,12 @@ public:
 */
 class ASTLocation: public ExpressionRight, public ASTStatement{
 public:
+	virtual Value * GenCode(Visitor* visitor);
 	ASTLocation(){
 
 	}
 	void evaluate(Visitor* visitor);
-	Value * GenCode(Visitor* visitor);	
+	virtual string getId();
 };
 
 /*
@@ -200,7 +201,7 @@ public:
 	}
 	
 	void evaluate(Visitor* visitor);
-	Value* GenCode(Visitor* visitor, Type * type);
+	Value * GenCode(Visitor* visitor, Type * type);
 	
 	string getId(){
 		return this->aSTIdentifier->getId();
@@ -247,7 +248,7 @@ public:
 		this->Def_=Def1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor, Type * type);
+	Value * GenCode(Visitor* visitor, Type * type);
 	Def* getDef(){
 		return this->Def_;
 	}; 
@@ -289,7 +290,7 @@ public:
 		this->charLiteral=charLiteral1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 	string getLiteral(){
 		return this->charLiteral;
 	}
@@ -303,7 +304,7 @@ public:
 		this->stringLiteral=stringLiteral1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 	string getLiteral(){
 		return this->stringLiteral;
 	}
@@ -321,7 +322,7 @@ public:
 		return this->expressionRight;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 	int getType(){
 		return this->type;
 	}
@@ -340,7 +341,7 @@ public:
 		this->expressionRightR=expressionRightR1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 	list<ExpressionRight*>* getLeftExprs(){
 		return this->expressionRightL;
 	}
@@ -363,7 +364,7 @@ public:
 		return false;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 class Integer: public ExpressionRight, public Expression{
@@ -376,7 +377,7 @@ public:
 		return integer;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 
@@ -417,6 +418,9 @@ public:
 	}
 	void evaluate(Visitor* visitor);
 	Value* GenCode(Visitor* visitor);
+	ASTLocation * getLocation(){
+		return this->location;
+	}
 };
 
 /*
@@ -434,7 +438,7 @@ public:
 	}
 
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 #endif

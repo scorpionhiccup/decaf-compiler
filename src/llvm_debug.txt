@@ -21,11 +21,6 @@ Inside ASTDeclarations
 Inside ASTIdentifier
 Inside ASTStatements
 Inside AssignmentStatement
-
-Inside ASTLocation
 Inside AssignmentStatement
-
-Inside ASTLocation
 Inside AssignmentStatement
-
-Inside ASTLocation
+Inside AssignmentStatement
