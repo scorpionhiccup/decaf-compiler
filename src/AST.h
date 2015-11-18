@@ -1,5 +1,19 @@
 #include <bits/stdc++.h>
-
+#include <llvm/IR/Type.h>
+#include <llvm/IR/DerivedTypes.h>
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/PassManager.h>
+#include <llvm/IR/Instructions.h>
+#include <llvm/IR/CallingConv.h>
+#include <llvm/Bitcode/ReaderWriter.h>
+#include <llvm/Analysis/Verifier.h>
+#include <llvm/Assembly/PrintModulePass.h>
+#include <llvm/IR/IRBuilder.h>
+//#include <llvm/ModuleProvider.h>
+#include <llvm/Support/TargetSelect.h>
+#include <llvm/ExecutionEngine/GenericValue.h>
+#include <llvm/Support/raw_ostream.h>
+using namespace llvm;
 #ifndef AST_H
 #define AST_H
 
@@ -10,6 +24,9 @@ class Visitor;
 class LangType;
 class ASTDeclarations;
 class ASTMain;
+class ASTField_Declaration;
+class ASTMethod_Declaration;
+class Declaration;
 
 extern FILE* XML_fp;
 
@@ -26,18 +43,36 @@ public:
 	void GenCode(Visitor* visitor);
 };
 
+class LangType: public ASTnode{
+public:
+	virtual Type* GenCode(Visitor* visitor);	
+};
+
+class ASTMF_Declaration: public ASTnode{
+public:
+	ASTMF_Declaration(){
+
+	}
+	virtual void evaluate(Visitor* visitor){
+
+	}
+};
+
 class ASTProgram: public ASTnode{
 private:
-	std::string id_;
 	ASTMain* aSTMain;
 public:
+	list<Declaration*> *Declarations;
 	ASTMain* getMain(){
 		return aSTMain;
 	}
 	void evaluate(Visitor* visitor);
 	void GenCode(Visitor* visitor);
-	ASTProgram(std::string id, ASTMain* aSTMain);
-	std::string getId();
+	ASTProgram(list<Declaration*> *Declarations)
+	{
+		this->Declarations=Declarations;
+	}
+	std::string getId();	
 
 };
 
@@ -54,7 +89,7 @@ public:
 /*
 	Field_Declaration: Type Declarations
 */
-class ASTField_Declaration: public ASTExpression{
+class ASTField_Declaration: public ASTExpression, public ASTMF_Declaration{
 	LangType* type;
 public:
 	list<ASTDeclarations*> * Declarations;
@@ -66,9 +101,14 @@ public:
 	void GenCode(Visitor* visitor);
 };
 
-
-class LangType: public ASTnode{
+class Declaration: public ASTnode{
+	ASTMF_Declaration *ASTMF_Declaration1;
+public:
+	Declaration(ASTMF_Declaration* ASTMF_Declaration1){
+		this->ASTMF_Declaration1=ASTMF_Declaration1;
+	}
 };
+
 
 class IntType: public LangType{
 	//std::string s;
@@ -85,6 +125,27 @@ public:
 		//this->s=s;
 	}
 };
+class VoidType: public LangType{
+public:
+	VoidType(){
+		//this->s=s;
+	}	
+};
+
+class ASTMethod_Declaration: public ASTMF_Declaration{
+	LangType *LangType1;
+	string IDENTIFIER;	
+public:
+	ASTMain* Block;
+	void evaluate(Visitor* visitor);
+	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER,ASTMain* Block) {
+		this->LangType1=LangType1;
+		this->IDENTIFIER=IDENTIFIER;
+		this->Block=Block;
+	}
+
+};
+
 
 class Args: public ASTnode{
 	std::string str;

@@ -21,10 +21,14 @@ public:
 
 void Visitor::visit(ASTProgram* aSTProgram){
 	fprintf(XML_fp, "<program>\n");
-	
-	ASTMain* aSTMain=aSTProgram->getMain();
+	fprintf(XML_fp, "<declarations count=\"%lu\">\n", (aSTProgram->Declarations)->size());
 
-	aSTMain->evaluate(this);
+	for (list<Declaration*>::reverse_iterator it=aSTProgram->Declarations->rbegin(); 
+		it!=aSTProgram->Declarations->rend(); ++it){
+		(*it)->evaluate(this);
+	}
+
+	fprintf(XML_fp, "</field_declarations>\n");
 
 	fprintf(XML_fp, "</program>\n");
 }
@@ -79,6 +83,10 @@ void Visitor::visit(ASTField_Declaration* aSTField_Declaration){
 		it!=aSTField_Declaration->Declarations->end(); ++it){
 			(*it)->evaluate(this);
 	}	
+}
+
+void Visitor::visit(ASTMethod_Declaration* aSTMethod_Declaration){	
+	aSTMethod_Declaration->Block->evaluate(this);
 }
 
 Value *Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){

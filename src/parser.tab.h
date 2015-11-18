@@ -76,11 +76,12 @@ extern int yydebug;
     TRSQUARE = 286,
     FALSE = 287,
     TRUE = 288,
-    TLESS = 289,
-    TGREAT = 290,
-    SEMI_COLON = 291,
-    TCOMMA = 292,
-    NOT_EQUAL = 293
+    VOID = 289,
+    TLESS = 290,
+    TGREAT = 291,
+    SEMI_COLON = 292,
+    TCOMMA = 293,
+    NOT_EQUAL = 294
   };
 #endif
 
@@ -100,10 +101,14 @@ union YYSTYPE
 	ASTIdentifier *identifier;
 	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
+	ASTMethod_Declaration *_ASTMethod_Declaration;
+	Declaration *_Declaration;
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<Declaration *>*_Declarations;
+
 	std::list<Args*> *_Callout_Argss; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
@@ -121,7 +126,7 @@ union YYSTYPE
 	LangType *type;
 	std::string *_string;
 
-#line 125 "parser.tab.h" /* yacc.c:1909  */
+#line 130 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

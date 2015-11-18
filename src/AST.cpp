@@ -32,17 +32,13 @@ void ASTStatement::GenCode(Visitor* visitor){
 }
 
 std::string ASTProgram::getId(){
-	return id_;
+	return "";
 }
 
 ASTIdentifier::ASTIdentifier(std::string id){
 	this->id_=id;		
 }
 	
-ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
-	this->id_=id;
-	this->aSTMain=aSTMain;		
-}
 
 void ASTMain::evaluate(Visitor* visitor){
 	visitor->visit(this);
@@ -213,5 +209,13 @@ void StringLiteral::evaluate(Visitor* visitor){
 }
 
 void StringLiteral::GenCode(Visitor* visitor){
+	visitor->CodeGen(this);	
+}
+
+void ASTMethod_Declaration::evaluate(Visitor* visitor){
+	visitor->visit(this);
+}
+
+Type * LangType::GenCode(Visitor* visitor){
 	visitor->CodeGen(this);	
 }
