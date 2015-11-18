@@ -36,13 +36,17 @@ int unary=0;
 	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
 	ASTMethod_Declaration *_ASTMethod_Declaration;
+	ASTParam_Declaration *_ASTParam_Declaration;
+
 	Declaration *_Declaration;
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
-	std::list<ASTField_Declaration *> *_ASTField_Declarations;
-	std::list<Declaration *>*_Declarations;
 
+	std::list<Declaration *>*_Declarations;
+	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+
+	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
 	std::list<Args*> *_Callout_Argss; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
@@ -81,10 +85,13 @@ int unary=0;
 //%type<_BaseDeclaration> Def
 %type<_Def> Def
 %type<_ASTField_Declaration> Field_Declaration
+%type<_ASTParam_Declaration> Param_Declaration
+
 %type<_ASTMethod_Declaration> Method_Declaration
 %type<_Declaration> Declaration
 %type<_ASTField_Declarations> Field_Declarations
 %type<_Declarations> Declaration_list
+%type<_ASTParam_Declarations> Param_Declarations
 %type<_ASTLocation> Location
 %type<_Callout_Argss> Callout_Argss
 %type<_Argss> Argss
@@ -135,9 +142,9 @@ Declaration : Field_Declaration {
 
 
 
-Method_Declaration: Type IDENTIFIER TLROUND TRROUND Block { 
+Method_Declaration: Type IDENTIFIER TLROUND Param_Declarations TRROUND Block { 
 	cout<<"B3\n";
-	$$=new ASTMethod_Declaration($1, $2, $5);
+	$$=new ASTMethod_Declaration($1, $2, $6, $4);
 }
 
 
@@ -155,7 +162,6 @@ Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
 	$$=new list<ASTField_Declaration*>();
 }
 
-
 Field_Declaration: Type Declarations {
 	cout<<"C\n";
 	$$ = new ASTField_Declaration($1, $2);	
@@ -169,6 +175,20 @@ Declarations: Def TCOMMA Declarations {
 		$$=new list<ASTDeclarations*>();
 		$$->push_back(new ASTDeclarations($1));
 	}
+
+Param_Declarations: Param_Declaration TCOMMA Param_Declarations{
+	$$=$3;
+	cout<<"C1\n";
+	$$->push_back($1);
+} | {
+	cout<<"C2\n";
+	$$=new list<ASTParam_Declaration*>();
+}
+
+Param_Declaration: Type Def {
+	cout<<"C\n";
+	$$ = new ASTParam_Declaration($1, $2);	
+}
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);

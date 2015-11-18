@@ -27,6 +27,7 @@ class ASTMain;
 class ASTField_Declaration;
 class ASTMethod_Declaration;
 class Declaration;
+class Def;
 
 extern FILE* XML_fp;
 
@@ -86,6 +87,17 @@ public:
 	void GenCode(Visitor* visitor);
 };
 
+
+class ASTParam_Declaration: public ASTnode{
+	LangType *LangType1;
+	Def *Def1;
+public:
+	ASTParam_Declaration(LangType *LangType1,Def *Def1){
+		this->LangType1=LangType1;
+		this->Def1=Def1;
+	}
+
+};
 /*
 	Field_Declaration: Type Declarations
 */
@@ -134,14 +146,18 @@ public:
 
 class ASTMethod_Declaration: public ASTMF_Declaration{
 	LangType *LangType1;
-	string IDENTIFIER;	
+	string IDENTIFIER;
+	list<ASTParam_Declaration*>* ASTParam_Declaration1;	
 public:
 	ASTMain* Block;
 	void evaluate(Visitor* visitor);
-	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER,ASTMain* Block) {
+	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER,ASTMain* Block,list<ASTParam_Declaration*>* ASTParam_Declaration1	
+) {
 		this->LangType1=LangType1;
 		this->IDENTIFIER=IDENTIFIER;
 		this->Block=Block;
+		this->ASTParam_Declaration1=ASTParam_Declaration1;	
+
 	}
 
 };
