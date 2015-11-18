@@ -13,12 +13,18 @@
 <statement_declarations count="3">
 <assignment>
 <location id="E" />
+<binary_expression type="+" >
+<integer value="23" />
+<integer value="2" />
+</binary_expression>
 </assignment>
 <assignment>
 <location id="F" />
+<integer value="6" />
 </assignment>
 <assignment>
 <location id="G" />
+<integer value="1" />
 </assignment>
 </statement_declarations>
 </program>

@@ -83,7 +83,7 @@ void ASTArrayIdentifier::evaluate(Visitor* visitor){
 };
 
 Value* ASTArrayIdentifier::GenCode(Visitor* visitor, Type *type){
-	visitor->CodeGen(this, type);	
+	return visitor->CodeGen(this, type);	
 };
 
 void CalloutStatement::evaluate(Visitor* visitor){
@@ -147,7 +147,7 @@ Value * RBinaryExpr::GenCode(Visitor* visitor){
 }
 
 void RBinaryExpr::evaluate(Visitor* visitor){
-	visitor->CodeGen(this);
+	visitor->visit(this);
 }
 
 Value * Integer::GenCode(Visitor* visitor){
@@ -155,7 +155,7 @@ Value * Integer::GenCode(Visitor* visitor){
 }
 
 void Integer::evaluate(Visitor* visitor){
-	visitor->CodeGen(this);	
+	visitor->visit(this);	
 }
 
 Value * Bool::GenCode(Visitor* visitor){
@@ -163,7 +163,7 @@ Value * Bool::GenCode(Visitor* visitor){
 }
 
 void Bool::evaluate(Visitor* visitor){
-	visitor->CodeGen(this);	
+	visitor->visit(this);	
 }
 
 void Expression::evaluate(Visitor* visitor){

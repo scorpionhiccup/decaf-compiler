@@ -127,7 +127,7 @@ public:
 
 	} 
 	void evaluate(Visitor* visitor);
-	Value * GenCode(Visitor* visitor);
+	virtual Value * GenCode(Visitor* visitor);
 };
 
 
@@ -146,7 +146,7 @@ public:
 
 	} 
 	void evaluate(Visitor* visitor);
-	Value* GenCode(Visitor* visitor, Type * type);	
+	virtual Value* GenCode(Visitor* visitor, Type * type);	
 };
 
 /*

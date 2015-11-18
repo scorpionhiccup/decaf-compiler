@@ -169,7 +169,6 @@ void Visitor::visit(ASTIdentifier* aSTIdentifier){
 }
 
 Value * Visitor::CodeGen(ASTIdentifier* aSTIdentifier, Type * type){
-	printDebug("Inside ASTIdentifier");
 	if (in_field){
 		Value *v;
 		AllocaInst *alloc = new AllocaInst(type, aSTIdentifier->getId(), this->currentBlock());
@@ -177,6 +176,10 @@ Value * Visitor::CodeGen(ASTIdentifier* aSTIdentifier, Type * type){
     	return v;
 	}
 
+	string msg="Inside ASTIdentifier ";
+	msg.append(aSTIdentifier->getId());
+	printDebug(msg);
+	
 	if (this->locals().find(aSTIdentifier->getId()) == this->locals().end()){
 		is_error=true;
 		return GenerateError::ErrorMsg("Unknown variable name");
@@ -227,7 +230,7 @@ void Visitor::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
 
 Value * Visitor::CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration, Type * type){
 	Value * V;
-
+	printDebug("Inside ASTArrayFieldDeclaration");
 	V = aSTArrayFieldDeclaration->getIdentifier()->GenCode(this, type);
 
 	return V ? V : GenerateError::ErrorMsg("Unknown variable name");
@@ -246,6 +249,8 @@ void Visitor::visit(CalloutStatement* calloutStatement){
 Value * Visitor::CodeGen(CalloutStatement* calloutStatement){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
+	printDebug("Inside CalloutStatement");
+	
 	for (list<Args *>::iterator it=calloutStatement->Argss->begin(); it!=calloutStatement->Argss->end(); ++it){
 		(*it)->GenCode(this);
 	}
@@ -256,7 +261,8 @@ Value * Visitor::CodeGen(CalloutStatement* calloutStatement){
 void Visitor::visit(AssignmentStatement* assignmentStatement){
 	fprintf(XML_fp, "<assignment>\n");
 
-	assignmentStatement->location->evaluate(this);
+	ASTLocation * location = assignmentStatement->getLocation();
+	location->evaluate(this);
 
 	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
 		it!=assignmentStatement->expressionRight->end(); ++it){
@@ -274,6 +280,7 @@ Value * Visitor::CodeGen(AssignmentStatement* assignmentStatement){
 	
 	ASTLocation * location = assignmentStatement->getLocation();
 	string id=location->getId();
+	V=location->GenCode(this, NULL);
 
 	if (this->locals().find(id) == this->locals().end()){
 		string error_str="Undeclared Variable in assignment statement: ";
@@ -301,10 +308,13 @@ void Visitor::visit(Args* Args){
 
 Value * Visitor::CodeGen(Args* args){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	printDebug("Inside Args");
+	
 	return V;
 }
 
 void Visitor::visit(RUnaryExpr* rUnaryExpr){
+
 	if (rUnaryExpr->getType()==1)
 		fprintf(XML_fp, "<unary_expression type=\"-\"\n");
 	else
@@ -324,6 +334,8 @@ void Visitor::visit(RUnaryExpr* rUnaryExpr){
 
 Value * Visitor::CodeGen(RUnaryExpr* rUnaryExpr){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	
+	printDebug("Inside RUnaryExpr");
 
 	std::list<ExpressionRight*> * exprs = rUnaryExpr->getExpressions();
 
@@ -420,12 +432,16 @@ Value * Visitor::CodeGen(RBinaryExpr* rBinaryExpr){
 
 void Visitor::visit(ExpressionRight* expressionRight){
 	fprintf(XML_fp, "<expr>\n");
-	//expressionRight->evaluate(this);
+	
+	expressionRight->evaluate(this);
+
 	fprintf(XML_fp, "</expr>\n");
 };
 
 Value * Visitor::CodeGen(ExpressionRight* expressionRight){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+
+	printDebug("Inside ExpressionRight");
 
 	return V;
 }
@@ -436,7 +452,11 @@ void Visitor::visit(Integer* integer){
 
 Value * Visitor::CodeGen(Integer* integer){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-	printDebug("Inside Integer");
+	
+	string msg="Inside Integer ";
+	msg.append(to_string(integer->getValue()));
+	printDebug(msg);
+
 	return V;
 }
 
@@ -449,6 +469,8 @@ void Visitor::visit(Bool* bool_obj){
 
 Value * Visitor::CodeGen(Bool* bool_obj){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	
+	printDebug("Inside Bool");
 
 	return V;
 }
@@ -460,6 +482,8 @@ void Visitor::visit(CharLiteral* charLiteral){
 
 Value * Visitor::CodeGen(CharLiteral* charLiteral){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	
+	printDebug("Inside CharLiteral");
 
 	return V;
 }
@@ -471,6 +495,8 @@ void Visitor::visit(StringLiteral* stringLiteral){
 
 Value * Visitor::CodeGen(StringLiteral* stringLiteral){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	
+	printDebug("Inside StringLiteral");
 
 	return V;
 }
@@ -482,6 +508,8 @@ void Visitor::visit(Expression* expr){
 
 Value * Visitor::CodeGen(Expression* expr, Type * type){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	
+	printDebug("Inside Expression");
 
 	return V;
 }
@@ -509,6 +537,8 @@ void Visitor::visit(BinaryExpr* expr){
 
 Value * Visitor::CodeGen(BinaryExpr* expr, Type * type){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	
+	printDebug("Inside BinaryExpr");
 
 	std::list<Expression*>* exprs=expr->getLeftExprs();
 

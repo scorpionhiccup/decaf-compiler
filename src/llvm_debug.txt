@@ -1,28 +1,28 @@
-Inside Integer
-Inside Integer
-Inside Integer
 Inside Main Block
 Inside ASTProgram
 Inside ASTMain
 Inside ASTField_Declaration
 Inside ASTDeclarations
-Inside ASTIdentifier
 Inside ASTField_Declaration
 Inside ASTDeclarations
-Inside ASTIdentifier
 Inside ASTField_Declaration
 Inside ASTDeclarations
-Inside ASTIdentifier
+Inside ASTArrayFieldDeclaration
 Inside ASTField_Declaration
 Inside ASTDeclarations
-Inside ASTIdentifier
 Inside ASTField_Declaration
 Inside ASTDeclarations
-Inside ASTIdentifier
 Inside ASTField_Declaration
 Inside ASTDeclarations
-Inside ASTIdentifier
 Inside ASTStatements
 Inside AssignmentStatement
+Inside ASTIdentifier E
+Inside RBinaryExpr
+Inside Integer 23
+Inside Integer 2
 Inside AssignmentStatement
+Inside ASTIdentifier F
+Inside Integer 6
 Inside AssignmentStatement
+Inside ASTIdentifier G
+Inside Integer 1
