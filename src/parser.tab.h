@@ -52,35 +52,37 @@ extern int yydebug;
     CHAR_LITERAL = 262,
     BOOLEAN = 263,
     CALLOUT = 264,
-    TEQUAL = 265,
-    INT = 266,
-    TPLUS = 267,
-    TMINUS = 268,
-    TMUL = 269,
-    TDIV = 270,
-    NOT = 271,
-    MOD = 272,
-    RBRACE = 273,
-    LBRACE = 274,
-    T_NEWLINE = 275,
-    T_QUIT = 276,
-    START = 277,
-    TLE = 278,
-    GE = 279,
-    AND = 280,
-    TEQ = 281,
-    OR = 282,
-    TLROUND = 283,
-    TRROUND = 284,
-    TLSQUARE = 285,
-    TRSQUARE = 286,
-    FALSE = 287,
-    TRUE = 288,
-    TLESS = 289,
-    TGREAT = 290,
-    SEMI_COLON = 291,
-    TCOMMA = 292,
-    NOT_EQUAL = 293
+    MAIN = 265,
+    TEQUAL = 266,
+    INT = 267,
+    TPLUS = 268,
+    TMINUS = 269,
+    TMUL = 270,
+    TDIV = 271,
+    NOT = 272,
+    MOD = 273,
+    RBRACE = 274,
+    LBRACE = 275,
+    T_NEWLINE = 276,
+    T_QUIT = 277,
+    START = 278,
+    TLE = 279,
+    GE = 280,
+    AND = 281,
+    TEQ = 282,
+    OR = 283,
+    TLROUND = 284,
+    TRROUND = 285,
+    TLSQUARE = 286,
+    TRSQUARE = 287,
+    FALSE = 288,
+    TRUE = 289,
+    VOID = 290,
+    TLESS = 291,
+    TGREAT = 292,
+    SEMI_COLON = 293,
+    TCOMMA = 294,
+    NOT_EQUAL = 295
   };
 #endif
 
@@ -120,7 +122,7 @@ union YYSTYPE
 	LangType *type;
 	std::string *_string;
 
-#line 124 "parser.tab.h" /* yacc.c:1909  */
+#line 126 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

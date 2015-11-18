@@ -18,14 +18,13 @@ INT: 23
 INT: 2
 ID: F
 INT: 6
-INT: 2
+ID: E
 INT: 3
 INT: 2
 ID: G
 BOOLEAN: true
 CALLOUT
 STRING: "printf"
-STRING: "%d%d%s"
 INT: 1
 INT: 2
-STRING: "asf"
+STRING: "dsa"

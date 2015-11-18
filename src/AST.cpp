@@ -106,7 +106,7 @@ void Args::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-Value * Args::GenCode(Visitor* visitor){
+Type * Args::GenCode(Visitor* visitor){
 	return visitor->CodeGen(this);	
 };
 
@@ -210,7 +210,7 @@ void CharLiteral::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-Value * CharLiteral::GenCode(Visitor* visitor){
+Type * CharLiteral::GenCode(Visitor* visitor){
 	return visitor->CodeGen(this);	
 }
 
@@ -218,7 +218,7 @@ void StringLiteral::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-Value * StringLiteral::GenCode(Visitor* visitor){
+Type * StringLiteral::GenCode(Visitor* visitor){
 	return visitor->CodeGen(this);	
 }
 
@@ -231,5 +231,9 @@ Type * BooleanType::GenCode(Visitor* visitor){
 }
 
 Type * LangType::GenCode(Visitor* visitor){
+	return visitor->CodeGen(this);
+}
+
+Type * ListExpressionRight::GenCode(Visitor* visitor){
 	return visitor->CodeGen(this);
 }

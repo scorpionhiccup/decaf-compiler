@@ -60,7 +60,7 @@ int unary=0;
 %token<string> CHAR_LITERAL
 %token<number> BOOLEAN
 
-%token<string> CALLOUT 
+%token<string> CALLOUT MAIN
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
@@ -71,8 +71,7 @@ int unary=0;
 %type<number>InExpression Bool
 %type<type> Type
 %type<Declarations_> Declarations
-//%type<fieldBaseDeclaration> Field_Declarations
-//%type<_BaseDeclaration> Def
+
 %type<_Def> Def
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTField_Declarations> Field_Declarations 
@@ -89,8 +88,6 @@ int unary=0;
 %type<_RBinaryExpr> RBinaryExpr
 %type<_BinaryExpr> BinaryExpr
 
-//%type<_string> STRING_LITERAL
-
 %left AND OR
 %left TEQUAL NOT_EQUAL TEQ
 %left TLE GE TGREAT TLESS
@@ -101,7 +98,7 @@ int unary=0;
 
 %start Program 
 %%
-Program: START PROG_ID LBRACE Field_Declarations Method_Declarations RBRACE {	
+Program: START PROG_ID LBRACE Main RBRACE {	
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($2, $4);
 		Visitor* visitor=new Visitor();
@@ -109,10 +106,6 @@ Program: START PROG_ID LBRACE Field_Declarations Method_Declarations RBRACE {
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 		visitor->generateCode(ast_prog);
 	}
-
-Method_Declarations: M_Type IDENTIFIER TLROUND Block TRROUND | M_Type MAIN TLROUND Block TRROUND
-
-M_Type: Type | VOID
 
 Main: Field_Declarations Statements {
 	ASTMain * ast_main = new ASTMain($1, $2);
@@ -149,15 +142,11 @@ Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 	}
 
 Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
-		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
 		$$=new ASTArrayIdentifier(new ASTIdentifier($1), $3);
-		
-		//TEMPORARY:
-		//$$=new ASTIdentifier($1);
+		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
 	} | IDENTIFIER {
 		$$=new ASTIdentifier($1);
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
-		//$$=new ASTIdentifier(yylval.string);
 	}
 
 InExpression:
@@ -184,7 +173,6 @@ BinaryExpr:
 	Expression TPLUS Expression {
 		operatorOutput("+");
 		$$=new BinaryExpr("+", $1, $3);
-
 	} | 
 	Expression TMINUS Expression {
 		operatorOutput("-");

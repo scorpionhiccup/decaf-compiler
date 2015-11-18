@@ -117,7 +117,7 @@ public:
 	}
 	Args(){};
 	void evaluate(Visitor* visitor);
-	Value * GenCode(Visitor* visitor);
+	Type * GenCode(Visitor* visitor);
 	string getLiteral(){
 		return this->str;
 	}
@@ -140,6 +140,7 @@ public:
 	ListExpressionRight(list<ExpressionRight*> *expressionRight1){
 		this->expressionRight=expressionRight1;
 	}
+	Type * GenCode(Visitor* visitor);
 };
 
 
@@ -286,7 +287,7 @@ public:
 		this->charLiteral=charLiteral1;
 	}
 	void evaluate(Visitor* visitor);
-	Value * GenCode(Visitor* visitor);
+	Type * GenCode(Visitor* visitor);
 	string getLiteral(){
 		return this->charLiteral;
 	}
@@ -300,7 +301,7 @@ public:
 		this->stringLiteral=stringLiteral1;
 	}
 	void evaluate(Visitor* visitor);
-	Value * GenCode(Visitor* visitor);
+	Type * GenCode(Visitor* visitor);
 	string getLiteral(){
 		return this->stringLiteral;
 	}

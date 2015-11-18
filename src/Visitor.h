@@ -63,10 +63,10 @@ public:
 		module = new Module("main", getGlobalContext()); 
 	}
 
-	Value * CodeGen(Args* args);
+	Type * CodeGen(Args* args);
 	Value * CodeGen(ASTProgram* aSTProgram);
-	Value * CodeGen(StringLiteral* stringLiteral);
-	Value * CodeGen(CharLiteral* charLiteral);
+	//Value * CodeGen(StringLiteral* stringLiteral);
+	//Value * CodeGen(CharLiteral* charLiteral);
 	Value * CodeGen(BinaryExpr* expr, Type * type);
 	Value * CodeGen(Expression* expr, Type * type);
 	Value * CodeGen(Bool* bool_obj);
@@ -95,6 +95,22 @@ public:
 
 	static Type * CodeGen(LangType* langType){
 		return Type::getVoidTy(getGlobalContext());
+	};
+
+	static Type * CodeGen(CharLiteral* charLiteral){
+		return ConstantDataArray::getString(getGlobalContext(),
+			charLiteral->getLiteral(),
+			false)->getType();
+	};
+
+	static Type * CodeGen(StringLiteral * stringLiteral){
+		return ConstantDataArray::getString(getGlobalContext(),
+			stringLiteral->getLiteral(),
+			false)->getType();
+	};
+
+	static Type * CodeGen(ListExpressionRight* listExpressionRight){
+		return Type::getInt64Ty(getGlobalContext());
 	};
 
 	std::map<std::string, Value*>& locals();

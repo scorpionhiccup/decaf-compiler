@@ -15,6 +15,12 @@ Visitor::~Visitor(){
 
 }
 
+static void printLevel(int depth){
+    for(int i=0;i<depth-1;i++){
+        cout<<'\t';
+   	}
+}
+
 void printDebug(string str){
 	if (version==0){
 		cout<<str<<"\n";
@@ -249,16 +255,47 @@ void Visitor::visit(CalloutStatement* calloutStatement){
 }
 
 Value * Visitor::CodeGen(CalloutStatement* calloutStatement){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-	
 	printDebug("Inside CalloutStatement");
+	
+	Value * V;
+
+	vector<Type*> argTypes;
 	
 	for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
 		it!=calloutStatement->Argss->rend(); ++it){
-		(*it)->GenCode(this);
+		Type * type = static_cast<Type *>((*it)->GenCode(this));
+		argTypes.push_back(type);
 	}
 
-	return V;
+	FunctionType *ftype = FunctionType::get(
+		Type::getInt64Ty(getGlobalContext()), 
+		argTypes, false);
+
+	Function *function = Function::Create(ftype, 
+		GlobalValue::InternalLinkage,
+		calloutStatement->name.c_str(),
+		this->module);
+	
+	BasicBlock *bblock = BasicBlock::Create(
+		getGlobalContext(), "entry", function, 0);
+	Builder.SetInsertPoint(bblock);
+	this->pushBlock(bblock);
+
+	for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
+		it!=calloutStatement->Argss->rend(); ++it){
+		
+		AllocaInst *alloc = new AllocaInst(
+			static_cast<Type *>((*it)->GenCode(this)), 
+			(*it)->getLiteral(), 
+			this->currentBlock());
+	    this->locals()[(*it)->getLiteral()] = alloc;
+
+		//(*it)->GenCode(this);
+	}
+	
+	this->popBlock();
+	
+	return function;
 }
 
 void Visitor::visit(AssignmentStatement* assignmentStatement){
@@ -309,15 +346,17 @@ void Visitor::visit(Args* Args){
 	fprintf(XML_fp, "</Args>\n");
 }
 
-Value * Visitor::CodeGen(Args* args){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+Type * Visitor::CodeGen(Args* args){
 	
 	string msg="Inside Args ";
 	msg.append(args->getLiteral());
 
 	printDebug(msg);
 	
-	return V;
+	return ConstantDataArray::getString(getGlobalContext(),
+			"args",
+			false)->getType();
+		
 }
 
 void Visitor::visit(RUnaryExpr* rUnaryExpr){
@@ -493,26 +532,26 @@ void Visitor::visit(CharLiteral* charLiteral){
 	fprintf(XML_fp, "<character value=\'%s\'' />\n", charLiteral->getLiteral().c_str());
 };
 
-Value * Visitor::CodeGen(CharLiteral* charLiteral){
+/*Value * Visitor::CodeGen(CharLiteral* charLiteral){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	printDebug("Inside CharLiteral");
 
 	return V;
-}
+}*/
 
 
 void Visitor::visit(StringLiteral* stringLiteral){
 	fprintf(XML_fp, "<string value=%s />\n", stringLiteral->getLiteral().c_str());
 };
 
-Value * Visitor::CodeGen(StringLiteral* stringLiteral){
+/*Value * Visitor::CodeGen(StringLiteral* stringLiteral){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	printDebug("Inside StringLiteral");
 
 	return V;
-}
+}*/
 
 void Visitor::visit(Expression* expr){
 	fprintf(XML_fp, "<expr>\n");

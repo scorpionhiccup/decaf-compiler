@@ -8,8 +8,8 @@ class Program
 	int G;
 
 	E = 23 - 2;
-	F = 6*2 + 3/2;
+	F = 6*E + 3/2;
 	G = true;
 
-	callout("printf", "%d%d%s", 1, 2, "asf");
+	callout("printf", 1, 2, "dsa");
 }

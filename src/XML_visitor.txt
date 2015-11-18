@@ -23,7 +23,7 @@
 <binary_expression type="+" >
 <binary_expression type="*" >
 <integer value="6" />
-<integer value="2" />
+<location id="E" />
 </binary_expression>
 <binary_expression type="/" >
 <integer value="3" />
@@ -36,12 +36,11 @@
 <integer value="1" />
 </assignment>
 <callout function="printf">
-<string value="%d%d%s" />
 <Args>
 </Args>
 <Args>
 </Args>
-<string value="asf" />
+<string value="dsa" />
 </callout>
 </statement_declarations>
 </program>
