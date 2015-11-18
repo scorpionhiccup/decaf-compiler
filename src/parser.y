@@ -34,21 +34,26 @@ int unary=0;
 	ASTIdentifier *identifier;
 	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
+	ASTMethod_Declaration *_ASTMethod_Declaration;
+	Declaration *_Declaration;
+	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
+	
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<Declaration *>*_Declarations;
+	
 	std::list<Args*> *_Callout_Argss; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
 	std::list<ASTDeclarations *> *Declarations_;
     std::list<Expression *> *_Expressions;
-	RUnaryExpr* _RUnaryExpr;
+    RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
 	BinaryExpr* _BinaryExpr;
 	Expression* _Expression;
-	//IntType *intType;
-	//BooleanType *booleanType;	
+	
 	ASTDeclarations * _ASTDeclarations;
 	ASTLocation* _ASTLocation;
 	LangType *type;
@@ -63,7 +68,7 @@ int unary=0;
 %token<string> CALLOUT MAIN
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
-%token TLROUND TRROUND TLSQUARE TRSQUARE 
+%token<string> TLROUND TRROUND TLSQUARE TRSQUARE 
 %token FALSE TRUE  VOID
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
@@ -74,7 +79,10 @@ int unary=0;
 
 %type<_Def> Def
 %type<_ASTField_Declaration> Field_Declaration
-%type<_ASTField_Declarations> Field_Declarations 
+%type<_ASTMethod_Declaration> Method_Declaration
+%type<_Declaration> Declaration
+%type<_ASTField_Declarations> Field_Declarations
+%type<_Declarations> Declaration_list
 %type<_ASTLocation> Location
 %type<_Callout_Argss> Callout_Argss
 %type<_Argss> Argss
@@ -83,10 +91,12 @@ int unary=0;
 
 %type<_aSTStatement> Statement
 %type<_aSTStatements> Statements
-%type<ast_main> Main
+%type<ast_main> Block
 %type<_RUnaryExpr> RUnary_Expr
 %type<_RBinaryExpr> RBinaryExpr
 %type<_BinaryExpr> BinaryExpr
+
+//%type<_string> STRING_LITERAL
 
 %left AND OR
 %left TEQUAL NOT_EQUAL TEQ
@@ -98,29 +108,51 @@ int unary=0;
 
 %start Program 
 %%
-Program: START PROG_ID LBRACE Main RBRACE {	
+Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
-		ASTProgram *ast_prog = new ASTProgram($2, $4);
-		Visitor* visitor=new Visitor();
-		ast_prog->evaluate(visitor);
+		ASTProgram *ast_prog = new ASTProgram($4);
+		ast_prog->evaluate(new Visitor());
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
-		visitor->generateCode(ast_prog);
+	} | 
+
+Declaration_list : Declaration_list Declaration{
+		$$=$1;
+		$$->push_back($2);
+	} | Declaration {
+		$$=new list<Declaration*>();
+		$$->push_back($1);
 	}
 
-Main: Field_Declarations Statements {
-	ASTMain * ast_main = new ASTMain($1, $2);
+Declaration : Field_Declaration {
+		$$=new Declaration($1);
+	} | Method_Declaration  {
+		$$=new Declaration($1);
+	}
+
+
+Method_Declaration: Type IDENTIFIER TLROUND TRROUND Block { 
+	cout<<"B3\n";
+	$$=new ASTMethod_Declaration($1, $2, $5);
+}
+
+
+Block: LBRACE Field_Declarations Statements RBRACE {
+	ASTMain * ast_main = new ASTMain($2, $3);
 	$$=ast_main;
 }
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
 	$$=$3;
+	cout<<"C1\n";
 	$$->push_back($1);
 } | {
+	cout<<"C2\n";
 	$$=new list<ASTField_Declaration*>();
 }
 
 
 Field_Declaration: Type Declarations {
+	cout<<"C\n";
 	$$ = new ASTField_Declaration($1, $2);	
 }
 
@@ -135,9 +167,11 @@ Declarations: Def TCOMMA Declarations {
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);
+		tcheck[yylval.string]=type+"array";
 		$$=new ASTArrayFieldDeclaration($1, $3);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
+		tcheck[yylval.string]=type;
 		$$=new ASTIdentifier($1);
 	}
 
@@ -173,6 +207,7 @@ BinaryExpr:
 	Expression TPLUS Expression {
 		operatorOutput("+");
 		$$=new BinaryExpr("+", $1, $3);
+
 	} | 
 	Expression TMINUS Expression {
 		operatorOutput("-");
@@ -328,10 +363,12 @@ Type: INT {
 		//$$=new Type();
 		$$=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
+		type="int";
 	} | BOOLEAN {
 		//$$=new Type();
 		$$=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
+		type="boolean";
 	}
   
 %%

@@ -38,17 +38,21 @@ public:
 
 void Visitor::visit(ASTProgram* aSTProgram){
 	fprintf(XML_fp, "<program>\n");
-	
-	ASTMain* aSTMain=aSTProgram->getMain();
-	aSTMain->evaluate(this);
+	fprintf(XML_fp, "<declarations count=\"%lu\">\n", (aSTProgram->Declarations)->size());
+
+	for (list<Declaration*>::reverse_iterator it=aSTProgram->Declarations->rbegin(); 
+		it!=aSTProgram->Declarations->rend(); ++it){
+		(*it)->evaluate(this);
+	}
+
+	fprintf(XML_fp, "</field_declarations>\n");
 
 	fprintf(XML_fp, "</program>\n");
 }
 
 
-Value * Visitor::CodeGen(ASTProgram* aSTProgram){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-	
+Value *Visitor::CodeGen(ASTProgram* aSTProgram){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	ASTMain* aSTMain=aSTProgram->getMain();
 	printDebug("Inside ASTProgram");
 	aSTMain->GenCode(this);
@@ -103,11 +107,15 @@ void Visitor::visit(ASTField_Declaration* aSTField_Declaration){
 	for (list<ASTDeclarations*>::iterator it=aSTField_Declaration->Declarations->begin(); 
 		it!=aSTField_Declaration->Declarations->end(); ++it){
 			(*it)->evaluate(this);
-	}
+	}	
 }
 
-Value * Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+void Visitor::visit(ASTMethod_Declaration* aSTMethod_Declaration){	
+	aSTMethod_Declaration->Block->evaluate(this);
+}
+
+Value *Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){
+	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	printDebug("Inside ASTField_Declaration");
 	LangType * langType=aSTField_Declaration->getType();
@@ -648,65 +656,3 @@ void Visitor::generateCode(ASTProgram *aSTProgram){
 	}
 	
 }
-
-/*Value * Visitor::CodeGen(ReturnStmt * returnStmt){
-	return ReturnInst::Create(getGlobalContext(), this->currentBlock());
-}
-
-Value * Visitor::CodeGen(ForStmt * ForStmt){
-
-}
-
-Value * Visitor::CodeGen(Block * block){
-	
-	list<Method_Declarations *> MethodList=block->MethodList;
-
-	for (list<Expression*>::reverse_iterator it=MethodList->rbegin();
-		it!=MethodList->rend(); ++it){
-		(*it)->GenCode(this);
-	}
-
-	list<Statement_Declarations *> StatementList=block->StatementList;
-
-	for (list<Expression*>::reverse_iterator it=StatementList->rbegin();
-		it!=StatementList->rend(); ++it){
-		(*it)->GenCode(this);
-	}
-}
-
-Value * Visitor::CodeGen(IfElseStmt * ifElseStmt){
-	Value * condition = ifElseStmt->Expr->codeGen(this);
-	if (condition){
-
-		condition = Builder.CreateFCmpONE(condition, 
-			ConstantFP::get(getGlobalContext(),APFloat(0.0)), 
-			"ifcond");
-
-		Function *TheFunction = Builder.GetInsertBlock()->getParent();
-
-		BasicBlock *IfBB = BasicBlock::Create(getGlobalContext(), "if", 
-			TheFunction);
-		BasicBlock *ElseBB = BasicBlock::Create(getGlobalContext(), "else");
-		BasicBlock *MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
-
-		Builder.CreateCondBr(condition, IfBB, ElseBB);
-		Builder.SetInsertPoint(IfBB);
-		//cout<<"Statement number: "<<bloc1_->stat_->size()<<endl;
-		Value *IfV = ifElseStmt->ifBlock->codeGen(context);
-		Builder.CreateBr(MergeBB);
-		IfBB = Builder.GetInsertBlock();
-
-		TheFunction->getBasicBlockList().push_back(ElseBB);
-		Builder.SetInsertPoint(ElseBB);
-		Value *ElseV = ifElseStmt->elseBlock->codeGen(context);
-		if(!ElseV) return NULL;
-
-		Builder.CreateBr(MergeBB);
-		ElseBB = Builder.GetInsertBlock();
-		TheFunction->getBasicBlockList().push_back(MergeBB);
-		Builder.SetInsertPoint(MergeBB);
-
-		return NULL;
-	}
-	return condition;
-}*/

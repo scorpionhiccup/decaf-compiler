@@ -39,6 +39,7 @@ public:
 	void visit(ASTProgram* aSTProgram);
 	void visit(ASTLocation* aSTLocation);
 	void visit(ASTIdentifier* aSTIdentifier);
+	void visit(ASTMethod_Declaration* aSTMethod_Declaration);	
 	void visit(ASTField_Declaration* aSTField_Declaration);
 	void visit(ASTArrayIdentifier* aSTArrayIdentifier);
 	void visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);

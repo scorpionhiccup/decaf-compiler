@@ -1,3 +1,5 @@
+#include <bits/stdc++.h>
+
 #ifndef AST_H
 #define AST_H
 
@@ -23,9 +25,11 @@ using namespace llvm;
 
 class Visitor;
 
-class LangType;
 class ASTDeclarations;
 class ASTMain;
+class ASTField_Declaration;
+class ASTMethod_Declaration;
+class Declaration;
 
 extern FILE* XML_fp;
 
@@ -42,18 +46,37 @@ public:
 	virtual Value * GenCode(Visitor* visitor);
 };
 
+class LangType: public ASTnode{
+public:
+	virtual Type* GenCode(Visitor* visitor);	
+};
+
+class ASTMF_Declaration: public ASTnode{
+public:
+	ASTMF_Declaration(){
+
+	}
+	virtual void evaluate(Visitor* visitor){
+
+	}
+};
+
 class ASTProgram: public ASTnode{
 private:
 	std::string id_;
 	ASTMain* aSTMain;
 public:
+	list<Declaration*> *Declarations;
 	ASTMain* getMain(){
 		return aSTMain;
 	}
 	void evaluate(Visitor* visitor);
 	Value * GenCode(Visitor* visitor);
-	ASTProgram(std::string id, ASTMain* aSTMain);
-	std::string getId();
+	ASTProgram(list<Declaration*> *Declarations)
+	{
+		this->Declarations=Declarations;
+	}
+	std::string getId();	
 
 };
 
@@ -70,8 +93,8 @@ public:
 /*
 	Field_Declaration: Type Declarations
 */
-class ASTField_Declaration: public ASTExpression{
-	LangType * type;
+class ASTField_Declaration: public ASTExpression, public ASTMF_Declaration{
+	LangType* type;
 public:
 	list<ASTDeclarations*> * Declarations;
 	ASTField_Declaration(LangType* type, list<ASTDeclarations*> * declarations){
@@ -85,11 +108,14 @@ public:
 	}
 };
 
-
-class LangType: public ASTnode{
+class Declaration: public ASTnode{
+	ASTMF_Declaration *ASTMF_Declaration1;
 public:
-	virtual Type* GenCode(Visitor* visitor);	
+	Declaration(ASTMF_Declaration* ASTMF_Declaration1){
+		this->ASTMF_Declaration1=ASTMF_Declaration1;
+	}
 };
+
 
 class IntType: public LangType{
 	//std::string s;
@@ -101,13 +127,34 @@ public:
 };
 
 class BooleanType: public LangType{
-	//std::string s;
 public:
 	Type* GenCode(Visitor* visitor);
 	BooleanType(){
 		//this->s=s;
 	}
 };
+
+class VoidType: public LangType{
+public:
+	VoidType(){
+		//this->s=s;
+	}	
+};
+
+class ASTMethod_Declaration: public ASTMF_Declaration{
+	LangType *LangType1;
+	string IDENTIFIER;	
+public:
+	ASTMain* Block;
+	void evaluate(Visitor* visitor);
+	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER,ASTMain* Block) {
+		this->LangType1=LangType1;
+		this->IDENTIFIER=IDENTIFIER;
+		this->Block=Block;
+	}
+
+};
+
 
 class Args: public ASTnode{
 	std::string str;
@@ -193,6 +240,7 @@ public:
 
 /*
 	Location -> IDENTIFIER TLSQUARE Expression TRSQUARE 
+	Def-> IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
 
 class ASTArrayIdentifier: public ASTLocation{
@@ -229,6 +277,7 @@ public:
 		this->size_=size;
 	}
 	void evaluate(Visitor* visitor);
+	void GenCode(Visitor* visitor);
 	string getId(){
 		return this->aSTIdentifier->getId();
 	};
@@ -261,6 +310,13 @@ public:
 /*
 	Callout_Argss: Argss | Argss TCOMMA Callout_Argss 
 */
+class CalloutArgs: public ASTnode{
+	Args* args;
+public:
+	CalloutArgs(Args* Args1){
+		this->args=Args1;
+	}
+};
 
 
 /*

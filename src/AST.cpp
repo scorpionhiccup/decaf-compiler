@@ -39,11 +39,6 @@ std::string ASTProgram::getId(){
 ASTIdentifier::ASTIdentifier(std::string id){
 	this->id_=id;		
 }
-	
-ASTProgram::ASTProgram(std::string id, ASTMain* aSTMain){
-	this->id_=id;
-	this->aSTMain=aSTMain;		
-}
 
 void ASTMain::evaluate(Visitor* visitor){
 	visitor->visit(this);
@@ -222,18 +217,18 @@ Type * StringLiteral::GenCode(Visitor* visitor){
 	return visitor->CodeGen(this);	
 }
 
-Type * IntType::GenCode(Visitor* visitor){
+Type * IntType::GenCode(Visitor * visitor){
 	return visitor->CodeGen(this);
 }
 
-Type * BooleanType::GenCode(Visitor* visitor){
+Type * BooleanType::GenCode(Visitor * visitor){
 	return visitor->CodeGen(this);
 }
 
-Type * LangType::GenCode(Visitor* visitor){
-	return visitor->CodeGen(this);
+void ASTMethod_Declaration::evaluate(Visitor* visitor){
+	return visitor->visit(this);
 }
 
-Type * ListExpressionRight::GenCode(Visitor* visitor){
+Type * LangType::GenCode(Visitor * visitor){
 	return visitor->CodeGen(this);
 }

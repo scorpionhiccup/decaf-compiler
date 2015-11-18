@@ -33,18 +33,18 @@ ALPHANUMERICAL          [a-zA-Z0-9_]
 ")"                     {return TRROUND;}
 ","                     {return TCOMMA;}
 "callout"               {fprintf(yyout, "%s\n", "CALLOUT");return CALLOUT;}
-"int"                   {fprintf(yyout,"%s\n", "INT_DECLARATION");return INT;}
-"boolean"               {fprintf(yyout,"%s\n", "BOOLEAN_DECLARATION");return BOOLEAN;}
-"false"                 {fprintf(yyout,"%s\n", "BOOLEAN: false");yylval.bval=0;return FALSE;}
-"true"                  {fprintf(yyout,"%s\n", "BOOLEAN: true");yylval.bval=1;return TRUE;}
-"void"                  {fprintf(yyout,"%s\n", "VOID_DECLARATION");return VOID;}
-"main"                  {return MAIN;}
-"<="                    {return TLE;}
-">="                    {return GE;}
-"=="                    {return TEQ;}
-"&&"                    {return AND;}
-"||"                    {return OR;}
-"!="                    {return NOT_EQUAL;}
+"int"					{fprintf(yyout,"%s\n", "INT_DECLARATION");return INT;}
+"boolean"				{fprintf(yyout,"%s\n", "BOOLEAN_DECLARATION");return BOOLEAN;}
+"false"					{fprintf(yyout,"%s\n", "BOOLEAN: false");yylval.bval=0;return FALSE;}
+"true"					{fprintf(yyout,"%s\n", "BOOLEAN: true");yylval.bval=1;return TRUE;}
+"void"					{fprintf(yyout,"%s\n", "VOID_DECLARATION");return VOID;}
+"main"					{return MAIN;}
+"<="					{return TLE;}
+">="					{return GE;}
+"=="					{return TEQ;}
+"&&"					{return AND;}
+"||"					{return OR;}
+"!=" 					{return NOT_EQUAL;}
 "="                     {return TEQUAL;}
 "*"                     {return TMUL;}
 "/"                     {return TDIV;}
