@@ -317,7 +317,6 @@ Statement: Location TEQUAL Expression_Right {
 
 Callout_Argss: Argss{
 		$$=new list<Args*>();
-		fprintf(LLVM_fp, "%s\n", $1->getLiteral().c_str());
 		$$->push_back($1);
 	} | Argss TCOMMA Callout_Argss {
 		$$=$3;
@@ -337,12 +336,10 @@ Type: INT {
 		//$$=new Type();
 		$$=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
-		type="int";
 	} | BOOLEAN {
 		//$$=new Type();
 		$$=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
-		type="boolean";
 	}
   
 %%

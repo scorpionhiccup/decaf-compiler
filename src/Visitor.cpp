@@ -240,7 +240,8 @@ Value * Visitor::CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration, Typ
 void Visitor::visit(CalloutStatement* calloutStatement){
 	fprintf(XML_fp, "<callout function=%s>\n", calloutStatement->name.c_str());
 	
-	for (list<Args *>::iterator it=calloutStatement->Argss->begin(); it!=calloutStatement->Argss->end(); ++it){
+	for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
+		it!=calloutStatement->Argss->rend(); ++it){
 		(*it)->evaluate(this);
 	}
 	
@@ -252,7 +253,8 @@ Value * Visitor::CodeGen(CalloutStatement* calloutStatement){
 	
 	printDebug("Inside CalloutStatement");
 	
-	for (list<Args *>::iterator it=calloutStatement->Argss->begin(); it!=calloutStatement->Argss->end(); ++it){
+	for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
+		it!=calloutStatement->Argss->rend(); ++it){
 		(*it)->GenCode(this);
 	}
 

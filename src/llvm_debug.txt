@@ -1,4 +1,3 @@
-
 Inside Main Block
 Inside ASTProgram
 Inside ASTMain
@@ -34,6 +33,7 @@ Inside AssignmentStatement
 Inside ASTIdentifier G
 Inside Integer 1
 Inside CalloutStatement
+Inside Args "%d%d%s"
 Inside Args 
 Inside Args 
-Inside Args "%d%d"
+Inside Args "asf"

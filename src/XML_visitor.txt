@@ -36,11 +36,12 @@
 <integer value="1" />
 </assignment>
 <callout function="printf">
+<string value="%d%d%s" />
 <Args>
 </Args>
 <Args>
 </Args>
-<string value="%d%d" />
+<string value="asf" />
 </callout>
 </statement_declarations>
 </program>

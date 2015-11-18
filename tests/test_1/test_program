@@ -11,5 +11,5 @@ class Program
 	F = 6*2 + 3/2;
 	G = true;
 
-	callout("printf", "%d%d", 1, 2);
+	callout("printf", "%d%d%s", 1, 2, "asf");
 }

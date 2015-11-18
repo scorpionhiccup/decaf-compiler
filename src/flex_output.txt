@@ -25,6 +25,7 @@ ID: G
 BOOLEAN: true
 CALLOUT
 STRING: "printf"
-STRING: "%d%d"
+STRING: "%d%d%s"
 INT: 1
 INT: 2
+STRING: "asf"

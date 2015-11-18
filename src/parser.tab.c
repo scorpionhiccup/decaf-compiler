@@ -518,7 +518,7 @@ static const yytype_uint16 yyrline[] =
      185,   190,   195,   200,   207,   211,   215,   222,   222,   227,
      227,   234,   236,   238,   240,   242,   244,   247,   250,   253,
      256,   262,   266,   270,   274,   286,   300,   300,   302,   305,
-     309,   312,   312,   318,   322,   327,   330,   332,   336,   341
+     309,   312,   312,   318,   321,   326,   329,   331,   335,   339
 };
 #endif
 
@@ -1835,70 +1835,67 @@ yyreduce:
 #line 318 "parser.y" /* yacc.c:1646  */
     {
 		(yyval._Callout_Argss)=new list<Args*>();
-		fprintf(LLVM_fp, "%s\n", (yyvsp[0]._Argss)->getLiteral().c_str());
 		(yyval._Callout_Argss)->push_back((yyvsp[0]._Argss));
 	}
-#line 1842 "parser.tab.c" /* yacc.c:1646  */
+#line 1841 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 322 "parser.y" /* yacc.c:1646  */
+#line 321 "parser.y" /* yacc.c:1646  */
     {
 		(yyval._Callout_Argss)=(yyvsp[0]._Callout_Argss);
 		(yyval._Callout_Argss)->push_back((yyvsp[-2]._Argss));
 	}
-#line 1851 "parser.tab.c" /* yacc.c:1646  */
+#line 1850 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 327 "parser.y" /* yacc.c:1646  */
+#line 326 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", (yyvsp[0].string));
 		(yyval._Argss)=new CharLiteral((yyvsp[0].string));
 	}
-#line 1860 "parser.tab.c" /* yacc.c:1646  */
+#line 1859 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 330 "parser.y" /* yacc.c:1646  */
+#line 329 "parser.y" /* yacc.c:1646  */
     {
 		(yyval._Argss)=new StringLiteral((yyvsp[0].string));
 	}
-#line 1868 "parser.tab.c" /* yacc.c:1646  */
+#line 1867 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 332 "parser.y" /* yacc.c:1646  */
+#line 331 "parser.y" /* yacc.c:1646  */
     {
 		(yyval._Argss)=new ListExpressionRight((yyvsp[0]._ExpressionRights));
 	}
-#line 1876 "parser.tab.c" /* yacc.c:1646  */
+#line 1875 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 336 "parser.y" /* yacc.c:1646  */
+#line 335 "parser.y" /* yacc.c:1646  */
     {
 		//$$=new Type();
 		(yyval.type)=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
-		type="int";
 	}
-#line 1887 "parser.tab.c" /* yacc.c:1646  */
+#line 1885 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 341 "parser.y" /* yacc.c:1646  */
+#line 339 "parser.y" /* yacc.c:1646  */
     {
 		//$$=new Type();
 		(yyval.type)=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
-		type="boolean";
 	}
-#line 1898 "parser.tab.c" /* yacc.c:1646  */
+#line 1895 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1902 "parser.tab.c" /* yacc.c:1646  */
+#line 1899 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2126,7 +2123,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 348 "parser.y" /* yacc.c:1906  */
+#line 345 "parser.y" /* yacc.c:1906  */
 
 
 int main(int Argsc, char* Argsv[]) {
