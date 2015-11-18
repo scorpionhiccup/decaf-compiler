@@ -194,7 +194,7 @@ void ASTLocation::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-Value * ASTLocation::GenCode(Visitor* visitor){
+Value * ASTLocation::GenCode(Visitor* visitor, Type * type){
 	return visitor->CodeGen(this);	
 }
 

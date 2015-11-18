@@ -154,11 +154,11 @@ public:
 */
 class ASTLocation: public ExpressionRight, public ASTStatement{
 public:
-	virtual Value * GenCode(Visitor* visitor);
+	virtual Value * GenCode(Visitor* visitor, Type * type);
 	ASTLocation(){
 
 	}
-	void evaluate(Visitor* visitor);
+	virtual void evaluate(Visitor* visitor);
 	virtual string getId();
 };
 
@@ -189,8 +189,8 @@ public:
 
 /*
 	Location -> IDENTIFIER TLSQUARE Expression TRSQUARE 
-	Def-> IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
+
 class ASTArrayIdentifier: public ASTLocation{
 	ASTIdentifier* aSTIdentifier;
 	std::list<Expression*>* expression;
@@ -213,7 +213,7 @@ public:
 };
 
 /*
-Def: IDENTIFIER TLSQUARE InExpression TRSQUARE
+	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
 class ASTArrayFieldDeclaration: public Def{
 	int size_;
@@ -342,12 +342,15 @@ public:
 	}
 	void evaluate(Visitor* visitor);
 	Value * GenCode(Visitor* visitor);
+	
 	list<ExpressionRight*>* getLeftExprs(){
 		return this->expressionRightL;
 	}
+	
 	list<ExpressionRight*>* getRightExprs(){
 		return this->expressionRightR;
 	}
+
 	string getType(){
 		return this->type;
 	}

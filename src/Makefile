@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-g -std=c++0x -Woverloaded-virtual
+CFLAGS=-g -std=c++0x -Woverloaded-virtual -w
 #CFLAGS=-Wall  -g
 
 all: clean syntax_analyser

@@ -178,6 +178,7 @@ Value * Visitor::CodeGen(ASTIdentifier* aSTIdentifier, Type * type){
 	}
 
 	if (this->locals().find(aSTIdentifier->getId()) == this->locals().end()){
+		is_error=true;
 		return GenerateError::ErrorMsg("Unknown variable name");
 	}
 	
@@ -203,7 +204,8 @@ Value * Visitor::CodeGen(ASTArrayIdentifier* aSTArrayIdentifier, Type* type){
 	std::list<Expression*>* exprs = aSTArrayIdentifier->getExpression();
 
 	printDebug("Inside ASTArrayIdentifier");
-	AllocaInst *alloc = new AllocaInst(type, aSTArrayIdentifier->getId(), this->currentBlock());
+	AllocaInst *alloc = new AllocaInst(type, 
+		aSTArrayIdentifier->getId(), this->currentBlock());
 	V=this->locals()[aSTArrayIdentifier->getId()]=alloc;
 	
 	for (list<Expression*>::reverse_iterator it=exprs->rbegin();
@@ -215,9 +217,11 @@ Value * Visitor::CodeGen(ASTArrayIdentifier* aSTArrayIdentifier, Type* type){
 }
 
 void Visitor::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
-	fprintf(XML_fp, "<location id=\"%s\" />\n", aSTArrayFieldDeclaration->getId().c_str());
+	fprintf(XML_fp, "<location id=\"%s\" />\n", 
+		aSTArrayFieldDeclaration->getId().c_str());
 	fprintf(XML_fp, "<position>\n");
-	fprintf(XML_fp, "<integer value=\"%d\" />\n", aSTArrayFieldDeclaration->getExpression());
+	fprintf(XML_fp, "<integer value=\"%d\" />\n", 
+		aSTArrayFieldDeclaration->getExpression());
 	fprintf(XML_fp, "</position>\n");
 }
 
@@ -354,24 +358,64 @@ void Visitor::visit(RBinaryExpr* rBinaryExpr){
 }
 
 Value * Visitor::CodeGen(RBinaryExpr* rBinaryExpr){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+
+	printDebug("Inside RBinaryExpr");
+	Instruction::BinaryOps instr;
+
+	Value * lhs, * rhs;
 
 	std::list<ExpressionRight*>* exprs=rBinaryExpr->getLeftExprs();
 
 	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		(*it)->GenCode(this);
-
+		lhs=(*it)->GenCode(this);
 	}
 
 	exprs=rBinaryExpr->getRightExprs();
 
 	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		(*it)->GenCode(this);
+		rhs=(*it)->GenCode(this);
 	}
 
+	const char * type=rBinaryExpr->getType().c_str();
+
+	if (!strcmp(type, "+")){
+		instr=Instruction::Add;
+	}else if (!strcmp(type, "-")){
+		instr=Instruction::Sub;	
+	}else if (!strcmp(type, "*")){
+		instr=Instruction::Mul;	
+	}else if (!strcmp(type, "/")){
+		instr=Instruction::SDiv;	
+	}else if (!strcmp(type, "%")){
+		instr=Instruction::SRem;	
+	} else if (!strcmp(type, "&&")){
+		instr=Instruction::And;	
+	} else if (!strcmp(type, "||")){
+		instr=Instruction::Or;	
+	} else if (!strcmp(type, "==")){
+		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_EQ, lhs, rhs, "", this->currentBlock());
+	} else if (!strcmp(type, "<=")){
+		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_ULE, lhs, rhs, "", this->currentBlock());
+	} else if (!strcmp(type, ">=")){
+		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_UGE, lhs, rhs, "", this->currentBlock());
+	} else if (!strcmp(type, ">")){
+		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_ULT, lhs, rhs, "", this->currentBlock());
+	} else if (!strcmp(type, "<")){
+		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_UGT, lhs, rhs, "", this->currentBlock());
+	} else if (!strcmp(type, "!=")){
+		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_NE, lhs, rhs, "", this->currentBlock());
+	}
+
+	Value * V=NULL;
+
+	if (lhs && rhs){
+		V=BinaryOperator::Create(instr, lhs, rhs, "", this->currentBlock());
+	}
+	
 	return V;
+
 }
 
 void Visitor::visit(ExpressionRight* expressionRight){
@@ -392,7 +436,7 @@ void Visitor::visit(Integer* integer){
 
 Value * Visitor::CodeGen(Integer* integer){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-	
+	printDebug("Inside Integer");
 	return V;
 }
 
@@ -518,6 +562,7 @@ void Visitor::generateCode(ASTProgram *aSTProgram){
 		pm.run(*module);
 	}else{
 		cout<<"Failure\n";
+		exit(1);
 	}
 	
 }

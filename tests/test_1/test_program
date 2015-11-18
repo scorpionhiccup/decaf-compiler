@@ -7,9 +7,8 @@ class Program
 	int F;
 	int G;
 
-	E=23;
+	E = 23;
 	F = 6;
 	G = true;
-	H=4;
-		
+
 }
