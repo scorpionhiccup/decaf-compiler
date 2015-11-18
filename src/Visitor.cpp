@@ -648,3 +648,65 @@ void Visitor::generateCode(ASTProgram *aSTProgram){
 	}
 	
 }
+
+/*Value * Visitor::CodeGen(ReturnStmt * returnStmt){
+	return ReturnInst::Create(getGlobalContext(), this->currentBlock());
+}
+
+Value * Visitor::CodeGen(ForStmt * ForStmt){
+
+}
+
+Value * Visitor::CodeGen(Block * block){
+	
+	list<Method_Declarations *> MethodList=block->MethodList;
+
+	for (list<Expression*>::reverse_iterator it=MethodList->rbegin();
+		it!=MethodList->rend(); ++it){
+		(*it)->GenCode(this);
+	}
+
+	list<Statement_Declarations *> StatementList=block->StatementList;
+
+	for (list<Expression*>::reverse_iterator it=StatementList->rbegin();
+		it!=StatementList->rend(); ++it){
+		(*it)->GenCode(this);
+	}
+}
+
+Value * Visitor::CodeGen(IfElseStmt * ifElseStmt){
+	Value * condition = ifElseStmt->Expr->codeGen(this);
+	if (condition){
+
+		condition = Builder.CreateFCmpONE(condition, 
+			ConstantFP::get(getGlobalContext(),APFloat(0.0)), 
+			"ifcond");
+
+		Function *TheFunction = Builder.GetInsertBlock()->getParent();
+
+		BasicBlock *IfBB = BasicBlock::Create(getGlobalContext(), "if", 
+			TheFunction);
+		BasicBlock *ElseBB = BasicBlock::Create(getGlobalContext(), "else");
+		BasicBlock *MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
+
+		Builder.CreateCondBr(condition, IfBB, ElseBB);
+		Builder.SetInsertPoint(IfBB);
+		//cout<<"Statement number: "<<bloc1_->stat_->size()<<endl;
+		Value *IfV = ifElseStmt->ifBlock->codeGen(context);
+		Builder.CreateBr(MergeBB);
+		IfBB = Builder.GetInsertBlock();
+
+		TheFunction->getBasicBlockList().push_back(ElseBB);
+		Builder.SetInsertPoint(ElseBB);
+		Value *ElseV = ifElseStmt->elseBlock->codeGen(context);
+		if(!ElseV) return NULL;
+
+		Builder.CreateBr(MergeBB);
+		ElseBB = Builder.GetInsertBlock();
+		TheFunction->getBasicBlockList().push_back(MergeBB);
+		Builder.SetInsertPoint(MergeBB);
+
+		return NULL;
+	}
+	return condition;
+}*/
