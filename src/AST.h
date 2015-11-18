@@ -38,7 +38,7 @@ public:
 
 class ASTStatement: public ASTnode{
 public:	
-	void evaluate(Visitor* visitor);
+	virtual void evaluate(Visitor* visitor);
 	virtual Value * GenCode(Visitor* visitor);
 };
 
@@ -118,6 +118,9 @@ public:
 	Args(){};
 	void evaluate(Visitor* visitor);
 	Value * GenCode(Visitor* visitor);
+	string getLiteral(){
+		return this->str;
+	}
 };
 
 
@@ -126,7 +129,7 @@ public:
 	ExpressionRight(){
 
 	} 
-	void evaluate(Visitor* visitor);
+	virtual void evaluate(Visitor* visitor);
 	virtual Value * GenCode(Visitor* visitor);
 };
 
@@ -145,7 +148,7 @@ public:
 	Expression(){
 
 	} 
-	void evaluate(Visitor* visitor);
+	virtual void evaluate(Visitor* visitor);
 	virtual Value* GenCode(Visitor* visitor, Type * type);	
 };
 
@@ -171,7 +174,7 @@ public:
 	Def() {
 		
 	}
-	void evaluate(Visitor* visitor);
+	virtual void evaluate(Visitor* visitor);
 };
 
 /*
@@ -257,13 +260,6 @@ public:
 /*
 	Callout_Argss: Argss | Argss TCOMMA Callout_Argss 
 */
-class CalloutArgs: public ASTnode{
-	Args* args;
-public:
-	CalloutArgs(Args* Args1){
-		this->args=Args1;
-	}
-};
 
 
 /*

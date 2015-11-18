@@ -10,21 +10,37 @@
 <location id="F" />
 <location id="G" />
 </field_declarations>
-<statement_declarations count="3">
+<statement_declarations count="4">
 <assignment>
 <location id="E" />
-<binary_expression type="+" >
+<binary_expression type="-" >
 <integer value="23" />
 <integer value="2" />
 </binary_expression>
 </assignment>
 <assignment>
 <location id="F" />
+<binary_expression type="+" >
+<binary_expression type="*" >
 <integer value="6" />
+<integer value="2" />
+</binary_expression>
+<binary_expression type="/" >
+<integer value="3" />
+<integer value="2" />
+</binary_expression>
+</binary_expression>
 </assignment>
 <assignment>
 <location id="G" />
 <integer value="1" />
 </assignment>
+<callout function="printf">
+<Args>
+</Args>
+<Args>
+</Args>
+<string value="%d%d" />
+</callout>
 </statement_declarations>
 </program>

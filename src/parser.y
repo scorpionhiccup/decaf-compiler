@@ -34,7 +34,6 @@ int unary=0;
 	ASTIdentifier *identifier;
 	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
-	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
@@ -318,6 +317,8 @@ Statement: Location TEQUAL Expression_Right {
 
 Callout_Argss: Argss{
 		$$=new list<Args*>();
+		fprintf(LLVM_fp, "%s\n", $1->getLiteral().c_str());
+		$$->push_back($1);
 	} | Argss TCOMMA Callout_Argss {
 		$$=$3;
 		$$->push_back($1);

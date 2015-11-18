@@ -7,8 +7,9 @@ class Program
 	int F;
 	int G;
 
-	E = 23 + 2;
-	F = 6;
+	E = 23 - 2;
+	F = 6*2 + 3/2;
 	G = true;
 
+	callout("printf", "%d%d", 1, 2);
 }

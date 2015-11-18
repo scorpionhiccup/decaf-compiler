@@ -230,6 +230,7 @@ void Visitor::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
 
 Value * Visitor::CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration, Type * type){
 	Value * V;
+	
 	printDebug("Inside ASTArrayFieldDeclaration");
 	V = aSTArrayFieldDeclaration->getIdentifier()->GenCode(this, type);
 
@@ -308,7 +309,11 @@ void Visitor::visit(Args* Args){
 
 Value * Visitor::CodeGen(Args* args){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-	printDebug("Inside Args");
+	
+	string msg="Inside Args ";
+	msg.append(args->getLiteral());
+
+	printDebug(msg);
 	
 	return V;
 }
@@ -374,20 +379,26 @@ Value * Visitor::CodeGen(RBinaryExpr* rBinaryExpr){
 	printDebug("Inside RBinaryExpr");
 	Instruction::BinaryOps instr;
 
-	Value * lhs, * rhs;
+	Value * lhs=NULL, * rhs=NULL, *temp;
 
 	std::list<ExpressionRight*>* exprs=rBinaryExpr->getLeftExprs();
 
 	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		lhs=(*it)->GenCode(this);
+		temp=(*it)->GenCode(this);
+		if (temp){
+			lhs=temp;
+		}
 	}
 
 	exprs=rBinaryExpr->getRightExprs();
 
 	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		rhs=(*it)->GenCode(this);
+		temp=(*it)->GenCode(this);
+		if (temp){
+			rhs=temp;
+		}
 	}
 
 	const char * type=rBinaryExpr->getType().c_str();
