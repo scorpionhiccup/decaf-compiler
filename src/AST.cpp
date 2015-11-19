@@ -152,7 +152,3 @@ void ListExpressionRight::evaluate(Visitor * visitor){
 void LangType::evaluate(Visitor * visitor){
 	visitor->visit(this);
 }
-
-Value* ASTMF_Declaration::GenCode(Visitor * visitor){
-	return visitor->CodeGen(this);
-}

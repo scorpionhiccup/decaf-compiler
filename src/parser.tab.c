@@ -183,8 +183,8 @@ union YYSTYPE
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
-	std::list<Declaration *>*_Declarations;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<Declaration *>*_Declarations;
 
 	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
 	std::list<Args*> *_Callout_Argss; 
@@ -519,15 +519,6 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-<<<<<<< HEAD
-       0,   114,   114,   120,   122,   126,   131,   133,   139,   145,
-     150,   153,   158,   162,   166,   171,   175,   180,   185,   188,
-     193,   196,   202,   207,   210,   213,   216,   219,   222,   227,
-     232,   237,   242,   249,   253,   257,   264,   264,   269,   269,
-     276,   278,   280,   282,   284,   286,   289,   292,   295,   298,
-     304,   308,   312,   316,   328,   342,   342,   344,   347,   351,
-     354,   354,   360,   363,   368,   371,   373,   377,   381,   385
-=======
        0,   115,   115,   123,   125,   128,   133,   135,   139,   144,
      149,   152,   157,   161,   165,   170,   173,   177,   181,   184,
      189,   192,   198,   203,   206,   209,   212,   215,   218,   223,
@@ -535,7 +526,6 @@ static const yytype_uint16 yyrline[] =
      272,   274,   276,   278,   280,   282,   285,   288,   291,   294,
      300,   304,   308,   312,   324,   338,   338,   340,   343,   347,
      350,   350,   356,   359,   364,   367,   369,   373,   377,   381
->>>>>>> VisitorIR
 };
 #endif
 
@@ -1398,11 +1388,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-<<<<<<< HEAD
-#line 114 "parser.y" /* yacc.c:1646  */
-=======
 #line 115 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram((yyvsp[-1]._Declarations));
@@ -1412,43 +1398,6 @@ yyreduce:
 		ast_prog->evaluate(visitor);
 		//ast_prog->GenCode(visitorIR);
 	}
-<<<<<<< HEAD
-#line 1399 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 4:
-#line 122 "parser.y" /* yacc.c:1646  */
-    {
-	(yyval._Declarations)=(yyvsp[-1]._Declarations);
-	(yyval._Declarations)->push_back((yyvsp[0]._Declaration));
-}
-#line 1408 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 5:
-#line 126 "parser.y" /* yacc.c:1646  */
-    {
-	(yyval._Declarations)=new list<Declaration*>();
-	(yyval._Declarations)->push_back((yyvsp[0]._Declaration));
-}
-#line 1417 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 6:
-#line 131 "parser.y" /* yacc.c:1646  */
-    {
-	(yyval._Declaration)=new Declaration((yyvsp[0]._ASTField_Declaration));
-}
-#line 1425 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 7:
-#line 133 "parser.y" /* yacc.c:1646  */
-    {
-	(yyval._Declaration)=new Declaration((yyvsp[0]._ASTMethod_Declaration));
-}
-#line 1433 "parser.tab.c" /* yacc.c:1646  */
-=======
 #line 1402 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1484,22 +1433,11 @@ yyreduce:
 		(yyval._Declaration)=new Declaration((yyvsp[0]._ASTMethod_Declaration));
 	}
 #line 1436 "parser.tab.c" /* yacc.c:1646  */
->>>>>>> VisitorIR
     break;
 
   case 8:
 #line 139 "parser.y" /* yacc.c:1646  */
     { 
-<<<<<<< HEAD
-	cout<<"B3\n";
-	(yyval._ASTMethod_Declaration)=new ASTMethod_Declaration((yyvsp[-5].type), (yyvsp[-4].string), (yyvsp[0].ast_main), (yyvsp[-2]._ASTParam_Declarations));
-}
-#line 1442 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 9:
-#line 145 "parser.y" /* yacc.c:1646  */
-=======
 	(yyval._ASTMethod_Declaration)=new ASTMethod_Declaration((yyvsp[-5].type), (yyvsp[-4].string), (yyvsp[0].ast_main), (yyvsp[-2]._ASTParam_Declarations));
 }
 #line 1444 "parser.tab.c" /* yacc.c:1646  */
@@ -1507,51 +1445,19 @@ yyreduce:
 
   case 9:
 #line 144 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 	ASTMain * ast_main = new ASTMain((yyvsp[-2]._ASTField_Declarations), (yyvsp[-1]._aSTStatements));
 	(yyval.ast_main)=ast_main;
 }
-<<<<<<< HEAD
-#line 1451 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 10:
-#line 150 "parser.y" /* yacc.c:1646  */
-=======
 #line 1453 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 149 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 	(yyval._ASTField_Declarations)=(yyvsp[0]._ASTField_Declarations);
 	(yyval._ASTField_Declarations)->push_back((yyvsp[-2]._ASTField_Declaration));
 }
-<<<<<<< HEAD
-#line 1460 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 11:
-#line 153 "parser.y" /* yacc.c:1646  */
-    {
-	(yyval._ASTField_Declarations)=new list<ASTField_Declaration*>();
-}
-#line 1468 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 12:
-#line 158 "parser.y" /* yacc.c:1646  */
-    {
-	(yyval._ASTField_Declaration) = new ASTField_Declaration((yyvsp[-1].type), (yyvsp[0].Declarations_));	
-}
-#line 1476 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 13:
-#line 162 "parser.y" /* yacc.c:1646  */
-=======
 #line 1462 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1573,47 +1479,19 @@ yyreduce:
 
   case 13:
 #line 161 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     { 
 		(yyval.Declarations_)=(yyvsp[0].Declarations_);
 		(yyval.Declarations_)->push_back(new ASTDeclarations((yyvsp[-2]._Def)));
 	}
-<<<<<<< HEAD
-#line 1485 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 14:
-#line 166 "parser.y" /* yacc.c:1646  */
-=======
 #line 1487 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
 #line 165 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		(yyval.Declarations_)=new list<ASTDeclarations*>();
 		(yyval.Declarations_)->push_back(new ASTDeclarations((yyvsp[0]._Def)));
 	}
-<<<<<<< HEAD
-#line 1494 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 15:
-#line 171 "parser.y" /* yacc.c:1646  */
-    {
-	(yyval._ASTParam_Declarations)=(yyvsp[0]._ASTParam_Declarations);
-	cout<<"C1\n";
-	(yyval._ASTParam_Declarations)->push_back((yyvsp[-2]._ASTParam_Declaration));
-}
-#line 1504 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 16:
-#line 175 "parser.y" /* yacc.c:1646  */
-    {
-	cout<<"C2\n";
-=======
 #line 1496 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1629,16 +1507,12 @@ yyreduce:
   case 16:
 #line 173 "parser.y" /* yacc.c:1646  */
     {
->>>>>>> VisitorIR
 	(yyval._ASTParam_Declarations)=new list<ASTParam_Declaration*>();
 }
 #line 1513 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-<<<<<<< HEAD
-#line 180 "parser.y" /* yacc.c:1646  */
-=======
 #line 177 "parser.y" /* yacc.c:1646  */
     {
 	(yyval._ASTParam_Declaration) = new ASTParam_Declaration((yyvsp[-1].type), (yyvsp[0]._Def));	
@@ -1648,126 +1522,37 @@ yyreduce:
 
   case 18:
 #line 181 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
-    {
-	cout<<"C\n";
-	(yyval._ASTParam_Declaration) = new ASTParam_Declaration((yyvsp[-1].type), (yyvsp[0]._Def));	
-}
-#line 1522 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 18:
-#line 185 "parser.y" /* yacc.c:1646  */
     {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", (yyvsp[-3].string), (yyvsp[-1].number));
 		(yyval._Def)=new ASTArrayFieldDeclaration((yyvsp[-3].string), (yyvsp[-1].number));
 	}
-<<<<<<< HEAD
-#line 1531 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 19:
-#line 188 "parser.y" /* yacc.c:1646  */
-=======
 #line 1530 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 184 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
 		(yyval._Def)=new ASTIdentifier((yyvsp[0].string));
 	}
-<<<<<<< HEAD
-#line 1540 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 20:
-#line 193 "parser.y" /* yacc.c:1646  */
-=======
 #line 1539 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
 #line 189 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		(yyval._ASTLocation)=new ASTArrayIdentifier(new ASTIdentifier((yyvsp[-3].string)), (yyvsp[-1]._Expressions));
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", (yyvsp[-3].string));
 	}
-<<<<<<< HEAD
-#line 1549 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 21:
-#line 196 "parser.y" /* yacc.c:1646  */
-=======
 #line 1548 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
 #line 192 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		(yyval._ASTLocation)=new ASTIdentifier((yyvsp[0].string));
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", (yyvsp[0].string));
 	}
-<<<<<<< HEAD
-#line 1558 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 22:
-#line 202 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval.number)=(yyvsp[0].number);
-	}
-#line 1566 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 23:
-#line 207 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._BinaryExpr)=new BinaryExpr("<=", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));	
-	}
-#line 1574 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 24:
-#line 210 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._BinaryExpr)=new BinaryExpr("<=", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));	
-	}
-#line 1582 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 25:
-#line 213 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._BinaryExpr)=new BinaryExpr("==", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));	
-	}
-#line 1590 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 26:
-#line 216 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._BinaryExpr)=new BinaryExpr("&&", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));	
-	}
-#line 1598 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 27:
-#line 219 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._BinaryExpr)=new BinaryExpr("||", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));	
-	}
-#line 1606 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 28:
-#line 222 "parser.y" /* yacc.c:1646  */
-=======
 #line 1557 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1821,214 +1606,78 @@ yyreduce:
 
   case 28:
 #line 218 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("+");
 		(yyval._BinaryExpr)=new BinaryExpr("+", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));
 
 	}
-<<<<<<< HEAD
-#line 1616 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 29:
-#line 227 "parser.y" /* yacc.c:1646  */
-=======
 #line 1615 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
 #line 223 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("-");
 		(yyval._BinaryExpr)=new BinaryExpr("-", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));
 
 	}
-<<<<<<< HEAD
-#line 1626 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 30:
-#line 232 "parser.y" /* yacc.c:1646  */
-=======
 #line 1625 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
 #line 228 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("*");
 		(yyval._BinaryExpr)=new BinaryExpr("*", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));
 
 	}
-<<<<<<< HEAD
-#line 1636 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 31:
-#line 237 "parser.y" /* yacc.c:1646  */
-=======
 #line 1635 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
 #line 233 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("/");
 		(yyval._BinaryExpr)=new BinaryExpr("/", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));
 
 	}
-<<<<<<< HEAD
-#line 1646 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 32:
-#line 242 "parser.y" /* yacc.c:1646  */
-=======
 #line 1645 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
 #line 238 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("%");
 		(yyval._BinaryExpr)=new BinaryExpr("%", (yyvsp[-2]._Expressions), (yyvsp[0]._Expressions));
 	}
-<<<<<<< HEAD
-#line 1655 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 33:
-#line 249 "parser.y" /* yacc.c:1646  */
-=======
 #line 1654 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
 #line 245 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		(yyval._Expressions)=new list<Expression *>();
 		(yyval._Expressions)->push_back((yyvsp[0]._BinaryExpr));
 	}
-<<<<<<< HEAD
-#line 1664 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 34:
-#line 253 "parser.y" /* yacc.c:1646  */
-=======
 #line 1663 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
 #line 249 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		(yyval._Expressions)=new list<Expression *>();
 		(yyval._Expressions)->push_back((yyvsp[0]._Def));	
 	}
-<<<<<<< HEAD
-#line 1673 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 35:
-#line 257 "parser.y" /* yacc.c:1646  */
-=======
 #line 1672 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 253 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		fprintf(bison_fp, "INT ENCOUNTERED=%d\n", (yyvsp[0].number));
 		(yyval._Expressions)=new list<Expression *>();
 		(yyval._Expressions)->push_back(new Integer((yyvsp[0].number)));
 	}
-<<<<<<< HEAD
-#line 1683 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 36:
-#line 264 "parser.y" /* yacc.c:1646  */
-    {
-		unary=2;
-	}
-#line 1691 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 37:
-#line 266 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._RUnaryExpr)=new RUnaryExpr(2, (yyvsp[0]._ExpressionRights));
-	}
-#line 1699 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 38:
-#line 269 "parser.y" /* yacc.c:1646  */
-    {
-		unary=1;
-	}
-#line 1707 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 39:
-#line 271 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._RUnaryExpr)=new RUnaryExpr(1, (yyvsp[0]._ExpressionRights));
-	}
-#line 1715 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 40:
-#line 276 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._RBinaryExpr)=new RBinaryExpr("<=", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));	
-	}
-#line 1723 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 41:
-#line 278 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._RBinaryExpr)=new RBinaryExpr(">=", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));	
-	}
-#line 1731 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 42:
-#line 280 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._RBinaryExpr)=new RBinaryExpr("==", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));	
-	}
-#line 1739 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 43:
-#line 282 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._RBinaryExpr)=new RBinaryExpr("&&", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));	
-	}
-#line 1747 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 44:
-#line 284 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._RBinaryExpr)=new RBinaryExpr("||", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));	
-	}
-#line 1755 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 45:
-#line 286 "parser.y" /* yacc.c:1646  */
-=======
 #line 1682 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2106,143 +1755,78 @@ yyreduce:
 
   case 45:
 #line 282 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("+");
 		(yyval._RBinaryExpr)=new RBinaryExpr("+", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));
 	}
-<<<<<<< HEAD
-#line 1764 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 46:
-#line 289 "parser.y" /* yacc.c:1646  */
-=======
 #line 1763 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
 #line 285 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("-");
 		(yyval._RBinaryExpr)=new RBinaryExpr("-", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));
 	}
-<<<<<<< HEAD
-#line 1773 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 47:
-#line 292 "parser.y" /* yacc.c:1646  */
-=======
 #line 1772 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
 #line 288 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("*");
 		(yyval._RBinaryExpr)=new RBinaryExpr("*", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));
 	}
-<<<<<<< HEAD
-#line 1782 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 48:
-#line 295 "parser.y" /* yacc.c:1646  */
-=======
 #line 1781 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
 #line 291 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("/");
 		(yyval._RBinaryExpr)=new RBinaryExpr("/", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));
 	}
-<<<<<<< HEAD
-#line 1791 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 49:
-#line 298 "parser.y" /* yacc.c:1646  */
-=======
 #line 1790 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
 #line 294 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		operatorOutput("%");
 		(yyval._RBinaryExpr)=new RBinaryExpr("%", (yyvsp[-2]._ExpressionRights), (yyvsp[0]._ExpressionRights));
 	}
-<<<<<<< HEAD
-#line 1800 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 50:
-#line 304 "parser.y" /* yacc.c:1646  */
-=======
 #line 1799 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
 #line 300 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		//$$=new list<ExpressionRight *>();
 		//$$->push_back($1);
 	}
-<<<<<<< HEAD
-#line 1809 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 51:
-#line 308 "parser.y" /* yacc.c:1646  */
-=======
 #line 1808 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
 #line 304 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		(yyval._ExpressionRights)=new list<ExpressionRight *>();
 		(yyval._ExpressionRights)->push_back((yyvsp[0]._RBinaryExpr));
 	}
-<<<<<<< HEAD
-#line 1818 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 52:
-#line 312 "parser.y" /* yacc.c:1646  */
-=======
 #line 1817 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
 #line 308 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		(yyval._ExpressionRights)=new list<ExpressionRight *>();
 		(yyval._ExpressionRights)->push_back((yyvsp[0]._ASTLocation));
 	}
-<<<<<<< HEAD
-#line 1827 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 53:
-#line 316 "parser.y" /* yacc.c:1646  */
-=======
 #line 1826 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
 #line 312 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		fprintf(bison_fp, "BOOLEAN ENCOUNTERED=");
 		if(unary==2) 
@@ -2255,19 +1839,11 @@ yyreduce:
 		(yyval._ExpressionRights)=new list<ExpressionRight *>();
 		(yyval._ExpressionRights)->push_back(new Integer((yyvsp[0].number)));
 	}
-<<<<<<< HEAD
-#line 1844 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 54:
-#line 328 "parser.y" /* yacc.c:1646  */
-=======
 #line 1843 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
 #line 324 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		fprintf(bison_fp, "INT ENCOUNTERED=");
 		if(unary==1)
@@ -2281,25 +1857,6 @@ yyreduce:
 		(yyval._ExpressionRights)->push_back(new Integer((yyvsp[0].number)));
 
 	}
-<<<<<<< HEAD
-#line 1862 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 55:
-#line 342 "parser.y" /* yacc.c:1646  */
-    {(yyval.number)=1;}
-#line 1868 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 56:
-#line 342 "parser.y" /* yacc.c:1646  */
-    {(yyval.number)=0;}
-#line 1874 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 57:
-#line 344 "parser.y" /* yacc.c:1646  */
-=======
 #line 1861 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2317,26 +1874,10 @@ yyreduce:
 
   case 57:
 #line 340 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 	(yyval._aSTStatements)=(yyvsp[0]._aSTStatements);
 	(yyval._aSTStatements)->push_back((yyvsp[-2]._aSTStatement));	
 }
-<<<<<<< HEAD
-#line 1883 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 58:
-#line 347 "parser.y" /* yacc.c:1646  */
-    {
-	(yyval._aSTStatements)=new list<ASTStatement*>();
-}
-#line 1891 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 59:
-#line 351 "parser.y" /* yacc.c:1646  */
-=======
 #line 1882 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2350,34 +1891,10 @@ yyreduce:
 
   case 59:
 #line 347 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
 		(yyval._aSTStatement)=new AssignmentStatement((yyvsp[-2]._ASTLocation), (yyvsp[0]._ExpressionRights));
 	}
-<<<<<<< HEAD
-#line 1900 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 60:
-#line 354 "parser.y" /* yacc.c:1646  */
-    {
-		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", (yyvsp[0].string));	
-	}
-#line 1908 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 61:
-#line 356 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._aSTStatement)=new CalloutStatement((yyvsp[-4].string), (yyvsp[-1]._Callout_Argss));
-	}
-#line 1916 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 62:
-#line 360 "parser.y" /* yacc.c:1646  */
-=======
 #line 1899 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2399,68 +1916,28 @@ yyreduce:
 
   case 62:
 #line 356 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		(yyval._Callout_Argss)=new list<Args*>();
 		(yyval._Callout_Argss)->push_back((yyvsp[0]._Argss));
 	}
-<<<<<<< HEAD
-#line 1925 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 63:
-#line 363 "parser.y" /* yacc.c:1646  */
-=======
 #line 1924 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
 #line 359 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		(yyval._Callout_Argss)=(yyvsp[0]._Callout_Argss);
 		(yyval._Callout_Argss)->push_back((yyvsp[-2]._Argss));
 	}
-<<<<<<< HEAD
-#line 1934 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 64:
-#line 368 "parser.y" /* yacc.c:1646  */
-=======
 #line 1933 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
 #line 364 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		fprintf(bison_fp, "CHAR ENCOUNTERED=%s\n", (yyvsp[0].string));
 		(yyval._Argss)=new CharLiteral((yyvsp[0].string));
 	}
-<<<<<<< HEAD
-#line 1943 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 65:
-#line 371 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._Argss)=new StringLiteral((yyvsp[0].string));
-	}
-#line 1951 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 66:
-#line 373 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval._Argss)=new ListExpressionRight((yyvsp[0]._ExpressionRights));
-	}
-#line 1959 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 67:
-#line 377 "parser.y" /* yacc.c:1646  */
-=======
 #line 1942 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2482,45 +1959,21 @@ yyreduce:
 
   case 67:
 #line 373 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		//$$=new Type();
 		(yyval.type)=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
 	}
-<<<<<<< HEAD
-#line 1969 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 68:
-#line 381 "parser.y" /* yacc.c:1646  */
-=======
 #line 1968 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
 #line 377 "parser.y" /* yacc.c:1646  */
->>>>>>> VisitorIR
     {
 		//$$=new Type();
 		(yyval.type)=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
 	}
-<<<<<<< HEAD
-#line 1979 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 69:
-#line 385 "parser.y" /* yacc.c:1646  */
-    {
-		(yyval.type)=new VoidType();
-	}
-#line 1987 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-
-#line 1991 "parser.tab.c" /* yacc.c:1646  */
-=======
 #line 1978 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2534,7 +1987,6 @@ yyreduce:
 
 
 #line 1990 "parser.tab.c" /* yacc.c:1646  */
->>>>>>> VisitorIR
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2762,11 +2214,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-<<<<<<< HEAD
-#line 389 "parser.y" /* yacc.c:1906  */
-=======
 #line 385 "parser.y" /* yacc.c:1906  */
->>>>>>> VisitorIR
 
 
 int main(int Argsc, char* Argsv[]) {

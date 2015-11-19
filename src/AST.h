@@ -43,7 +43,6 @@ public:
 
 class ASTStatement: public ASTnode{
 public:	
-	using ASTnode::GenCode;
 	virtual void evaluate(Visitor* visitor);
 };
 

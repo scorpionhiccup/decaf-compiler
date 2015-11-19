@@ -87,7 +87,6 @@ int unary=0;
 %type<_Declarations> Declaration_list
 %type<_ASTParam_Declarations> Param_Declarations
 %type<_ASTLocation> Location
-%type<_ASTParam_Declarations> Param_Declarations
 %type<_Callout_Argss> Callout_Argss
 %type<_Argss> Argss
 %type<_ExpressionRights> Expression_Right
