@@ -11,9 +11,6 @@ extern int yyparse();
 extern FILE* yyin, *yyout;
 FILE *XML_fp, *bison_fp, *LLVM_fp;
 
-map<string, string> tcheck;
-string type;
-
 void yyerror(const char* s);
 void operatorOutput(string op);
 
@@ -69,7 +66,7 @@ int unary=0;
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
 %token<string> TLROUND TRROUND TLSQUARE TRSQUARE 
-%token FALSE TRUE  VOID
+%token FALSE TRUE VOID
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
 //%type<number> Expression 
@@ -112,10 +109,9 @@ Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($4);
 		ast_prog->evaluate(new Visitor());
-		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	} | 
 
-Declaration_list : Declaration_list Declaration{
+Declaration_list: Declaration_list Declaration{
 		$$=$1;
 		$$->push_back($2);
 	} | Declaration {
@@ -123,17 +119,15 @@ Declaration_list : Declaration_list Declaration{
 		$$->push_back($1);
 	}
 
-Declaration : Field_Declaration {
+Declaration: Field_Declaration {
 		$$=new Declaration($1);
 	} | Method_Declaration  {
 		$$=new Declaration($1);
 	}
 
-
 Method_Declaration: Type IDENTIFIER TLROUND TRROUND Block { 
-	cout<<"B3\n";
-	$$=new ASTMethod_Declaration($1, $2, $5);
-}
+		$$=new ASTMethod_Declaration($1, $2, $5);
+	}
 
 
 Block: LBRACE Field_Declarations Statements RBRACE {
@@ -143,16 +137,13 @@ Block: LBRACE Field_Declarations Statements RBRACE {
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
 	$$=$3;
-	cout<<"C1\n";
 	$$->push_back($1);
 } | {
-	cout<<"C2\n";
 	$$=new list<ASTField_Declaration*>();
 }
 
 
 Field_Declaration: Type Declarations {
-	cout<<"C\n";
 	$$ = new ASTField_Declaration($1, $2);	
 }
 
@@ -167,11 +158,9 @@ Declarations: Def TCOMMA Declarations {
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);
-		tcheck[yylval.string]=type+"array";
 		$$=new ASTArrayFieldDeclaration($1, $3);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
-		tcheck[yylval.string]=type;
 		$$=new ASTIdentifier($1);
 	}
 
@@ -363,12 +352,12 @@ Type: INT {
 		//$$=new Type();
 		$$=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
-		type="int";
 	} | BOOLEAN {
 		//$$=new Type();
 		$$=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
-		type="boolean";
+	} | VOID {
+		$$=new VoidType();
 	}
   
 %%

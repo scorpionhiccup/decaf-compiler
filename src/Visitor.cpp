@@ -656,3 +656,7 @@ void Visitor::generateCode(ASTProgram *aSTProgram){
 	}
 	
 }
+
+void Visitor::visit(Declaration * declaration){
+	printDebug("Inside Declaration");
+}

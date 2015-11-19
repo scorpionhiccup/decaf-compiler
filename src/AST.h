@@ -48,6 +48,9 @@ public:
 
 class LangType: public ASTnode{
 public:
+	LangType(){
+
+	}
 	virtual Type* GenCode(Visitor* visitor);	
 };
 
@@ -109,10 +112,14 @@ public:
 };
 
 class Declaration: public ASTnode{
-	ASTMF_Declaration *ASTMF_Declaration1;
+	ASTMF_Declaration * ASTMF_Declaration1;
 public:
 	Declaration(ASTMF_Declaration* ASTMF_Declaration1){
 		this->ASTMF_Declaration1=ASTMF_Declaration1;
+	}
+	void evaluate(Visitor* visitor);
+	ASTMF_Declaration * getDeclaration(){
+		return this->ASTMF_Declaration1;
 	}
 };
 

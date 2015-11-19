@@ -232,3 +232,7 @@ void ASTMethod_Declaration::evaluate(Visitor* visitor){
 Type * LangType::GenCode(Visitor * visitor){
 	return visitor->CodeGen(this);
 }
+
+void Declaration::evaluate(Visitor* visitor){
+	 visitor->visit(this);
+}

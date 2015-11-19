@@ -58,6 +58,7 @@ public:
 	void visit(BinaryExpr* expr);
 	void visit(CharLiteral* charLiteral);
 	void visit(StringLiteral* stringLiteral);
+	void visit(Declaration * declaration);
 
 	Module *module;
 	Visitor() { 
