@@ -51,7 +51,16 @@ public:
 	void visit(CharLiteral* charLiteral);
 	void visit(StringLiteral* stringLiteral);
 	void visit(Declaration * declaration);
-
+	void visit(ASTParam_Declaration * aSTParam_Declaration);
+	void visit(MethodCallStatement * methodCallStatement);
+	void visit(ASTIF * aSTIF);
+	void visit(ASTIFELSE * aSTIFELSE);
+	void visit(ASTFor * aSTFor);
+	void visit(ASTReturn * aSTReturn);
+	void visit(ReturnValue * returnValue);	
+	void visit(ASTBreak * aSTBreak);
+	void visit(ASTContinue * aSTContinue);
+	
 	Visitor() { 
 	}
 

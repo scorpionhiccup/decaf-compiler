@@ -140,10 +140,8 @@ Declaration: Field_Declaration {
 	}
 
 Method_Declaration: Type IDENTIFIER TLROUND Param_Declarations TRROUND Block { 
-	cout<<"B3\n";
 	$$=new ASTMethod_Declaration($1, $2, $6, $4);
 }
-
 
 Block: LBRACE Field_Declarations Statements RBRACE {
 	ASTMain * ast_main = new ASTMain($2, $3);
@@ -152,16 +150,13 @@ Block: LBRACE Field_Declarations Statements RBRACE {
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
 	$$=$3;
-	cout<<"C1\n";
 	$$->push_back($1);
 } | {
-	cout<<"C2\n";
 	$$=new list<ASTField_Declaration*>();
 }
 
 
 Field_Declaration: Type Declarations {
-	cout<<"C\n";
 	$$ = new ASTField_Declaration($1, $2);	
 }
 
@@ -176,10 +171,8 @@ Declarations: Def TCOMMA Declarations {
 
 Param_Declarations: Param_Declaration TCOMMA Param_Declarations{
 	$$=$3;
-	cout<<"C1\n";
 	$$->push_back($1);
 } | {
-	cout<<"C2\n";
 	$$=new list<ASTParam_Declaration*>();
 }
 

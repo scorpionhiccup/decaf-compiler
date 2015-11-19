@@ -94,8 +94,8 @@ public:
 
 class ASTParam_Declaration: public ASTnode{
 	LangType *LangType1;
-	Def *Def1;
 public:
+	Def *Def1;
 	ASTParam_Declaration(LangType *LangType1,Def *Def1){
 		this->LangType1=LangType1;
 		this->Def1=Def1;
@@ -257,28 +257,29 @@ public:
 	virtual string getId();
 };
 class MethodCallStatement : public ASTStatement {
+public: 
 	string IDENTIFIER;
 	list<Args *> *Argss;
-public: 
 	MethodCallStatement(string IDENTIFIER,list<Args *> *Argss){
 		this->IDENTIFIER=IDENTIFIER;
 		this->Argss=Argss;
 	}
 };
+
 class ASTIF : public ASTStatement {
+public:
 	list<ExpressionRight*> *ExpressionRight1;
 	ASTMain *Block1;
-public:
 	ASTIF(list<ExpressionRight*> *ExpressionRight1,ASTMain *Block1) {
 		this->ExpressionRight1=ExpressionRight1;
 		this->Block1=Block1;
 	}
 };
+
 class ASTIFELSE : public ASTStatement {
-	list<ExpressionRight*> *ExpressionRight1;
-	ASTMain *Block1;
-	ASTMain *Block2;	
 public:
+	list<ExpressionRight*> *ExpressionRight1;
+	ASTMain *Block1, *Block2;	
 	ASTIFELSE(list<ExpressionRight*> *ExpressionRight1,ASTMain *Block1,ASTMain *Block2){
 		this->ExpressionRight1=ExpressionRight1;
 		this->Block1=Block1;
@@ -299,19 +300,18 @@ public:
 	}
 };
 class ASTReturn : public ASTStatement {
-	ReturnValue* ReturnValue1;
 public:
+	ReturnValue* ReturnValue1;
 	ASTReturn(ReturnValue* ReturnValue1){
 			this->ReturnValue1=ReturnValue1;
 		}
 	
 };
 class ASTFor: public ASTStatement{
-	string IDENTIFIER;
-	list<ExpressionRight*>* ExpressionRight1;
-	list<ExpressionRight*>* ExpressionRight2;
-	ASTMain *Block;
 public:
+	string IDENTIFIER;
+	list<ExpressionRight*>* ExpressionRight1, *ExpressionRight2;
+	ASTMain *Block;
 	ASTFor(string IDENTIFIER,list<ExpressionRight*>* ExpressionRight1,list<ExpressionRight*>* ExpressionRight2,
 	ASTMain *Block) {
 		this->IDENTIFIER=IDENTIFIER;

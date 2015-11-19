@@ -82,6 +82,69 @@ void Visitor::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 	aSTMethod_Declaration->Block->evaluate(this);
 }
 
+void Visitor::visit(ASTParam_Declaration * aSTParam_Declaration){
+	aSTParam_Declaration->Def1->evaluate(this);
+}
+
+void Visitor::visit(MethodCallStatement * methodCallStatement){
+	for (list<Args *>::iterator it=methodCallStatement->Argss->begin();
+		it!=methodCallStatement->Argss->end(); ++it){
+		(*it)->evaluate(this);
+	}
+};
+
+void Visitor::visit(ASTIF * aSTIF){
+	aSTIF->Block1->evaluate(this);
+
+	for (list<ExpressionRight *>::iterator it=aSTIF->ExpressionRight1->begin();
+		it!=aSTIF->ExpressionRight1->end(); ++it){
+		(*it)->evaluate(this);
+	}	
+
+}
+
+void Visitor::visit(ASTIFELSE * aSTIFELSE){
+	aSTIFELSE->Block1->evaluate(this);
+	aSTIFELSE->Block2->evaluate(this);
+
+	for (list<ExpressionRight *>::iterator it=aSTIFELSE->ExpressionRight1->begin();
+		it!=aSTIFELSE->ExpressionRight1->end(); ++it){
+		(*it)->evaluate(this);
+	}	
+}
+
+void Visitor::visit(ASTFor * aSTFor){
+	aSTFor->Block->evaluate(this);
+
+	for (list<ExpressionRight *>::iterator it=aSTFor->ExpressionRight1->begin();
+		it!=aSTFor->ExpressionRight1->end(); ++it){
+		(*it)->evaluate(this);
+	}	
+
+	for (list<ExpressionRight *>::iterator it=aSTFor->ExpressionRight2->begin();
+		it!=aSTFor->ExpressionRight2->end(); ++it){
+		(*it)->evaluate(this);
+	}	
+
+}
+
+
+void Visitor::visit(ASTReturn * aSTReturn){
+	aSTReturn->ReturnValue1->evaluate(this);
+}
+
+void Visitor::visit(ReturnValue * returnValue){
+
+}
+
+void Visitor::visit(ASTBreak * aSTBreak){
+
+}
+
+void Visitor::visit(ASTContinue * aSTContinue){
+
+}
+
 /*void Visitor::CodeGen(ASTMethod_Declaration* aSTMethod_Declaration){
 	Value * V;
 
