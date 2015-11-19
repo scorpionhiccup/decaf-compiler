@@ -67,26 +67,26 @@ public:
 	}
 
 	Type * CodeGen(Args* args);
-	Value * CodeGen(ASTProgram* aSTProgram);
-	Value * CodeGen(ASTMethod_Declaration* aSTMethod_Declaration);
-	Value * CodeGen(ASTMF_Declaration* aSTMF_Declaration);
-	Value * CodeGen(ASTIdentifier* aSTIdentifier, Type * type);
-	Value * CodeGen(BinaryExpr* expr, Type * type);
-	Value * CodeGen(Expression* expr, Type * type);
-	Value * CodeGen(Bool* bool_obj);
-	Value * CodeGen(Integer* integer);
-	Value * CodeGen(ASTnode* aSTnode);
-	Value * CodeGen(ExpressionRight* expressionRight);
-	Value * CodeGen(RUnaryExpr* rUnaryExpr);
-	Value * CodeGen(RBinaryExpr* rBinaryExpr);
-	Value * CodeGen(ASTMain* aSTMain);
-	Value * CodeGen(AssignmentStatement* assignmentStatement);
-	Value * CodeGen(CalloutStatement* calloutStatement);
-	Value * CodeGen(ASTDeclarations* aSTDeclarations, Type* type);
-	Value * CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration, Type * type);
-	Value * CodeGen(ASTLocation* aSTLocation);
-	Value * CodeGen(ASTField_Declaration* aSTField_Declaration);
-	Value * CodeGen(ASTArrayIdentifier* aSTArrayIdentifier, Type * type);
+	void CodeGen(ASTProgram* aSTProgram);
+	void CodeGen(ASTMethod_Declaration* aSTMethod_Declaration);
+	void CodeGen(ASTMF_Declaration* aSTMF_Declaration);
+	void CodeGen(ASTIdentifier* aSTIdentifier, Type * type);
+	void CodeGen(BinaryExpr* expr, Type * type);
+	void CodeGen(Expression* expr, Type * type);
+	void CodeGen(Bool* bool_obj);
+	void CodeGen(Integer* integer);
+	void CodeGen(ASTnode* aSTnode);
+	void CodeGen(ExpressionRight* expressionRight);
+	void CodeGen(RUnaryExpr* rUnaryExpr);
+	void CodeGen(RBinaryExpr* rBinaryExpr);
+	void CodeGen(ASTMain* aSTMain);
+	void CodeGen(AssignmentStatement* assignmentStatement);
+	void CodeGen(CalloutStatement* calloutStatement);
+	void CodeGen(ASTDeclarations* aSTDeclarations, Type* type);
+	void CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration, Type * type);
+	void CodeGen(ASTLocation* aSTLocation);
+	void CodeGen(ASTField_Declaration* aSTField_Declaration);
+	void CodeGen(ASTArrayIdentifier* aSTArrayIdentifier, Type * type);
 	
 	static Type * CodeGen(IntType* intType){
 		return Type::getInt64Ty(getGlobalContext());

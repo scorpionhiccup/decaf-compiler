@@ -78,13 +78,14 @@ int unary=0;
 
 %type<_Def> Def
 %type<_ASTField_Declaration> Field_Declaration
+%type<_ASTParam_Declaration> Param_Declaration
+
 %type<_ASTMethod_Declaration> Method_Declaration
 %type<_Declaration> Declaration
 %type<_ASTField_Declarations> Field_Declarations
 %type<_Declarations> Declaration_list
 %type<_ASTLocation> Location
 %type<_ASTParam_Declarations> Param_Declarations
-%type<_ASTParam_Declaration> Param_Declaration
 %type<_Callout_Argss> Callout_Argss
 %type<_Argss> Argss
 %type<_ExpressionRights> Expression_Right
@@ -132,9 +133,9 @@ Declaration: Field_Declaration {
 		$$=new Declaration($1);
 	}
 
-Method_Declaration: Type IDENTIFIER TLROUND TRROUND Block { 
-		$$=new ASTMethod_Declaration($1, $2, $5);
-	}
+Method_Declaration: Type IDENTIFIER TLROUND Param_Declarations TRROUND Block { 
+	$$=new ASTMethod_Declaration($1, $2, $6, $4);
+}
 
 
 Block: LBRACE Field_Declarations Statements RBRACE {
