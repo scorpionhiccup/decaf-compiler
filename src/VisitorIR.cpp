@@ -30,6 +30,7 @@ public:
 };
 
 void VisitorIR::generateCode(ASTProgram *aSTProgram){
+	fflush(stdout);
 	vector<Type*> argTypes;
 	FunctionType *ftype = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
 	mainFunction = Function::Create(ftype, GlobalValue::InternalLinkage, "Class Program", this->module);
@@ -54,11 +55,16 @@ void VisitorIR::generateCode(ASTProgram *aSTProgram){
 
 void VisitorIR::visit(ASTProgram* aSTProgram){
 	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-	ASTMain* aSTMain=aSTProgram->getMain();
-	printDebug2("Inside ASTProgram");
-	aSTMain->evaluate(this);
+
+	printDebug2("Inside ASTProgram ");	
 	
+	for (list<Declaration*>::reverse_iterator it=aSTProgram->Declarations->rbegin();
+		it!=aSTProgram->Declarations->rend(); ++it){
+		(*it)->evaluate(this);
+	}
+
 	aSTProgram->to_return=V;
+	
 }
 
 void VisitorIR::visit(Args* args){
@@ -77,8 +83,10 @@ void VisitorIR::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 	Value * V;
 
 	//TODO: Add Callout Arguements from AST Class.
-
 	printDebug2("Inside ASTMethod_Declaration");
+
+	aSTMethod_Declaration->Block->evaluate(this);
+
 	vector<Type*> argTypes;
 	
 	/*for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
@@ -125,10 +133,17 @@ void VisitorIR::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 };
 	
 void VisitorIR::visit(ASTMF_Declaration * aSTMF_Declaration){
+	printDebug2("Inside ASTMF_Declaration");
+
 	aSTMF_Declaration->to_return=ConstantInt::get(getGlobalContext(), APInt(32,0));
 }
 
 void VisitorIR::visit(ASTIdentifier* aSTIdentifier){
+	
+	string msg="Inside ASTIdentifier ";
+	msg.append(aSTIdentifier->getId());
+	printDebug2(msg);
+	
 	if (in_field){
 		AllocaInst *alloc = new AllocaInst(aSTIdentifier->type, aSTIdentifier->getId(), this->currentBlock());
     	aSTIdentifier->Def::to_return=this->locals()[aSTIdentifier->getId()]=alloc;
@@ -198,9 +213,11 @@ void VisitorIR::visit(Integer* integer){
 }
 
 void VisitorIR::visit(ASTnode* aSTnode){
+	printDebug2("Inside ASTnode");
+
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	aSTnode->evaluate(this);
+	//aSTnode->evaluate(this);
 	aSTnode->to_return=V;
 }
 
@@ -297,6 +314,7 @@ void VisitorIR::visit(RBinaryExpr* rBinaryExpr){
 }
 
 void VisitorIR::visit(ASTMain* aSTMain){
+
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	printDebug2("Inside ASTMain");
@@ -306,7 +324,7 @@ void VisitorIR::visit(ASTMain* aSTMain){
 		(*it)->evaluate(this);
 	}
 
-	in_field=false;
+	//in_field=false;
 
 	printDebug2("Inside ASTStatements");
 
@@ -320,13 +338,16 @@ void VisitorIR::visit(ASTMain* aSTMain){
 
 void VisitorIR::visit(AssignmentStatement* assignmentStatement){
 	
-	printDebug2("Inside AssignmentStatement");
 
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	ASTLocation * location = assignmentStatement->getLocation();
+	
 	string id=location->getId();
+	
 	location->evaluate(this);
+
+	printDebug2("Inside AssignmentStatement");
 	
 	if (this->locals().find(id) == this->locals().end()){
 		string error_str="Undeclared Variable in assignment statement: ";
@@ -336,14 +357,19 @@ void VisitorIR::visit(AssignmentStatement* assignmentStatement){
 		return;
 	}
 
-	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
-		it!=assignmentStatement->expressionRight->end(); ++it){
-		(*it)->evaluate(this);
-		V=(*it)->to_return;
+	if (assignmentStatement->expressionRight->size()){
+		ExpressionRight * expr = assignmentStatement->expressionRight->back();
+		expr->evaluate(this);
+		V=expr->to_return;
 		if (V!=NULL){
 			V=new StoreInst(V, this->locals()[id], this->currentBlock());
 		}
+		
 	}
+
+	/*for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
+		it!=assignmentStatement->expressionRight->end(); ++it){
+	}*/
 
 	assignmentStatement->to_return=V;
 }
@@ -405,9 +431,9 @@ void VisitorIR::visit(ASTDeclarations* aSTDeclarations){
 }
 
 void VisitorIR::visit(ASTLocation* aSTLocation){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-	
 	printDebug2("Inside ASTLocation");
+
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));	
 
 	aSTLocation->ExpressionRight::to_return=V;
 }
@@ -461,24 +487,21 @@ std::map<std::string, Value*>& VisitorIR::locals() {
 
 void VisitorIR::visit(ASTField_Declaration* aSTField_Declaration){
 	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-
+	LangType *langType=aSTField_Declaration->getType();
 	printDebug2("Inside ASTField_Declaration");
-	LangType * langType=aSTField_Declaration->getType();
 	langType->evaluate(this);
 	aSTField_Declaration->type=langType;
 
-	for (list<ASTDeclarations*>::iterator it=aSTField_Declaration->Declarations->begin(); 
-		it!=aSTField_Declaration->Declarations->end(); ++it){		
-
-		LangType * langType=aSTField_Declaration->getType();
-		langType->evaluate(this);
-		(*it)->type=langType->type;
-		
-		(*it)->evaluate(this);
-		if ((*it)->to_return){
-			V=(*it)->to_return;
-		}
-	}
-
 	aSTField_Declaration->ASTExpression::to_return=V;
+}
+
+void VisitorIR::visit(Def* def){
+
+}
+
+void VisitorIR::visit(Declaration* declaration){
+	printDebug2("Inside Declaration");
+	ASTMF_Declaration * dec = declaration->getDeclaration();
+	dec->evaluate(this);
+	declaration->to_return=dec->to_return;
 }

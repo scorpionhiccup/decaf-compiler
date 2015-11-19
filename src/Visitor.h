@@ -27,43 +27,42 @@ class Visitor{
 public:
 	virtual ~Visitor();
 
-	void visit(Args* args);
-	void visit(ASTProgram* aSTProgram);
-	void visit(ASTLocation* aSTLocation);
-	void visit(ASTIdentifier* aSTIdentifier);
-	void visit(ASTMethod_Declaration* aSTMethod_Declaration);	
-	void visit(ASTField_Declaration* aSTField_Declaration);
-	void visit(ASTArrayIdentifier* aSTArrayIdentifier);
-	void visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
-	void visit(Def* def);
-	void visit(ASTDeclarations* aSTDeclarations);
-	void visit(CalloutStatement* calloutStatement);
-	void visit(AssignmentStatement* assignmentStatement);
-	void visit(ASTMain* aSTMain);
-	void visit(RBinaryExpr* rBinaryExpr);
-	void visit(RUnaryExpr* rUnaryExpr);
-	void visit(ExpressionRight* expressionRight);
-	void visit(ASTnode* aSTnode);
-	void visit(Integer* integer);
-	void visit(Bool* bool_obj);
-	void visit(Expression* expr);
-	void visit(BinaryExpr* expr);
-	void visit(CharLiteral* charLiteral);
-	void visit(StringLiteral* stringLiteral);
-	void visit(Declaration * declaration);
-	void visit(ASTParam_Declaration * aSTParam_Declaration);
-	void visit(MethodCallStatement * methodCallStatement);
-	void visit(ASTIF * aSTIF);
-	void visit(ASTIFELSE * aSTIFELSE);
-	void visit(ASTFor * aSTFor);
-	void visit(ASTReturn * aSTReturn);
-	void visit(ReturnValue * returnValue);	
-	void visit(ASTBreak * aSTBreak);
-	void visit(ASTContinue * aSTContinue);
+	virtual void visit(Args* args);
+	virtual void visit(ASTProgram* aSTProgram);
+	virtual void visit(ASTLocation* aSTLocation);
+	virtual void visit(ASTIdentifier* aSTIdentifier);
+	virtual void visit(ASTMethod_Declaration* aSTMethod_Declaration);	
+	virtual void visit(ASTField_Declaration* aSTField_Declaration);
+	virtual void visit(ASTArrayIdentifier* aSTArrayIdentifier);
+	virtual void visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
+	virtual void visit(Def* def);
+	virtual void visit(ASTDeclarations* aSTDeclarations);
+	virtual void visit(CalloutStatement* calloutStatement);
+	virtual void visit(AssignmentStatement* assignmentStatement);
+	virtual void visit(ASTMain* aSTMain);
+	virtual void visit(RBinaryExpr* rBinaryExpr);
+	virtual void visit(RUnaryExpr* rUnaryExpr);
+	virtual void visit(ExpressionRight* expressionRight);
+	virtual void visit(ASTnode* aSTnode);
+	virtual void visit(Integer* integer);
+	virtual void visit(Bool* bool_obj);
+	virtual void visit(Expression* expr);
+	virtual void visit(BinaryExpr* expr);
+	virtual void visit(CharLiteral* charLiteral);
+	virtual void visit(StringLiteral* stringLiteral);
+	virtual void visit(Declaration * declaration);
+	virtual void visit(ASTParam_Declaration * aSTParam_Declaration);
+	virtual void visit(MethodCallStatement * methodCallStatement);
+	virtual void visit(ASTIF * aSTIF);
+	virtual void visit(ASTIFELSE * aSTIFELSE);
+	virtual void visit(ASTFor * aSTFor);
+	virtual void visit(ASTReturn * aSTReturn);
+	virtual void visit(ReturnValue * returnValue);	
+	virtual void visit(ASTBreak * aSTBreak);
+	virtual void visit(ASTContinue * aSTContinue);
 	
 	Visitor() { 
 	}
-
 
 };
 

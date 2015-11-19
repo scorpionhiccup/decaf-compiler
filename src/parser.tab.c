@@ -1428,12 +1428,12 @@ yyreduce:
         case 2:
 #line 119 "parser.y" /* yacc.c:1646  */
     {
-		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram((yyvsp[-1]._Declarations));
 		Visitor * visitor=new Visitor();
 		ast_prog->evaluate(visitor);
+		
 		VisitorIR * visitorIR = new VisitorIR();
-		ast_prog->evaluate(visitor);
+		visitorIR->generateCode(ast_prog);
 	}
 #line 1439 "parser.tab.c" /* yacc.c:1646  */
     break;

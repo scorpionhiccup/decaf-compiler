@@ -117,12 +117,12 @@ int unary=0;
 %start Program 
 %%
 Program: START PROG_ID LBRACE Declaration_list RBRACE {
-		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($4);
 		Visitor * visitor=new Visitor();
 		ast_prog->evaluate(visitor);
+		
 		VisitorIR * visitorIR = new VisitorIR();
-		ast_prog->evaluate(visitor);
+		visitorIR->generateCode(ast_prog);
 	} | 
 
 Declaration_list: Declaration_list Declaration{

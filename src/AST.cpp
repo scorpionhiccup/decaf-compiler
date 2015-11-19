@@ -27,7 +27,6 @@ ASTIdentifier::ASTIdentifier(std::string id){
 	this->id_=id;		
 }
 	
-
 void ASTMain::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
@@ -36,17 +35,18 @@ void ASTField_Declaration::evaluate(Visitor* visitor){
 	visitor->visit(this);
 };
 
-
 void ASTDeclarations::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
 void ASTIdentifier::evaluate(Visitor* visitor){
+	cout<<"HERE2\n";
 	visitor->visit(this);
 };
 
 void ASTArrayIdentifier::evaluate(Visitor* visitor){
-	visitor->visit(this);	
+	cout<<"HERE3\n";
+	visitor->visit(this);
 };
 
 void CalloutStatement::evaluate(Visitor* visitor){
@@ -106,6 +106,7 @@ void Def::evaluate(Visitor* visitor){
 }
 
 void ASTLocation::evaluate(Visitor* visitor){
+	cout<<"HERE\n";
 	visitor->visit(this);	
 }
 
@@ -142,6 +143,7 @@ void VoidType::evaluate(Visitor * visitor){
 }
 
 void IntType::evaluate(Visitor * visitor){
+	//cout<<"cht\n";
 	visitor->visit(this);
 }
 
