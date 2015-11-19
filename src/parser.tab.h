@@ -90,7 +90,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 28 "parser.y" /* yacc.c:1909  */
+#line 24 "parser.y" /* yacc.c:1909  */
 
 	int number;
 	int bval;
@@ -118,19 +118,18 @@ union YYSTYPE
 	std::list<ExpressionRight *> *_ExpressionRights;
 	std::list<ASTDeclarations *> *Declarations_;
     std::list<Expression *> *_Expressions;
-	RUnaryExpr* _RUnaryExpr;
+    RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
 	BinaryExpr* _BinaryExpr;
 	Expression* _Expression;
-	//IntType *intType;
-	//BooleanType *booleanType;	
+	
 	ASTDeclarations * _ASTDeclarations;
 	ASTLocation* _ASTLocation;
 	LangType *type;
 	std::string *_string;
 
-#line 134 "parser.tab.h" /* yacc.c:1909  */
+#line 133 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

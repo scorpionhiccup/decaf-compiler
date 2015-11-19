@@ -9,17 +9,13 @@ using namespace std;
 extern int yylex(), yylineno;
 extern int yyparse();
 extern FILE* yyin, *yyout;
-FILE *XML_fp;
-FILE* bison_fp;
-
-map<string,string> tcheck;
-string type;
+FILE *XML_fp, *bison_fp, *LLVM_fp;
 
 void yyerror(const char* s);
 void operatorOutput(string op);
 
 enum VERSION{DEBUG, RELEASE};
-VERSION version=DEBUG;
+int version=DEBUG;
 
 int unary=0;
 %}
@@ -52,13 +48,12 @@ int unary=0;
 	std::list<ExpressionRight *> *_ExpressionRights;
 	std::list<ASTDeclarations *> *Declarations_;
     std::list<Expression *> *_Expressions;
-	RUnaryExpr* _RUnaryExpr;
+    RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
 	BinaryExpr* _BinaryExpr;
 	Expression* _Expression;
-	//IntType *intType;
-	//BooleanType *booleanType;	
+	
 	ASTDeclarations * _ASTDeclarations;
 	ASTLocation* _ASTLocation;
 	LangType *type;
@@ -81,8 +76,7 @@ int unary=0;
 %type<number>InExpression Bool
 %type<type> Type
 %type<Declarations_> Declarations
-//%type<fieldBaseDeclaration> Field_Declarations
-//%type<_BaseDeclaration> Def
+
 %type<_Def> Def
 %type<_ASTField_Declaration> Field_Declaration
 %type<_ASTParam_Declaration> Param_Declaration
@@ -121,9 +115,10 @@ int unary=0;
 Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($4);
-		ast_prog->evaluate(new Visitor());
-		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
-	} |
+		Visitor * visitor=new Visitor();
+		ast_prog->evaluate(visitor);
+		ast_prog->GenCode(visitor);
+	} | 
 
 Declaration_list : Declaration_list Declaration{
 	$$=$1;
@@ -155,15 +150,13 @@ Block: LBRACE Field_Declarations Statements RBRACE {
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
 	$$=$3;
-	cout<<"C1\n";
 	$$->push_back($1);
 } | {
-	cout<<"C2\n";
 	$$=new list<ASTField_Declaration*>();
 }
 
+
 Field_Declaration: Type Declarations {
-	cout<<"C\n";
 	$$ = new ASTField_Declaration($1, $2);	
 }
 
@@ -192,42 +185,18 @@ Param_Declaration: Type Def {
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);
-		tcheck[yylval.string]=type+"array";
 		$$=new ASTArrayFieldDeclaration($1, $3);
 	} | IDENTIFIER {
 		fprintf(bison_fp, "ID=%s\n", yylval.string);
-		tcheck[yylval.string]=type;
 		$$=new ASTIdentifier($1);
 	}
 
-Location: IDENTIFIER {if(tcheck.count(yylval.string)==0) {
-			cout<<"Variable "<<yylval.string<<"  not declared\n";
-			exit(0);
-		}
-		if(tcheck[yylval.string]!="intarray"&&tcheck[yylval.string]!="booleanarray") {
-			cout<<"Variable "<<yylval.string<<" is not an array\n";
-			exit(0);
-		}
-		}TLSQUARE Expression TRSQUARE {
+Location: IDENTIFIER TLSQUARE Expression TRSQUARE {
+		$$=new ASTArrayIdentifier(new ASTIdentifier($1), $3);
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
-		$$=new ASTArrayIdentifier(new ASTIdentifier($1), $4);
-		
-		//TEMPORARY:
-		//$$=new ASTIdentifier($1);
 	} | IDENTIFIER {
 		$$=new ASTIdentifier($1);
 		fprintf(bison_fp, "LOCATION ENCOUNTERED=%s\n", $1);
-		if(tcheck.count(yylval.string)==0) {
-			cout<<"Variable "<<yylval.string<<" not declared\n";
-			exit(0);
-		}
-		cout<<tcheck[yylval.string]<<endl;
-		
-		if(tcheck[yylval.string]!="int"&& tcheck[yylval.string]!="boolean") {
-			cout<<"Variable "<<yylval.string<<" is an array\n";
-			exit(0);
-		}
-		//$$=new ASTIdentifier(yylval.string);
 	}
 
 InExpression:
@@ -391,6 +360,7 @@ Statement: Location TEQUAL Expression_Right {
 
 Callout_Argss: Argss{
 		$$=new list<Args*>();
+		$$->push_back($1);
 	} | Argss TCOMMA Callout_Argss {
 		$$=$3;
 		$$->push_back($1);
@@ -409,12 +379,10 @@ Type: INT {
 		//$$=new Type();
 		$$=new IntType();
 		fprintf(bison_fp, "INT DECLARATION ENCOUNTERED. ");
-		type="int";
 	} | BOOLEAN {
 		//$$=new Type();
 		$$=new BooleanType();
 		fprintf(bison_fp, "BOOLEAN DECLARATION ENCOUNTERED. ");
-		type="boolean";
 	} | VOID {
 		$$=new VoidType();
 	}
@@ -426,7 +394,8 @@ int main(int Argsc, char* Argsv[]) {
 	const char *outfile = "flex_output.txt";		
 	const char *bison_outfile = "bison_output.txt";
 	const char *xml_outfile = "XML_visitor.txt";
-
+	const char *llvm_outfile = "llvm_debug.txt";
+	
 	if (Argsc>=2){
 		yyin = fopen( Argsv[1], "r");
 		strcpy(infile, Argsv[1]);
@@ -437,6 +406,7 @@ int main(int Argsc, char* Argsv[]) {
 	yyout = fopen(outfile, "w");
 	bison_fp = fopen(bison_outfile, "w");	
 	XML_fp = fopen(xml_outfile, "w");
+	LLVM_fp = fopen(llvm_outfile, "w");
 
 	if(!yyin){
 		printf("Error in opening '%s' for reading!", infile);
@@ -457,6 +427,11 @@ int main(int Argsc, char* Argsv[]) {
 		printf("Error in opening '%s' for writing!", xml_outfile);
 		exit(0);
 	}	
+
+	if (!LLVM_fp){
+		printf("Error in opening '%s' for writing!", llvm_outfile);
+		exit(0);
+	}
 
 	clock_t start, end;
 	if (version == DEBUG){
@@ -482,6 +457,7 @@ int main(int Argsc, char* Argsv[]) {
 void yyerror( const char *msg) {
 	cerr << "Line: " << yylineno << ": " << msg << endl; 
 	cerr.flush();
+	exit(1);
 }
 
 void operatorOutput(string op) {

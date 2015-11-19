@@ -1,4 +1,9 @@
 #include <bits/stdc++.h>
+
+#ifndef AST_H
+#define AST_H
+
+#include <bits/stdc++.h>
 #include <llvm/IR/Type.h>
 #include <llvm/IR/DerivedTypes.h>
 #include <llvm/IR/LLVMContext.h>
@@ -13,15 +18,13 @@
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/Support/raw_ostream.h>
-using namespace llvm;
-#ifndef AST_H
-#define AST_H
 
 using namespace std;
+using namespace llvm;
+
 
 class Visitor;
 
-class LangType;
 class ASTDeclarations;
 class ASTMain;
 class ASTField_Declaration;
@@ -34,18 +37,22 @@ extern FILE* XML_fp;
 class ASTnode{
 public:
 	virtual void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 
 };
 
 class ASTStatement: public ASTnode{
 public:	
-	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	using ASTnode::GenCode;
+	virtual void evaluate(Visitor* visitor);
+	virtual Value * GenCode(Visitor* visitor);
 };
 
 class LangType: public ASTnode{
 public:
+	LangType(){
+
+	}
 	virtual Type* GenCode(Visitor* visitor);	
 };
 
@@ -54,9 +61,8 @@ public:
 	ASTMF_Declaration(){
 
 	}
-	virtual void evaluate(Visitor* visitor){
-
-	}
+	virtual void evaluate(Visitor* visitor);
+	virtual Value * GenCode(Visitor* visitor);
 };
 
 class ASTProgram: public ASTnode{
@@ -68,7 +74,7 @@ public:
 		return aSTMain;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 	ASTProgram(list<Declaration*> *Declarations)
 	{
 		this->Declarations=Declarations;
@@ -84,7 +90,7 @@ public:
 		return value_;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 
@@ -110,14 +116,21 @@ public:
 		this->Declarations=declarations;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
+	LangType * getType(){
+		return this->type;
+	}
 };
 
 class Declaration: public ASTnode{
-	ASTMF_Declaration *ASTMF_Declaration1;
+	ASTMF_Declaration * ASTMF_Declaration1;
 public:
 	Declaration(ASTMF_Declaration* ASTMF_Declaration1){
 		this->ASTMF_Declaration1=ASTMF_Declaration1;
+	}
+	void evaluate(Visitor* visitor);
+	ASTMF_Declaration * getDeclaration(){
+		return this->ASTMF_Declaration1;
 	}
 };
 
@@ -125,23 +138,26 @@ public:
 class IntType: public LangType{
 	//std::string s;
 public:
+	Type* GenCode(Visitor* visitor);
 	IntType(){
 		//this->s=s;
 	}
 };
 
 class BooleanType: public LangType{
-	//std::string s;
 public:
+	Type* GenCode(Visitor* visitor);
 	BooleanType(){
 		//this->s=s;
 	}
 };
+
 class VoidType: public LangType{
 public:
 	VoidType(){
 		//this->s=s;
-	}	
+	}
+	Type* GenCode(Visitor* visitor);
 };
 
 class ASTMethod_Declaration: public ASTMF_Declaration{
@@ -151,8 +167,7 @@ class ASTMethod_Declaration: public ASTMF_Declaration{
 public:
 	ASTMain* Block;
 	void evaluate(Visitor* visitor);
-	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER,ASTMain* Block,list<ASTParam_Declaration*>* ASTParam_Declaration1	
-) {
+	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER,ASTMain* Block,list<ASTParam_Declaration*>* ASTParam_Declaration1) {
 		this->LangType1=LangType1;
 		this->IDENTIFIER=IDENTIFIER;
 		this->Block=Block;
@@ -160,6 +175,13 @@ public:
 
 	}
 
+	Value * GenCode(Visitor * visitor);
+	string getIdentifier(){
+		return this->IDENTIFIER;
+	}
+	LangType * getLangType(){
+		return this->LangType1;
+	}
 };
 
 
@@ -171,7 +193,10 @@ public:
 	}
 	Args(){};
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Type * GenCode(Visitor* visitor);
+	string getLiteral(){
+		return this->str;
+	}
 };
 
 
@@ -181,7 +206,7 @@ public:
 
 	} 
 	virtual void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	virtual Value * GenCode(Visitor* visitor);
 };
 
 
@@ -191,6 +216,7 @@ public:
 	ListExpressionRight(list<ExpressionRight*> *expressionRight1){
 		this->expressionRight=expressionRight1;
 	}
+	Type * GenCode(Visitor* visitor);
 };
 
 
@@ -199,8 +225,8 @@ public:
 	Expression(){
 
 	} 
-	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);	
+	virtual void evaluate(Visitor* visitor);
+	virtual Value* GenCode(Visitor* visitor, Type * type);	
 };
 
 /*
@@ -208,23 +234,24 @@ public:
 */
 class ASTLocation: public ExpressionRight, public ASTStatement{
 public:
+	virtual Value * GenCode(Visitor* visitor, Type * type);
 	ASTLocation(){
 
 	}
-	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);	
+	virtual void evaluate(Visitor* visitor);
+	virtual string getId();
 };
 
 /*
 	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
 */
-class Def: public Expression{	
+class Def: public Expression{
 public:
+	virtual Value* GenCode(Visitor* visitor, Type * type);	
 	Def() {
 		
 	}
-	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	virtual void evaluate(Visitor* visitor);
 };
 
 /*
@@ -232,11 +259,11 @@ public:
 	Def -> IDENTIFIER
 */
 class ASTIdentifier: public ASTLocation, public Def{
-	std::string id_;
 public:
+	Value* GenCode(Visitor* visitor, Type * type);
+	std::string id_;
 	ASTIdentifier(std::string id);
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
 	string getId();
 };
 
@@ -244,6 +271,7 @@ public:
 	Location -> IDENTIFIER TLSQUARE Expression TRSQUARE 
 	Def-> IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
+
 class ASTArrayIdentifier: public ASTLocation{
 	ASTIdentifier* aSTIdentifier;
 	std::list<Expression*>* expression;
@@ -254,7 +282,7 @@ public:
 	}
 	
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor, Type * type);
 	
 	string getId(){
 		return this->aSTIdentifier->getId();
@@ -266,12 +294,13 @@ public:
 };
 
 /*
-Def: IDENTIFIER TLSQUARE InExpression TRSQUARE
+	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE
 */
 class ASTArrayFieldDeclaration: public Def{
 	int size_;
 	ASTIdentifier* aSTIdentifier;
 public:
+	Value* GenCode(Visitor* visitor, Type* type);
 	ASTArrayFieldDeclaration(std::string id, int size){
 		this->aSTIdentifier=new ASTIdentifier(id);
 		this->size_=size;
@@ -281,8 +310,13 @@ public:
 	string getId(){
 		return this->aSTIdentifier->getId();
 	};
+
 	int getExpression(){
 		return size_;
+	}
+
+	ASTIdentifier* getIdentifier(){
+		return aSTIdentifier;
 	}
 };
 
@@ -296,7 +330,7 @@ public:
 		this->Def_=Def1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor, Type * type);
 	Def* getDef(){
 		return this->Def_;
 	}; 
@@ -326,7 +360,7 @@ public:
 		this->Argss=Argss;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	virtual Value * GenCode(Visitor* visitor);
 };
 
 
@@ -338,7 +372,7 @@ public:
 		this->charLiteral=charLiteral1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Type * GenCode(Visitor* visitor);
 	string getLiteral(){
 		return this->charLiteral;
 	}
@@ -352,7 +386,7 @@ public:
 		this->stringLiteral=stringLiteral1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Type * GenCode(Visitor* visitor);
 	string getLiteral(){
 		return this->stringLiteral;
 	}
@@ -370,7 +404,7 @@ public:
 		return this->expressionRight;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 	int getType(){
 		return this->type;
 	}
@@ -389,13 +423,16 @@ public:
 		this->expressionRightR=expressionRightR1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
+	
 	list<ExpressionRight*>* getLeftExprs(){
 		return this->expressionRightL;
 	}
+	
 	list<ExpressionRight*>* getRightExprs(){
 		return this->expressionRightR;
 	}
+
 	string getType(){
 		return this->type;
 	}
@@ -412,7 +449,7 @@ public:
 		return false;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 class Integer: public ExpressionRight, public Expression{
@@ -425,7 +462,7 @@ public:
 		return integer;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 
@@ -434,7 +471,7 @@ class BinaryExpr: public Expression{
 	std::list<Expression*> *  expressionL, *expressionR;
 public:
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value* GenCode(Visitor* visitor, Type* type);
 	BinaryExpr(string type1, 
 		std::list<Expression*> * expressionL1, 
 		std::list<Expression*> * expressionR1) {
@@ -465,7 +502,10 @@ public:
 		this->expressionRight=expressionRight;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	virtual Value* GenCode(Visitor* visitor);
+	ASTLocation * getLocation(){
+		return this->location;
+	}
 };
 
 /*
@@ -483,7 +523,7 @@ public:
 	}
 
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+	Value * GenCode(Visitor* visitor);
 };
 
 #endif

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <program>
 <declarations count="1">
 <node>
@@ -260969,3 +260970,5 @@
 <node>
 <node>
 <node
+=======
+>>>>>>> Stashed changes
