@@ -32,14 +32,16 @@ int unary=0;
 	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
 	ASTMethod_Declaration *_ASTMethod_Declaration;
+	ASTParam_Declaration *_ASTParam_Declaration;
+
 	Declaration *_Declaration;
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
-	
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<Declaration *>*_Declarations;
-	
+
+	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
 	std::list<Args*> *_Callout_Argss; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
@@ -62,7 +64,7 @@ int unary=0;
 %token<string> CHAR_LITERAL
 %token<number> BOOLEAN
 
-%token<string> CALLOUT MAIN
+%token<string> CALLOUT 
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
 %token<string> TLROUND TRROUND TLSQUARE TRSQUARE 
@@ -81,6 +83,8 @@ int unary=0;
 %type<_ASTField_Declarations> Field_Declarations
 %type<_Declarations> Declaration_list
 %type<_ASTLocation> Location
+%type<_ASTParam_Declarations> Param_Declarations
+%type<_ASTParam_Declaration> Param_Declaration
 %type<_Callout_Argss> Callout_Argss
 %type<_Argss> Argss
 %type<_ExpressionRights> Expression_Right
@@ -101,14 +105,17 @@ int unary=0;
 %left TPLUS TMINUS  
 %left TMUL TDIV MOD
 %left NOT
-%left TLROUND TRROUND
+%left TLROUND TRROUND 
+%nonassoc TLSQUARE SEMI_COLON
 
 %start Program 
 %%
 Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($4);
-		ast_prog->evaluate(new Visitor());
+		Visitor * visitor=new Visitor();
+		ast_prog->evaluate(visitor);
+		ast_prog->GenCode(visitor);
 	} | 
 
 Declaration_list: Declaration_list Declaration{
@@ -155,6 +162,20 @@ Declarations: Def TCOMMA Declarations {
 		$$=new list<ASTDeclarations*>();
 		$$->push_back(new ASTDeclarations($1));
 	}
+
+Param_Declarations: Param_Declaration TCOMMA Param_Declarations{
+	$$=$3;
+	cout<<"C1\n";
+	$$->push_back($1);
+} | {
+	cout<<"C2\n";
+	$$=new list<ASTParam_Declaration*>();
+}
+
+Param_Declaration: Type Def {
+	cout<<"C\n";
+	$$ = new ASTParam_Declaration($1, $2);	
+}
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);

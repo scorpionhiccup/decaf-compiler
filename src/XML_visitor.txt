@@ -1,4 +1,0 @@
-<program>
-<declarations count="1">
-</field_declarations>
-</program>

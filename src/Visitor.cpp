@@ -114,6 +114,54 @@ void Visitor::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 	aSTMethod_Declaration->Block->evaluate(this);
 }
 
+Value * Visitor::CodeGen(ASTMethod_Declaration* aSTMethod_Declaration){
+	Value * V;
+
+	printDebug("Inside ASTMethod_Declaration");
+	vector<Type*> argTypes;
+	
+	/*for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
+		it!=calloutStatement->Argss->rend(); ++it){
+		Type * type = static_cast<Type *>((*it)->GenCode(this));
+		argTypes.push_back(type);
+	}*/
+
+	LangType* langType = aSTMethod_Declaration->getLangType();
+	Type * type = static_cast<Type *>(langType->GenCode(this));
+	
+	FunctionType *ftype = FunctionType::get(
+		type, 
+		argTypes, false);
+
+	Function *function = Function::Create(ftype, 
+		GlobalValue::InternalLinkage,
+		aSTMethod_Declaration->getIdentifier(),
+		this->module);
+	
+	BasicBlock *bblock = BasicBlock::Create(
+		getGlobalContext(), "entry", function, 0);
+	
+	Builder.SetInsertPoint(bblock);
+	this->pushBlock(bblock);
+
+	/*for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
+		it!=calloutStatement->Argss->rend(); ++it){
+		
+		AllocaInst *alloc = new AllocaInst(
+			static_cast<Type *>((*it)->GenCode(this)), 
+			(*it)->getLiteral(), 
+			this->currentBlock());
+	    this->locals()[(*it)->getLiteral()] = alloc;
+
+		//(*it)->GenCode(this);
+	}*/
+	
+	this->popBlock();
+	
+	return function;
+}
+
+
 Value *Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){
 	Value *V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
@@ -540,26 +588,9 @@ void Visitor::visit(CharLiteral* charLiteral){
 	fprintf(XML_fp, "<character value=\'%s\'' />\n", charLiteral->getLiteral().c_str());
 };
 
-/*Value * Visitor::CodeGen(CharLiteral* charLiteral){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-	
-	printDebug("Inside CharLiteral");
-
-	return V;
-}*/
-
-
 void Visitor::visit(StringLiteral* stringLiteral){
 	fprintf(XML_fp, "<string value=%s />\n", stringLiteral->getLiteral().c_str());
 };
-
-/*Value * Visitor::CodeGen(StringLiteral* stringLiteral){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
-	
-	printDebug("Inside StringLiteral");
-
-	return V;
-}*/
 
 void Visitor::visit(Expression* expr){
 	fprintf(XML_fp, "<expr>\n");
@@ -659,4 +690,9 @@ void Visitor::generateCode(ASTProgram *aSTProgram){
 
 void Visitor::visit(Declaration * declaration){
 	printDebug("Inside Declaration");
+}
+
+Value * Visitor::CodeGen(ASTMF_Declaration * aSTMF_Declaration){
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	return V;
 }

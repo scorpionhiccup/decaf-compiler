@@ -25,11 +25,13 @@ using namespace llvm;
 
 class Visitor;
 
+class LangType;
 class ASTDeclarations;
 class ASTMain;
 class ASTField_Declaration;
 class ASTMethod_Declaration;
 class Declaration;
+class Def;
 
 extern FILE* XML_fp;
 
@@ -59,14 +61,12 @@ public:
 	ASTMF_Declaration(){
 
 	}
-	virtual void evaluate(Visitor* visitor){
-
-	}
+	virtual void evaluate(Visitor* visitor);
+	virtual Value * GenCode(Visitor* visitor);
 };
 
 class ASTProgram: public ASTnode{
 private:
-	std::string id_;
 	ASTMain* aSTMain;
 public:
 	list<Declaration*> *Declarations;
@@ -93,6 +93,17 @@ public:
 	Value * GenCode(Visitor* visitor);
 };
 
+
+class ASTParam_Declaration: public ASTnode{
+	LangType *LangType1;
+	Def *Def1;
+public:
+	ASTParam_Declaration(LangType *LangType1,Def *Def1){
+		this->LangType1=LangType1;
+		this->Def1=Def1;
+	}
+
+};
 /*
 	Field_Declaration: Type Declarations
 */
@@ -134,6 +145,7 @@ public:
 };
 
 class BooleanType: public LangType{
+	//std::string s;
 public:
 	Type* GenCode(Visitor* visitor);
 	BooleanType(){
@@ -145,12 +157,14 @@ class VoidType: public LangType{
 public:
 	VoidType(){
 		//this->s=s;
-	}	
+	}
+	Type* GenCode(Visitor* visitor);
 };
 
 class ASTMethod_Declaration: public ASTMF_Declaration{
 	LangType *LangType1;
-	string IDENTIFIER;	
+	string IDENTIFIER;
+	list<ASTParam_Declaration*>* ASTParam_Declaration1;	
 public:
 	ASTMain* Block;
 	void evaluate(Visitor* visitor);
@@ -158,8 +172,17 @@ public:
 		this->LangType1=LangType1;
 		this->IDENTIFIER=IDENTIFIER;
 		this->Block=Block;
+		this->ASTParam_Declaration1=ASTParam_Declaration1;	
+
 	}
 
+	Value * GenCode(Visitor * visitor);
+	string getIdentifier(){
+		return this->IDENTIFIER;
+	}
+	LangType * getLangType(){
+		return this->LangType1;
+	}
 };
 
 
@@ -480,7 +503,7 @@ public:
 		this->expressionRight=expressionRight;
 	}
 	void evaluate(Visitor* visitor);
-	Value* GenCode(Visitor* visitor);
+	virtual Value* GenCode(Visitor* visitor);
 	ASTLocation * getLocation(){
 		return this->location;
 	}

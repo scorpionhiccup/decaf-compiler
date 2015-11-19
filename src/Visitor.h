@@ -20,6 +20,7 @@
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/Support/raw_ostream.h>
+#include <llvm/IR/LLVMContext.h>
 
 using namespace llvm; 
 
@@ -67,8 +68,9 @@ public:
 
 	Type * CodeGen(Args* args);
 	Value * CodeGen(ASTProgram* aSTProgram);
-	//Value * CodeGen(StringLiteral* stringLiteral);
-	//Value * CodeGen(CharLiteral* charLiteral);
+	Value * CodeGen(ASTMethod_Declaration* aSTMethod_Declaration);
+	Value * CodeGen(ASTMF_Declaration* aSTMF_Declaration);
+	Value * CodeGen(ASTIdentifier* aSTIdentifier, Type * type);
 	Value * CodeGen(BinaryExpr* expr, Type * type);
 	Value * CodeGen(Expression* expr, Type * type);
 	Value * CodeGen(Bool* bool_obj);
@@ -83,7 +85,6 @@ public:
 	Value * CodeGen(ASTDeclarations* aSTDeclarations, Type* type);
 	Value * CodeGen(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration, Type * type);
 	Value * CodeGen(ASTLocation* aSTLocation);
-	Value * CodeGen(ASTIdentifier* aSTIdentifier, Type * type);
 	Value * CodeGen(ASTField_Declaration* aSTField_Declaration);
 	Value * CodeGen(ASTArrayIdentifier* aSTArrayIdentifier, Type * type);
 	
@@ -96,6 +97,10 @@ public:
 	};
 
 	static Type * CodeGen(LangType* langType){
+		return Type::getVoidTy(getGlobalContext());
+	};
+
+	static Type * CodeGen(VoidType* voidType){
 		return Type::getVoidTy(getGlobalContext());
 	};
 

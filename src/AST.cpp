@@ -33,12 +33,13 @@ Value * ASTStatement::GenCode(Visitor* visitor){
 }
 
 std::string ASTProgram::getId(){
-	return id_;
+	return "";
 }
 
 ASTIdentifier::ASTIdentifier(std::string id){
 	this->id_=id;		
 }
+	
 
 void ASTMain::evaluate(Visitor* visitor){
 	visitor->visit(this);
@@ -225,14 +226,29 @@ Type * BooleanType::GenCode(Visitor * visitor){
 	return visitor->CodeGen(this);
 }
 
-void ASTMethod_Declaration::evaluate(Visitor* visitor){
-	return visitor->visit(this);
+Type * VoidType::GenCode(Visitor * visitor){
+	return visitor->CodeGen(this);
 }
 
-Type * LangType::GenCode(Visitor * visitor){
+void ASTMethod_Declaration::evaluate(Visitor* visitor){
+	visitor->visit(this);
+}
+
+Value * ASTMethod_Declaration::GenCode(Visitor * visitor){
 	return visitor->CodeGen(this);
+}
+Type * LangType::GenCode(Visitor* visitor){
+	visitor->CodeGen(this);	
 }
 
 void Declaration::evaluate(Visitor* visitor){
 	 visitor->visit(this);
+}
+
+void ASTMF_Declaration::evaluate(Visitor * visitor){
+	visitor->visit(this);
+}
+
+Value* ASTMF_Declaration::GenCode(Visitor * visitor){
+	return visitor->CodeGen(this);
 }

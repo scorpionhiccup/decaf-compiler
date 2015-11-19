@@ -52,37 +52,36 @@ extern int yydebug;
     CHAR_LITERAL = 262,
     BOOLEAN = 263,
     CALLOUT = 264,
-    MAIN = 265,
-    TEQUAL = 266,
-    INT = 267,
-    TPLUS = 268,
-    TMINUS = 269,
-    TMUL = 270,
-    TDIV = 271,
-    NOT = 272,
-    MOD = 273,
-    RBRACE = 274,
-    LBRACE = 275,
-    T_NEWLINE = 276,
-    T_QUIT = 277,
-    START = 278,
-    TLE = 279,
-    GE = 280,
-    AND = 281,
-    TEQ = 282,
-    OR = 283,
-    TLROUND = 284,
-    TRROUND = 285,
-    TLSQUARE = 286,
-    TRSQUARE = 287,
-    FALSE = 288,
-    TRUE = 289,
-    VOID = 290,
-    TLESS = 291,
-    TGREAT = 292,
-    SEMI_COLON = 293,
-    TCOMMA = 294,
-    NOT_EQUAL = 295
+    TEQUAL = 265,
+    INT = 266,
+    TPLUS = 267,
+    TMINUS = 268,
+    TMUL = 269,
+    TDIV = 270,
+    NOT = 271,
+    MOD = 272,
+    RBRACE = 273,
+    LBRACE = 274,
+    T_NEWLINE = 275,
+    T_QUIT = 276,
+    START = 277,
+    TLE = 278,
+    GE = 279,
+    AND = 280,
+    TEQ = 281,
+    OR = 282,
+    TLROUND = 283,
+    TRROUND = 284,
+    TLSQUARE = 285,
+    TRSQUARE = 286,
+    FALSE = 287,
+    TRUE = 288,
+    VOID = 289,
+    TLESS = 290,
+    TGREAT = 291,
+    SEMI_COLON = 292,
+    TCOMMA = 293,
+    NOT_EQUAL = 294
   };
 #endif
 
@@ -103,14 +102,16 @@ union YYSTYPE
 	ASTArrayIdentifier *arrayIdentifier;
 	ASTField_Declaration *_ASTField_Declaration;
 	ASTMethod_Declaration *_ASTMethod_Declaration;
+	ASTParam_Declaration *_ASTParam_Declaration;
+
 	Declaration *_Declaration;
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
-	
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<Declaration *>*_Declarations;
-	
+
+	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
 	std::list<Args*> *_Callout_Argss; 
 	std::list<ASTStatement*>* _aSTStatements;
 	std::list<ExpressionRight *> *_ExpressionRights;
@@ -127,7 +128,7 @@ union YYSTYPE
 	LangType *type;
 	std::string *_string;
 
-#line 131 "parser.tab.h" /* yacc.c:1909  */
+#line 132 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
