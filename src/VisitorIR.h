@@ -1,7 +1,7 @@
-#ifndef VISITOR_H
-#define VISITOR_H
+#ifndef LLVM_VISITOR
+#define LLVM_VISITOR
 
-#include "AST.h"
+//#include "AST.h"
 
 #include <stack>
 #include <llvm/IR/Module.h>
@@ -23,10 +23,17 @@
 
 using namespace llvm; 
 
-class Visitor{
+class CodeGenBlock {
 public:
-	virtual ~Visitor();
+	BasicBlock *block;
+	std::map<std::string, Value*> locals;
+};
 
+
+class VisitorIR: public Visitor{
+	std::stack<CodeGenBlock *> blocks;
+	Function *mainFunction;
+public:
 	void visit(Args* args);
 	void visit(ASTProgram* aSTProgram);
 	void visit(ASTLocation* aSTLocation);
@@ -47,14 +54,56 @@ public:
 	void visit(Integer* integer);
 	void visit(Bool* bool_obj);
 	void visit(Expression* expr);
-	void visit(BinaryExpr* expr);
-	void visit(CharLiteral* charLiteral);
-	void visit(StringLiteral* stringLiteral);
 	void visit(Declaration * declaration);
-
-	Visitor() { 
+	void visit(ASTMF_Declaration * aSTMF_Declaration);
+	void visit(BinaryExpr* binaryExpr);
+	
+	Module *module;
+	VisitorIR() { 
+		module = new Module("main", getGlobalContext()); 
 	}
 
+	void visit(IntType* intType){
+		intType->type=Type::getInt64Ty(getGlobalContext());
+	};
+	
+	void visit(BooleanType* booleanType){
+		booleanType->type=Type::getInt1Ty(getGlobalContext());
+	};
+
+	void visit(LangType* langType){
+		langType->type=Type::getVoidTy(getGlobalContext());
+	};
+
+	void visit(VoidType* voidType){
+		voidType->type=Type::getVoidTy(getGlobalContext());
+	};
+
+	void visit(CharLiteral* charLiteral){
+		charLiteral->type=ConstantDataArray::getString(getGlobalContext(),
+			charLiteral->getLiteral(),
+			false)->getType();
+	};
+
+	void visit(StringLiteral * stringLiteral){
+		stringLiteral->type = ConstantDataArray::getString(getGlobalContext(),
+			stringLiteral->getLiteral(),
+			false)->getType();
+	};
+
+	void visit(ListExpressionRight* listExpressionRight){
+		listExpressionRight->type = Type::getInt64Ty(getGlobalContext());
+	};
+
+	std::map<std::string, Value*>& locals();
+	
+	BasicBlock *currentBlock();
+	
+	void pushBlock(BasicBlock *block);
+
+	void popBlock();
+
+	void generateCode(ASTProgram *aSTProgram);
 
 };
 

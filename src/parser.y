@@ -4,6 +4,7 @@
 class Visitor;
 #include "AST.h"
 #include "Visitor.h"
+#include "VisitorIR.h"
 using namespace std;
 
 extern int yylex(), yylineno;
@@ -38,8 +39,8 @@ int unary=0;
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
-	std::list<Declaration *>*_Declarations;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<Declaration *>*_Declarations;
 
 	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
 	std::list<Args*> *_Callout_Argss; 
@@ -86,6 +87,7 @@ int unary=0;
 %type<_Declarations> Declaration_list
 %type<_ASTParam_Declarations> Param_Declarations
 %type<_ASTLocation> Location
+%type<_ASTParam_Declarations> Param_Declarations
 %type<_Callout_Argss> Callout_Argss
 %type<_Argss> Argss
 %type<_ExpressionRights> Expression_Right
@@ -116,28 +118,26 @@ Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		ASTProgram *ast_prog = new ASTProgram($4);
 		Visitor * visitor=new Visitor();
 		ast_prog->evaluate(visitor);
-		ast_prog->GenCode(visitor);
+		VisitorIR * visitorIR = new VisitorIR();
+		ast_prog->evaluate(visitor);
+		//ast_prog->GenCode(visitorIR);
 	} | 
 
-Declaration_list : Declaration_list Declaration{
-	$$=$1;
-	$$->push_back($2);
-} 
-| Declaration {
-	$$=new list<Declaration*>();
-	$$->push_back($1);
-}
+Declaration_list: Declaration_list Declaration{
+		$$=$1;
+		$$->push_back($2);
+	} | Declaration {
+		$$=new list<Declaration*>();
+		$$->push_back($1);
+	}
 
-Declaration : Field_Declaration {
-	$$=new Declaration($1);
-}| Method_Declaration  {
-	$$=new Declaration($1);
-}
-
-
+Declaration: Field_Declaration {
+		$$=new Declaration($1);
+	} | Method_Declaration  {
+		$$=new Declaration($1);
+	}
 
 Method_Declaration: Type IDENTIFIER TLROUND Param_Declarations TRROUND Block { 
-	cout<<"B3\n";
 	$$=new ASTMethod_Declaration($1, $2, $6, $4);
 }
 
@@ -170,15 +170,12 @@ Declarations: Def TCOMMA Declarations {
 
 Param_Declarations: Param_Declaration TCOMMA Param_Declarations{
 	$$=$3;
-	cout<<"C1\n";
 	$$->push_back($1);
 } | {
-	cout<<"C2\n";
 	$$=new list<ASTParam_Declaration*>();
 }
 
 Param_Declaration: Type Def {
-	cout<<"C\n";
 	$$ = new ASTParam_Declaration($1, $2);	
 }
 
