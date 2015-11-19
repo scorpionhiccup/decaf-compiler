@@ -12,7 +12,7 @@ lex.yy.c: lexical_analyser.l parser.tab.h
 	flex -d lexical_analyser.l
 
 syntax_analyser: lex.yy.c parser.tab.c parser.tab.h AST.cpp Visitor.cpp 
-	$(CC) $(CFLAGS) -o $(OUTFILE) parser.tab.c AST.cpp Visitor.cpp lex.yy.c `llvm-config --libs core vectorize jit native --cxxflags` `llvm-config --ldflags` -lfl \
+	$(CC) $(CFLAGS) -o $(OUTFILE) parser.tab.c AST.cpp Visitor.cpp lex.yy.c VisitorIR.cpp `llvm-config --libs core vectorize jit native --cxxflags` `llvm-config --ldflags` -lfl \
 	-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DCURSES_LIBRARY=/usr/lib/x86_64-linux-gnu/libncurses.so 
 
 clean:

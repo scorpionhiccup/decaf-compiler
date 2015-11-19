@@ -4,6 +4,7 @@
 class Visitor;
 #include "AST.h"
 #include "Visitor.h"
+#include "VisitorIR.h"
 using namespace std;
 
 extern int yylex(), yylineno;
@@ -116,7 +117,8 @@ Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		ASTProgram *ast_prog = new ASTProgram($4);
 		Visitor * visitor=new Visitor();
 		ast_prog->evaluate(visitor);
-		ast_prog->GenCode(visitor);
+		VisitorIR * visitorIR = new VisitorIR();
+		ast_prog->GenCode(visitorIR);
 	} | 
 
 Declaration_list: Declaration_list Declaration{
@@ -166,15 +168,12 @@ Declarations: Def TCOMMA Declarations {
 
 Param_Declarations: Param_Declaration TCOMMA Param_Declarations{
 	$$=$3;
-	cout<<"C1\n";
 	$$->push_back($1);
 } | {
-	cout<<"C2\n";
 	$$=new list<ASTParam_Declaration*>();
 }
 
 Param_Declaration: Type Def {
-	cout<<"C\n";
 	$$ = new ASTParam_Declaration($1, $2);	
 }
 

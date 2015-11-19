@@ -128,11 +128,11 @@ void Visitor::CodeGen(ASTMethod_Declaration* aSTMethod_Declaration){
 	}*/
 
 	LangType* langType = aSTMethod_Declaration->getLangType();
-	Type * type = static_cast<Type *>(langType->GenCode(this));
+	langType->GenCode(this);
+	Type * type=langType->type;
 	
 	FunctionType *ftype = FunctionType::get(
-		type, 
-		argTypes, false);
+		type, argTypes, false);
 
 	Function *function = Function::Create(ftype, 
 		GlobalValue::InternalLinkage,
@@ -168,8 +168,9 @@ void Visitor::CodeGen(ASTField_Declaration* aSTField_Declaration){
 
 	printDebug("Inside ASTField_Declaration");
 	LangType * langType=aSTField_Declaration->getType();
-	Type * type = langType->GenCode(this);
-	
+	langType->GenCode(this);
+	Type * type = langType->type;
+
 	for (list<ASTDeclarations*>::iterator it=aSTField_Declaration->Declarations->begin(); 
 		it!=aSTField_Declaration->Declarations->end(); ++it){
 			(*it)->GenCode(this, type);
@@ -332,11 +333,12 @@ void Visitor::CodeGen(CalloutStatement* calloutStatement){
 	Value * V;
 
 	vector<Type*> argTypes;
-	
+	LangType* langType;
+
 	for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
 		it!=calloutStatement->Argss->rend(); ++it){
-		Type * type = static_cast<Type *>((*it)->GenCode(this));
-		argTypes.push_back(type);
+		(*it)->GenCode(this);
+		argTypes.push_back((*it)->type);
 	}
 
 	FunctionType *ftype = FunctionType::get(
@@ -355,9 +357,9 @@ void Visitor::CodeGen(CalloutStatement* calloutStatement){
 
 	for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
 		it!=calloutStatement->Argss->rend(); ++it){
-		
+		(*it)->GenCode(this);
 		AllocaInst *alloc = new AllocaInst(
-			static_cast<Type *>((*it)->GenCode(this)), 
+			(*it)->type, 
 			(*it)->getLiteral(), 
 			this->currentBlock());
 	    this->locals()[(*it)->getLiteral()] = alloc;
@@ -401,7 +403,6 @@ void Visitor::CodeGen(AssignmentStatement* assignmentStatement){
 		assignmentStatement->to_return=NULL;
 		return;
 	}
-
 
 	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
 		it!=assignmentStatement->expressionRight->end(); ++it){

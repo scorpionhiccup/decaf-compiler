@@ -102,10 +102,6 @@ void Args::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
 
-Type * Args::GenCode(Visitor* visitor){
-	return visitor->CodeGen(this);	
-};
-
 void ExpressionRight::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 };
@@ -206,28 +202,8 @@ void CharLiteral::evaluate(Visitor* visitor){
 	visitor->visit(this);	
 }
 
-Type * CharLiteral::GenCode(Visitor* visitor){
-	return visitor->CodeGen(this);	
-}
-
 void StringLiteral::evaluate(Visitor* visitor){
 	visitor->visit(this);	
-}
-
-Type * StringLiteral::GenCode(Visitor* visitor){
-	return visitor->CodeGen(this);	
-}
-
-Type * IntType::GenCode(Visitor * visitor){
-	return visitor->CodeGen(this);
-}
-
-Type * BooleanType::GenCode(Visitor * visitor){
-	return visitor->CodeGen(this);
-}
-
-Type * VoidType::GenCode(Visitor * visitor){
-	return visitor->CodeGen(this);
 }
 
 void ASTMethod_Declaration::evaluate(Visitor* visitor){
@@ -236,9 +212,6 @@ void ASTMethod_Declaration::evaluate(Visitor* visitor){
 
 void ASTMethod_Declaration::GenCode(Visitor * visitor){
 	visitor->CodeGen(this);
-}
-Type * LangType::GenCode(Visitor* visitor){
-	return visitor->CodeGen(this);	
 }
 
 void Declaration::evaluate(Visitor* visitor){
@@ -251,4 +224,24 @@ void ASTMF_Declaration::evaluate(Visitor * visitor){
 
 void ASTMF_Declaration::GenCode(Visitor * visitor){
 	visitor->CodeGen(this);
+}
+
+void BooleanType::evaluate(Visitor * visitor){
+	visitor->visit(this);
+}
+
+void VoidType::evaluate(Visitor * visitor){
+	visitor->visit(this);
+}
+
+void IntType::evaluate(Visitor * visitor){
+	visitor->visit(this);
+}
+
+void ListExpressionRight::evaluate(Visitor * visitor){
+	visitor->visit(this);
+}
+
+void LangType::evaluate(Visitor * visitor){
+	visitor->visit(this);
 }
