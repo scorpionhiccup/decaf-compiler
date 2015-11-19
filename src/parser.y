@@ -39,8 +39,9 @@ int unary=0;
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
-	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+
 	std::list<Declaration *>*_Declarations;
+	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 
 	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
 	std::list<Args*> *_Callout_Argss; 
@@ -48,7 +49,7 @@ int unary=0;
 	std::list<ExpressionRight *> *_ExpressionRights;
 	std::list<ASTDeclarations *> *Declarations_;
     std::list<Expression *> *_Expressions;
-    RUnaryExpr* _RUnaryExpr;
+	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
 	BinaryExpr* _BinaryExpr;
@@ -58,6 +59,7 @@ int unary=0;
 	ASTLocation* _ASTLocation;
 	LangType *type;
 	std::string *_string;
+	ReturnValue *_ReturnValue;
 }
 
 %token<number> T_INT
@@ -69,7 +71,7 @@ int unary=0;
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
 %token<string> TLROUND TRROUND TLSQUARE TRSQUARE 
-%token FALSE TRUE VOID
+%token FALSE TRUE  VOID IF ELSE FOR RETURN CONTINUE BREAK
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
 //%type<number> Expression 
@@ -98,6 +100,8 @@ int unary=0;
 %type<_RUnaryExpr> RUnary_Expr
 %type<_RBinaryExpr> RBinaryExpr
 %type<_BinaryExpr> BinaryExpr
+%type<_ReturnValue> Return_Value
+
 
 //%type<_string> STRING_LITERAL
 
@@ -119,7 +123,6 @@ Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		ast_prog->evaluate(visitor);
 		VisitorIR * visitorIR = new VisitorIR();
 		ast_prog->evaluate(visitor);
-		//ast_prog->GenCode(visitorIR);
 	} | 
 
 Declaration_list: Declaration_list Declaration{
@@ -137,6 +140,7 @@ Declaration: Field_Declaration {
 	}
 
 Method_Declaration: Type IDENTIFIER TLROUND Param_Declarations TRROUND Block { 
+	cout<<"B3\n";
 	$$=new ASTMethod_Declaration($1, $2, $6, $4);
 }
 
@@ -148,13 +152,16 @@ Block: LBRACE Field_Declarations Statements RBRACE {
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
 	$$=$3;
+	cout<<"C1\n";
 	$$->push_back($1);
 } | {
+	cout<<"C2\n";
 	$$=new list<ASTField_Declaration*>();
 }
 
 
 Field_Declaration: Type Declarations {
+	cout<<"C\n";
 	$$ = new ASTField_Declaration($1, $2);	
 }
 
@@ -169,8 +176,10 @@ Declarations: Def TCOMMA Declarations {
 
 Param_Declarations: Param_Declaration TCOMMA Param_Declarations{
 	$$=$3;
+	cout<<"C1\n";
 	$$->push_back($1);
 } | {
+	cout<<"C2\n";
 	$$=new list<ASTParam_Declaration*>();
 }
 
@@ -347,12 +356,41 @@ Statements: Statement SEMI_COLON Statements{
 Statement: Location TEQUAL Expression_Right {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
 		$$=new AssignmentStatement($1, $3);
-	} | CALLOUT TLROUND STRING_LITERAL  {
-		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
-	} TCOMMA Callout_Argss TRROUND {
-		$$=new CalloutStatement($3, $6);
 	}
+	  | IDENTIFIER TLROUND Callout_Argss TRROUND{
+	  	$$=new MethodCallStatement($1,$3);
+	  }
+	  | CALLOUT TLROUND STRING_LITERAL  {
+		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
+	}   TCOMMA Callout_Argss TRROUND {
+		$$=new CalloutStatement($3, $6);
+	} | IF TLROUND Expression_Right TRROUND Block {
+		$$=new ASTIF($3,$5);
+	}
+	  | IF TLROUND Expression_Right TRROUND Block ELSE Block{
+	  	$$=new ASTIFELSE($3,$5,$7);
+	  }
+      | FOR IDENTIFIER TEQUAL Expression_Right TCOMMA Expression_Right Block{
+      	$$=new ASTFor($2,$4,$6,$7);
+      }
+      | RETURN Return_Value {
+      	$$= new ASTReturn($2);
+      }
+      | BREAK {
+      	$$=new ASTBreak();
+      }
+      | CONTINUE {
+      	$$=new ASTContinue();
+      }
+      | Block {
+      	$$=$1;
+      }
 
+Return_Value: Argss{
+	$$=$1;
+} | {
+	$$=new NoReturn();
+}
 Callout_Argss: Argss{
 		$$=new list<Args*>();
 		$$->push_back($1);
