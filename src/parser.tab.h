@@ -77,11 +77,17 @@ extern int yydebug;
     FALSE = 287,
     TRUE = 288,
     VOID = 289,
-    TLESS = 290,
-    TGREAT = 291,
-    SEMI_COLON = 292,
-    TCOMMA = 293,
-    NOT_EQUAL = 294
+    IF = 290,
+    ELSE = 291,
+    FOR = 292,
+    RETURN = 293,
+    CONTINUE = 294,
+    BREAK = 295,
+    TLESS = 296,
+    TGREAT = 297,
+    SEMI_COLON = 298,
+    TCOMMA = 299,
+    NOT_EQUAL = 300
   };
 #endif
 
@@ -129,8 +135,9 @@ union YYSTYPE
 	ASTLocation* _ASTLocation;
 	LangType *type;
 	std::string *_string;
+	ReturnValue *_ReturnValue;
 
-#line 134 "parser.tab.h" /* yacc.c:1909  */
+#line 141 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

@@ -38,6 +38,11 @@ ALPHANUMERICAL       	[a-zA-Z0-9_]
 "false"					{fprintf(yyout,"%s\n", "BOOLEAN: false");yylval.bval=0;return FALSE;}
 "true"					{fprintf(yyout,"%s\n", "BOOLEAN: true");yylval.bval=1;return TRUE;}
 "void"					{fprintf(yyout,"%s\n", "VOID_DECLARATION");return VOID;}
+"if"					{return IF;}
+"else"					{return ELSE;}
+"for"					{return FOR;}
+"break"					{return BREAK;}	
+"continue"				{return CONTINUE;}
 "<="					{return TLE;}
 ">="					{return GE;}
 "=="					{return TEQ;}

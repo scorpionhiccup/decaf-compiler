@@ -29,6 +29,8 @@ class ASTMethod_Declaration;
 class Declaration;
 class Def;
 
+
+
 extern FILE* XML_fp;
 
 class ASTnode{
@@ -163,10 +165,17 @@ public:
 };
 
 
-class Args: public ASTnode{
+class ReturnValue: public ASTnode{
+	public:
+		ReturnValue(){
+
+		}
+};
+
+class Args: public ReturnValue{
 	std::string str;
 public:
-	Args(std::string str): ASTnode(){
+	Args(std::string str){
 		this->str=str;
 	}
 	Args(){};
@@ -204,6 +213,17 @@ public:
 };
 
 /*
+	Callout_Argss: Argss | Argss TCOMMA Callout_Argss 
+*/
+class CalloutArgs: public ASTnode{
+	Args* args;
+public:
+	CalloutArgs(Args* Args1){
+		this->args=Args1;
+	}
+};
+	
+/*
 	Location
 */
 class ASTLocation: public ExpressionRight, public ASTStatement{
@@ -214,7 +234,77 @@ public:
 	void evaluate(Visitor* visitor);
 	void GenCode(Visitor* visitor);	
 };
+class MethodCallStatement : public ASTStatement {
+	string IDENTIFIER;
+	list<Args *> *Argss;
+public: 
+	MethodCallStatement(string IDENTIFIER,list<Args *> *Argss){
+		this->IDENTIFIER=IDENTIFIER;
+		this->Argss=Argss;
+	}
+};
+class ASTIF : public ASTStatement {
+	list<ExpressionRight*> *ExpressionRight1;
+	ASTMain *Block1;
+public:
+	ASTIF(list<ExpressionRight*> *ExpressionRight1,ASTMain *Block1) {
+		this->ExpressionRight1=ExpressionRight1;
+		this->Block1=Block1;
+	}
+};
+class ASTIFELSE : public ASTStatement {
+	list<ExpressionRight*> *ExpressionRight1;
+	ASTMain *Block1;
+	ASTMain *Block2;	
+public:
+	ASTIFELSE(list<ExpressionRight*> *ExpressionRight1,ASTMain *Block1,ASTMain *Block2){
+		this->ExpressionRight1=ExpressionRight1;
+		this->Block1=Block1;
+		this->Block2=Block2;
+	}
+		
+};
+class ASTBreak : public   ASTStatement {
+public:
+	ASTBreak() {
 
+	}
+};
+class ASTContinue : public ASTStatement {
+public:
+	ASTContinue(){
+
+	}
+};
+class ASTReturn : public ASTStatement {
+	ReturnValue* ReturnValue1;
+public:
+	ASTReturn(ReturnValue* ReturnValue1){
+			this->ReturnValue1=ReturnValue1;
+		}
+	
+};
+class ASTFor: public ASTStatement{
+	string IDENTIFIER;
+	list<ExpressionRight*>* ExpressionRight1;
+	list<ExpressionRight*>* ExpressionRight2;
+	ASTMain *Block;
+public:
+	ASTFor(string IDENTIFIER,list<ExpressionRight*>* ExpressionRight1,list<ExpressionRight*>* ExpressionRight2,
+	ASTMain *Block) {
+		this->IDENTIFIER=IDENTIFIER;
+		this->ExpressionRight1=ExpressionRight1;
+		this->ExpressionRight2=ExpressionRight2;
+		this->Block=Block;
+	}
+
+};
+class NoReturn: public ReturnValue{
+public:
+	NoReturn() {
+
+	}
+};
 /*
 	Def: IDENTIFIER TLSQUARE InExpression TRSQUARE | IDENTIFIER
 */
@@ -300,17 +390,6 @@ public:
 	Def* getDef(){
 		return this->Def_;
 	}; 
-};
-
-/*
-	Callout_Argss: Argss | Argss TCOMMA Callout_Argss 
-*/
-class CalloutArgs: public ASTnode{
-	Args* args;
-public:
-	CalloutArgs(Args* Args1){
-		this->args=Args1;
-	}
 };
 
 
@@ -472,7 +551,7 @@ public:
 	Main: Field_Declarations Statements
 */
 
-class ASTMain: public ASTnode{
+class ASTMain: public ASTStatement{
 public:
 	std::list<ASTField_Declaration*> *FieldDeclarations_;
 	std::list<ASTStatement*> *statements;

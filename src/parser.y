@@ -63,6 +63,7 @@ int unary=0;
 	ASTLocation* _ASTLocation;
 	LangType *type;
 	std::string *_string;
+	ReturnValue *_ReturnValue;
 }
 
 %token<number> T_INT
@@ -74,7 +75,7 @@ int unary=0;
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
 %token TLROUND TRROUND TLSQUARE TRSQUARE 
-%token FALSE TRUE  VOID 
+%token FALSE TRUE  VOID IF ELSE FOR RETURN CONTINUE BREAK
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
 //%type<number> Expression 
@@ -104,6 +105,8 @@ int unary=0;
 %type<_RUnaryExpr> RUnary_Expr
 %type<_RBinaryExpr> RBinaryExpr
 %type<_BinaryExpr> BinaryExpr
+%type<_ReturnValue> Return_Value
+
 
 //%type<_string> STRING_LITERAL
 
@@ -121,7 +124,7 @@ int unary=0;
 Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		fprintf(bison_fp, "PROGRAM ENCOUNTERED\n");
 		ASTProgram *ast_prog = new ASTProgram($4);
-		ast_prog->evaluate(new Visitor());
+		//ast_prog->evaluate(new Visitor());
 		std::cout<<"MAIN CLASS ID: "<<ast_prog->getId()<<"\n";
 	} |
 
@@ -383,12 +386,41 @@ Statements: Statement SEMI_COLON Statements{
 Statement: Location TEQUAL Expression_Right {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
 		$$=new AssignmentStatement($1, $3);
-	} | CALLOUT TLROUND STRING_LITERAL  {
-		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
-	} TCOMMA Callout_Argss TRROUND {
-		$$=new CalloutStatement($3, $6);
 	}
+	  | IDENTIFIER TLROUND Callout_Argss TRROUND{
+	  	$$=new MethodCallStatement($1,$3);
+	  }
+	  | CALLOUT TLROUND STRING_LITERAL  {
+		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
+	}   TCOMMA Callout_Argss TRROUND {
+		$$=new CalloutStatement($3, $6);
+	} | IF TLROUND Expression_Right TRROUND Block {
+		$$=new ASTIF($3,$5);
+	}
+	  | IF TLROUND Expression_Right TRROUND Block ELSE Block{
+	  	$$=new ASTIFELSE($3,$5,$7);
+	  }
+      | FOR IDENTIFIER TEQUAL Expression_Right TCOMMA Expression_Right Block{
+      	$$=new ASTFor($2,$4,$6,$7);
+      }
+      | RETURN Return_Value {
+      	$$= new ASTReturn($2);
+      }
+      | BREAK {
+      	$$=new ASTBreak();
+      }
+      | CONTINUE {
+      	$$=new ASTContinue();
+      }
+      | Block {
+      	$$=$1;
+      }
 
+Return_Value: Argss{
+	$$=$1;
+} | {
+	$$=new NoReturn();
+}
 Callout_Argss: Argss{
 		$$=new list<Args*>();
 	} | Argss TCOMMA Callout_Argss {
