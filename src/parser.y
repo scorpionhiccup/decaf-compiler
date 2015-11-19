@@ -38,8 +38,8 @@ int unary=0;
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
-	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<Declaration *>*_Declarations;
+	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 
 	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
 	std::list<Args*> *_Callout_Argss; 
@@ -78,13 +78,14 @@ int unary=0;
 
 %type<_Def> Def
 %type<_ASTField_Declaration> Field_Declaration
+%type<_ASTParam_Declaration> Param_Declaration
+
 %type<_ASTMethod_Declaration> Method_Declaration
 %type<_Declaration> Declaration
 %type<_ASTField_Declarations> Field_Declarations
 %type<_Declarations> Declaration_list
-%type<_ASTLocation> Location
 %type<_ASTParam_Declarations> Param_Declarations
-%type<_ASTParam_Declaration> Param_Declaration
+%type<_ASTLocation> Location
 %type<_Callout_Argss> Callout_Argss
 %type<_Argss> Argss
 %type<_ExpressionRights> Expression_Right
@@ -118,23 +119,27 @@ Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		ast_prog->GenCode(visitor);
 	} | 
 
-Declaration_list: Declaration_list Declaration{
-		$$=$1;
-		$$->push_back($2);
-	} | Declaration {
-		$$=new list<Declaration*>();
-		$$->push_back($1);
-	}
+Declaration_list : Declaration_list Declaration{
+	$$=$1;
+	$$->push_back($2);
+} 
+| Declaration {
+	$$=new list<Declaration*>();
+	$$->push_back($1);
+}
 
-Declaration: Field_Declaration {
-		$$=new Declaration($1);
-	} | Method_Declaration  {
-		$$=new Declaration($1);
-	}
+Declaration : Field_Declaration {
+	$$=new Declaration($1);
+}| Method_Declaration  {
+	$$=new Declaration($1);
+}
 
-Method_Declaration: Type IDENTIFIER TLROUND TRROUND Block { 
-		$$=new ASTMethod_Declaration($1, $2, $5);
-	}
+
+
+Method_Declaration: Type IDENTIFIER TLROUND Param_Declarations TRROUND Block { 
+	cout<<"B3\n";
+	$$=new ASTMethod_Declaration($1, $2, $6, $4);
+}
 
 
 Block: LBRACE Field_Declarations Statements RBRACE {

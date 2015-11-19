@@ -1032,7 +1032,7 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 25 "lexical_analyser.l"
-;               // ignore all whitespace
+; // ignore all whitespace
 	YY_BREAK
 case 3:
 YY_RULE_SETUP

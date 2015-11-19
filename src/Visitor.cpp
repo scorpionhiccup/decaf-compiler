@@ -588,6 +588,7 @@ void Visitor::visit(CharLiteral* charLiteral){
 	fprintf(XML_fp, "<character value=\'%s\'' />\n", charLiteral->getLiteral().c_str());
 };
 
+
 void Visitor::visit(StringLiteral* stringLiteral){
 	fprintf(XML_fp, "<string value=%s />\n", stringLiteral->getLiteral().c_str());
 };

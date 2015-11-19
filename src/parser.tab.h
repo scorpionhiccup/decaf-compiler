@@ -108,8 +108,8 @@ union YYSTYPE
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
-	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 	std::list<Declaration *>*_Declarations;
+	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 
 	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
 	std::list<Args*> *_Callout_Argss; 

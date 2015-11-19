@@ -44,6 +44,7 @@ public:
 
 class ASTStatement: public ASTnode{
 public:	
+	using ASTnode::GenCode;
 	virtual void evaluate(Visitor* visitor);
 	virtual Value * GenCode(Visitor* visitor);
 };
@@ -168,7 +169,7 @@ class ASTMethod_Declaration: public ASTMF_Declaration{
 public:
 	ASTMain* Block;
 	void evaluate(Visitor* visitor);
-	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER,ASTMain* Block) {
+	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER,ASTMain* Block,list<ASTParam_Declaration*>* ASTParam_Declaration1) {
 		this->LangType1=LangType1;
 		this->IDENTIFIER=IDENTIFIER;
 		this->Block=Block;

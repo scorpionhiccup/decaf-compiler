@@ -16,22 +16,22 @@ using namespace std;
 %option noyywrap
 %option yylineno
 
-LETTER                  [a-zA-Z_]
-DIGIT                   [0-9]
-ALPHANUMERICAL          [a-zA-Z0-9_]
+LETTER            		[a-zA-Z_]
+DIGIT             		[0-9]
+ALPHANUMERICAL       	[a-zA-Z0-9_]
 
 %%
-[\n]                    {} 
-[ \t]+  ;               // ignore all whitespace
-"class"                 {fprintf(yyout,"%s\n", "CLASS");return START;}
-";"                     {return SEMI_COLON;}
+[\n]					{} 
+[ \t]+	; // ignore all whitespace
+"class" 				{fprintf(yyout,"%s\n", "CLASS");return START;}
+";"						{return SEMI_COLON;}
 "{"                     {return LBRACE;}
 "}"                     {return RBRACE;}
 "["                     {return TLSQUARE;}
 "]"                     {return TRSQUARE;}
 "("                     {return TLROUND;}
 ")"                     {return TRROUND;}
-","                     {return TCOMMA;}
+","						{return TCOMMA;}
 "callout"               {fprintf(yyout, "%s\n", "CALLOUT");return CALLOUT;}
 "int"					{fprintf(yyout,"%s\n", "INT_DECLARATION");return INT;}
 "boolean"				{fprintf(yyout,"%s\n", "BOOLEAN_DECLARATION");return BOOLEAN;}
@@ -47,16 +47,16 @@ ALPHANUMERICAL          [a-zA-Z0-9_]
 "="                     {return TEQUAL;}
 "*"                     {return TMUL;}
 "/"                     {return TDIV;}
-"%"                     {return MOD;}
+"%"						{return MOD;}
 "+"                     {return TPLUS;}
 "-"                     {return TMINUS;}
-"!"                     {return NOT;}
-">"                     {return TGREAT;}
-"<"                     {return TLESS;}
-{DIGIT}+                {fprintf(yyout,"INT: %s\n", yytext);yylval.number = atoi(yytext); return T_INT; }
-\'(\\.|[^'])*\'         {fprintf(yyout,"CHARACTER: %s\n", yytext); strcpy(yylval.string, yytext); return CHAR_LITERAL;}
-\"(\\.|[^"])*\"         {fprintf(yyout,"STRING: %s\n", yytext); strcpy(yylval.string, yytext); return STRING_LITERAL;}
-"Program"               {fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return PROG_ID; }
+"!"						{return NOT;}
+">"						{return TGREAT;}
+"<"						{return TLESS;}
+{DIGIT}+				{fprintf(yyout,"INT: %s\n", yytext);yylval.number = atoi(yytext); return T_INT; }
+\'(\\.|[^'])*\'		   	{fprintf(yyout,"CHARACTER: %s\n", yytext); strcpy(yylval.string, yytext); return CHAR_LITERAL;}
+\"(\\.|[^"])*\"		    {fprintf(yyout,"STRING: %s\n", yytext); strcpy(yylval.string, yytext); return STRING_LITERAL;}
+"Program"				{fprintf(yyout,"ID: %s\n", yytext); strcpy(yylval.string, yytext); return PROG_ID; }
 {LETTER}{ALPHANUMERICAL}*  {fprintf(yyout, "ID: %s\n", yytext); strcpy(yylval.string, yytext); return IDENTIFIER; }
-.                       { fprintf(stdout, "Syntax Error\n"); exit(1);} 
+. 						{ fprintf(stdout, "Syntax Error\n"); exit(1);} 
 %%
