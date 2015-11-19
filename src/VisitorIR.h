@@ -23,6 +23,13 @@
 
 using namespace llvm; 
 
+class CodeGenBlock {
+public:
+	BasicBlock *block;
+	std::map<std::string, Value*> locals;
+};
+
+
 class VisitorIR: public Visitor{
 	std::stack<CodeGenBlock *> blocks;
 	Function *mainFunction;

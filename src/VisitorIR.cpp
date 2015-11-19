@@ -239,7 +239,7 @@ void VisitorIR::visit(RBinaryExpr* rBinaryExpr){
 
 	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		(*it)->GenCode(this);
+		(*it)->evaluate(this);
 		temp=(*it)->to_return;
 		if (temp){
 			lhs=temp;
@@ -250,7 +250,7 @@ void VisitorIR::visit(RBinaryExpr* rBinaryExpr){
 
 	for (list<ExpressionRight*>::reverse_iterator it=exprs->rbegin();
 		it!=exprs->rend(); ++it){
-		(*it)->GenCode(this);
+		(*it)->evaluate(this);
 		temp=(*it)->to_return;
 		if (temp){
 			rhs=temp;
@@ -303,7 +303,7 @@ void VisitorIR::visit(ASTMain* aSTMain){
 	
 	for(list<ASTField_Declaration*>::reverse_iterator it=aSTMain->FieldDeclarations_->rbegin(); 
 		it!=aSTMain->FieldDeclarations_->rend(); ++it){
-		(*it)->GenCode(this);
+		(*it)->evaluate(this);
 	}
 
 	in_field=false;
@@ -312,7 +312,7 @@ void VisitorIR::visit(ASTMain* aSTMain){
 
 	for (list<ASTStatement*>::reverse_iterator it=aSTMain->statements->rbegin(); 
 		it!=aSTMain->statements->rend(); ++it){
-		(*it)->GenCode(this);
+		(*it)->evaluate(this);
 	}
 
 	aSTMain->to_return=V;
@@ -326,7 +326,7 @@ void VisitorIR::visit(AssignmentStatement* assignmentStatement){
 	
 	ASTLocation * location = assignmentStatement->getLocation();
 	string id=location->getId();
-	location->GenCode(this, NULL);
+	location->evaluate(this);
 	
 	if (this->locals().find(id) == this->locals().end()){
 		string error_str="Undeclared Variable in assignment statement: ";
@@ -338,7 +338,7 @@ void VisitorIR::visit(AssignmentStatement* assignmentStatement){
 
 	for (list<ExpressionRight*>::iterator it=assignmentStatement->expressionRight->begin();
 		it!=assignmentStatement->expressionRight->end(); ++it){
-		(*it)->GenCode(this);
+		(*it)->evaluate(this);
 		V=(*it)->to_return;
 		if (V!=NULL){
 			V=new StoreInst(V, this->locals()[id], this->currentBlock());
@@ -358,7 +358,7 @@ void VisitorIR::visit(CalloutStatement* calloutStatement){
 
 	for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
 		it!=calloutStatement->Argss->rend(); ++it){
-		(*it)->GenCode(this);
+		(*it)->evaluate(this);
 		argTypes.push_back((*it)->type);
 	}
 
@@ -378,14 +378,14 @@ void VisitorIR::visit(CalloutStatement* calloutStatement){
 
 	for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
 		it!=calloutStatement->Argss->rend(); ++it){
-		(*it)->GenCode(this);
+		(*it)->evaluate(this);
 		AllocaInst *alloc = new AllocaInst(
 			(*it)->type, 
 			(*it)->getLiteral(), 
 			this->currentBlock());
 	    this->locals()[(*it)->getLiteral()] = alloc;
 
-		//(*it)->GenCode(this);
+		//(*it)->evaluate(this);
 	}
 	
 	this->popBlock();
@@ -398,7 +398,8 @@ void VisitorIR::visit(ASTDeclarations* aSTDeclarations){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
 	Def *def=aSTDeclarations->getDef();
-	def->GenCode(this, aSTDeclarations->type);
+	def->type=aSTDeclarations->type;
+	def->evaluate(this);
 
 	aSTDeclarations->to_return = aSTDeclarations->to_return?aSTDeclarations->to_return:V;
 }

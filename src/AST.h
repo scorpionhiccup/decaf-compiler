@@ -38,14 +38,12 @@ extern FILE* XML_fp;
 class ASTnode{
 public:
 	virtual void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
 	Value * to_return;
 };
 
 class ASTStatement: public ASTnode{
 public:	
 	virtual void evaluate(Visitor* visitor);
-	virtual void GenCode(Visitor* visitor);
 };
 
 class LangType: public ASTnode{
@@ -63,7 +61,7 @@ public:
 
 	}
 	virtual void evaluate(Visitor* visitor);
-	virtual void GenCode(Visitor* visitor);
+
 };
 
 class ASTProgram: public ASTnode{
@@ -75,7 +73,7 @@ public:
 		return aSTMain;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 	ASTProgram(list<Declaration*> *Declarations)
 	{
 		this->Declarations=Declarations;
@@ -91,7 +89,7 @@ public:
 		return value_;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 };
 
 
@@ -117,7 +115,7 @@ public:
 		this->Declarations=declarations;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 	LangType * getType(){
 		return this->type;
 	}
@@ -206,7 +204,7 @@ public:
 
 	} 
 	virtual void evaluate(Visitor* visitor);
-	virtual void GenCode(Visitor* visitor);
+
 };
 
 
@@ -227,7 +225,7 @@ public:
 	} 
 	Type * type;
 	virtual void evaluate(Visitor* visitor);
-	virtual void GenCode(Visitor* visitor, Type * type);	
+
 };
 
 /*
@@ -235,7 +233,6 @@ public:
 */
 class ASTLocation: public ExpressionRight, public ASTStatement{
 public:
-	virtual void GenCode(Visitor* visitor, Type * type);
 	ASTLocation(){
 
 	}
@@ -248,7 +245,7 @@ public:
 */
 class Def: public Expression{
 public:
-	virtual void GenCode(Visitor* visitor, Type * type);	
+
 	Def() {
 		
 	}
@@ -261,7 +258,7 @@ public:
 */
 class ASTIdentifier: public ASTLocation, public Def{
 public:
-	void GenCode(Visitor* visitor, Type * type);
+
 	std::string id_;
 	ASTIdentifier(std::string id);
 	void evaluate(Visitor* visitor);
@@ -285,7 +282,7 @@ public:
 		return this->aSTIdentifier->type;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor, Type * type);
+
 	
 	string getId(){
 		return this->aSTIdentifier->getId();
@@ -303,13 +300,13 @@ class ASTArrayFieldDeclaration: public Def{
 	int size_;
 	ASTIdentifier* aSTIdentifier;
 public:
-	void GenCode(Visitor* visitor, Type* type);
+
 	ASTArrayFieldDeclaration(std::string id, int size){
 		this->aSTIdentifier=new ASTIdentifier(id);
 		this->size_=size;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 	string getId(){
 		return this->aSTIdentifier->getId();
 	};
@@ -334,7 +331,7 @@ public:
 	}
 	Type * type;
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor, Type * type);
+
 	Def* getDef(){
 		return this->Def_;
 	}; 
@@ -365,7 +362,7 @@ public:
 		this->Argss=Argss;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 };
 
 
@@ -407,7 +404,7 @@ public:
 		return this->expressionRight;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 	int getType(){
 		return this->type;
 	}
@@ -426,7 +423,7 @@ public:
 		this->expressionRightR=expressionRightR1;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 	
 	list<ExpressionRight*>* getLeftExprs(){
 		return this->expressionRightL;
@@ -452,7 +449,7 @@ public:
 		return false;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 };
 
 class Integer: public ExpressionRight, public Expression{
@@ -465,7 +462,7 @@ public:
 		return integer;
 	}
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 };
 
 
@@ -475,7 +472,7 @@ class BinaryExpr: public Expression{
 public:
 	Type * type;
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor, Type* type);
+
 	BinaryExpr(string type1, 
 		std::list<Expression*> * expressionL1, 
 		std::list<Expression*> * expressionR1) {
@@ -506,7 +503,7 @@ public:
 		this->expressionRight=expressionRight;
 	}
 	void evaluate(Visitor* visitor);
-	virtual void GenCode(Visitor* visitor);
+
 	ASTLocation * getLocation(){
 		return this->location;
 	}
@@ -527,7 +524,7 @@ public:
 	}
 
 	void evaluate(Visitor* visitor);
-	void GenCode(Visitor* visitor);
+
 };
 
 #endif

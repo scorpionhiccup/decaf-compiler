@@ -118,7 +118,8 @@ Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		Visitor * visitor=new Visitor();
 		ast_prog->evaluate(visitor);
 		VisitorIR * visitorIR = new VisitorIR();
-		ast_prog->GenCode(visitorIR);
+		ast_prog->evaluate(visitor);
+		//ast_prog->GenCode(visitorIR);
 	} | 
 
 Declaration_list: Declaration_list Declaration{
