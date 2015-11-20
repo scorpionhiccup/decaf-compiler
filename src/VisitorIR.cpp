@@ -5,7 +5,7 @@
 #include "VisitorIR.h"
 
 static IRBuilder<> Builder(getGlobalContext());
-static bool in_field=true, is_debug=true, is_error=false;
+bool in_field=true, is_debug=true, is_error=false;
 
 extern int version;
 
@@ -145,15 +145,11 @@ void VisitorIR::visit(ASTIdentifier* aSTIdentifier){
 	printDebug2(msg);
 	
 	if (in_field){
-		AllocaInst *alloc = new AllocaInst(aSTIdentifier->type, aSTIdentifier->getId(), this->currentBlock());
+		AllocaInst *alloc = new AllocaInst(Type::getInt64Ty(getGlobalContext()), aSTIdentifier->getId(), this->currentBlock());
     	aSTIdentifier->Def::to_return=this->locals()[aSTIdentifier->getId()]=alloc;
     	return;
 	}
 
-	string msg="Inside ASTIdentifier ";
-	msg.append(aSTIdentifier->getId());
-	printDebug2(msg);
-	
 	if (this->locals().find(aSTIdentifier->getId()) == this->locals().end()){
 		is_error=true;
 		aSTIdentifier->Def::to_return=GenerateError::ErrorMsg("Unknown variable name");
@@ -341,14 +337,8 @@ void VisitorIR::visit(AssignmentStatement* assignmentStatement){
 
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 	
-	ASTLocation * location = assignmentStatement->getLocation();
-	
-	string id=location->getId();
-	
-	location->evaluate(this);
-
 	printDebug2("Inside AssignmentStatement");
-	
+
 	if (this->locals().find(id) == this->locals().end()){
 		string error_str="Undeclared Variable in assignment statement: ";
 		cerr<<error_str<<id<<"\n";
@@ -363,6 +353,12 @@ void VisitorIR::visit(AssignmentStatement* assignmentStatement){
 		V=expr->to_return;
 		if (V!=NULL){
 			V=new StoreInst(V, this->locals()[id], this->currentBlock());
+			
+			ASTLocation * location = assignmentStatement->getLocation();
+	
+			string id=location->getId();
+			location->type=expr->type;
+			location->evaluate(this);
 		}
 		
 	}
