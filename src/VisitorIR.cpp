@@ -39,11 +39,10 @@ void VisitorIR::generateCode(ASTProgram *aSTProgram){
 	printDebug2("Inside Main Block");
 
 	pushBlock(bblock);
-	in_field=true;
 	aSTProgram->evaluate(this);
 	popBlock();
 
-	printDebug2("Outside Main Block");
+	//printDebug2("Outside Main Block");
 
 	if (!is_error){
 		PassManager pm;
@@ -67,7 +66,7 @@ void VisitorIR::visit(ASTProgram* aSTProgram){
 	}
 
 
-	printDebug2("Outside ASTProgram");
+	//printDebug2("Outside ASTProgram");
 	aSTProgram->to_return=V;
 	
 }
@@ -84,7 +83,7 @@ void VisitorIR::visit(Args* args){
 
 	args->to_return=ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	printDebug2("Outside Args");
+	//printDebug2("Outside Args");
 		
 }
 
@@ -139,7 +138,7 @@ void VisitorIR::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 	
 	aSTMethod_Declaration->to_return=function;
 
-	printDebug2("Outside ASTMethod_Declaration");
+	//printDebug2("Outside ASTMethod_Declaration");
 
 };
 	
@@ -148,30 +147,31 @@ void VisitorIR::visit(ASTMF_Declaration * aSTMF_Declaration){
 
 	aSTMF_Declaration->to_return=ConstantInt::get(getGlobalContext(), APInt(32,0));
 
-	printDebug2("Outside ASTMF_Declaration");
+	//printDebug2("Outside ASTMF_Declaration");
 
 }
 
 void VisitorIR::visit(ASTIdentifier* aSTIdentifier){
+	string msg="Inside ASTIdentifier ";
+	msg.append(aSTIdentifier->getId());
+	printDebug2(msg);
 	
+	string id=aSTIdentifier->getId();
+
 	if (in_field){
-		string msg="Inside ASTIdentifier ";
-		msg.append(aSTIdentifier->getId());
-		printDebug2(msg);
-	
-		AllocaInst *alloc = new AllocaInst(Type::getInt64Ty(getGlobalContext()), aSTIdentifier->getId(), this->currentBlock());
-		aSTIdentifier->Def::to_return=this->locals()[aSTIdentifier->getId()]=alloc;
+		AllocaInst *alloc = new AllocaInst(Type::getInt64Ty(getGlobalContext()), id, this->currentBlock());
+		aSTIdentifier->Def::to_return=this->locals()[id]=alloc;
 		return;
 	}
 
-	if (this->locals().find(aSTIdentifier->getId()) == this->locals().end()){
+	if (this->locals().find(id) == this->locals().end()){
 		is_error=true;
 		aSTIdentifier->Def::to_return=GenerateError::ErrorMsg("Unknown variable name");
 	}
 
-	aSTIdentifier->Def::to_return=new LoadInst(this->locals()[aSTIdentifier->getId()], "", false, this->currentBlock());
+	aSTIdentifier->Def::to_return=new LoadInst(this->locals()[id], "", false, this->currentBlock());
 
-	printDebug2("Outside ASTIdentifier");
+	//printDebug2("Outside ASTIdentifier");
 
 }
 
@@ -199,7 +199,7 @@ void VisitorIR::visit(BinaryExpr* expr){
 
 	expr->to_return=V;
 
-	printDebug2("Outside BinaryExpr");
+	//printDebug2("Outside BinaryExpr");
 
 }
 
@@ -210,7 +210,7 @@ void VisitorIR::visit(Expression* expr){
 
 	expr->to_return=V;
 
-	printDebug2("Outside Expression");
+	//printDebug2("Outside Expression");
 
 }
 
@@ -221,7 +221,7 @@ void VisitorIR::visit(Bool* bool_obj){
 
 	bool_obj->to_return=V;
 
-	printDebug2("Outside Bool");
+	//printDebug2("Outside Bool");
 
 }
 
@@ -234,7 +234,7 @@ void VisitorIR::visit(Integer* integer){
 
 	integer->ExpressionRight::to_return=V;
 
-	printDebug2("Outside Args");
+	//printDebug2("Outside Args");
 
 }
 
@@ -246,7 +246,7 @@ void VisitorIR::visit(ASTnode* aSTnode){
 	//aSTnode->evaluate(this);
 	aSTnode->to_return=V;
 
-	printDebug2("Outside ASTnode");
+	//printDebug2("Outside ASTnode");
 
 }
 
@@ -257,7 +257,7 @@ void VisitorIR::visit(ExpressionRight* expressionRight){
 
 	expressionRight->to_return=V;
 
-	printDebug2("Outside ExpressionRight");
+	//printDebug2("Outside ExpressionRight");
 
 }
 
@@ -275,7 +275,7 @@ void VisitorIR::visit(RUnaryExpr* rUnaryExpr){
 
 	rUnaryExpr->to_return=V;
 
-	printDebug2("Outside RUnaryExpr");
+	//printDebug2("Outside RUnaryExpr");
 
 }
 
@@ -326,17 +326,23 @@ void VisitorIR::visit(RBinaryExpr* rBinaryExpr){
 	} else if (!strcmp(type, "||")){
 		instr=Instruction::Or;	
 	} else if (!strcmp(type, "==")){
-		rBinaryExpr->to_return = CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_EQ, lhs, rhs, "", this->currentBlock());
+		rBinaryExpr->to_return = CmpInst::Create(Instruction::ICmp, 
+			ICmpInst::ICMP_EQ, lhs, rhs, "", this->currentBlock());
 	} else if (!strcmp(type, "<=")){
-		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_ULE, lhs, rhs, "", this->currentBlock());
+		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, 
+			ICmpInst::ICMP_ULE, lhs, rhs, "", this->currentBlock());
 	} else if (!strcmp(type, ">=")){
-		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_UGE, lhs, rhs, "", this->currentBlock());
+		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, 
+			ICmpInst::ICMP_UGE, lhs, rhs, "", this->currentBlock());
 	} else if (!strcmp(type, ">")){
-		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_ULT, lhs, rhs, "", this->currentBlock());
+		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, 
+			ICmpInst::ICMP_ULT, lhs, rhs, "", this->currentBlock());
 	} else if (!strcmp(type, "<")){
-		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_UGT, lhs, rhs, "", this->currentBlock());
+		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, 
+			ICmpInst::ICMP_UGT, lhs, rhs, "", this->currentBlock());
 	} else if (!strcmp(type, "!=")){
-		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_NE, lhs, rhs, "", this->currentBlock());
+		rBinaryExpr->to_return =  CmpInst::Create(Instruction::ICmp, 
+			ICmpInst::ICMP_NE, lhs, rhs, "", this->currentBlock());
 	}
 
 	Value * V=NULL;
@@ -347,7 +353,7 @@ void VisitorIR::visit(RBinaryExpr* rBinaryExpr){
 	
 	rBinaryExpr->to_return = V;
 
-	printDebug2("Outside RBinaryExpr");
+	//printDebug2("Outside RBinaryExpr");
 
 }
 
@@ -367,7 +373,7 @@ void VisitorIR::visit(ASTMain* aSTMain){
 
 	in_field=false;
 
-	printDebug2("Outside FieldDeclarations");
+	//printDebug2("Outside FieldDeclarations");
 
 	printDebug2("Inside ASTStatements");
 
@@ -378,9 +384,9 @@ void VisitorIR::visit(ASTMain* aSTMain){
 
 	}
 
-	printDebug2("Outside ASTStatements");
+	//printDebug2("Outside ASTStatements");
 
-	printDebug2("Outside ASTMain");
+	//printDebug2("Outside ASTMain");
 
 	aSTMain->to_return=V;
 }
@@ -420,7 +426,7 @@ void VisitorIR::visit(AssignmentStatement* assignmentStatement){
 		it!=assignmentStatement->expressionRight->end(); ++it){
 	}*/
 
-	printDebug2("Outside AssignmentStatement");
+	//printDebug2("Outside AssignmentStatement");
 
 	assignmentStatement->to_return=V;
 }
@@ -469,7 +475,7 @@ void VisitorIR::visit(CalloutStatement* calloutStatement){
 	
 	calloutStatement->to_return=function;
 
-	printDebug2("Outside CalloutStatement");
+	//printDebug2("Outside CalloutStatement");
 
 }
 
@@ -483,7 +489,7 @@ void VisitorIR::visit(ASTDeclarations* aSTDeclarations){
 
 	aSTDeclarations->to_return = aSTDeclarations->to_return?aSTDeclarations->to_return:V;
 
-	printDebug2("Outside ASTDeclarations");
+	//printDebug2("Outside ASTDeclarations");
 
 }
 
@@ -493,7 +499,7 @@ void VisitorIR::visit(ASTLocation* aSTLocation){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));	
 
 	aSTLocation->ExpressionRight::to_return=V;
-	printDebug2("Outside ASTLocation");
+	//printDebug2("Outside ASTLocation");
 
 }
 
@@ -515,7 +521,7 @@ void VisitorIR::visit(ASTArrayIdentifier* aSTArrayIdentifier){
 
 	aSTArrayIdentifier->ASTLocation::ExpressionRight::to_return = V ? V : GenerateError::ErrorMsg("Unknown variable name");
 
-	printDebug2("Outside ASTArrayIdentifier");
+	//printDebug2("Outside ASTArrayIdentifier");
 
 }
 
@@ -530,7 +536,7 @@ void VisitorIR::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
 
 	aSTArrayFieldDeclaration->to_return= aSTIdentifier->Def::to_return ? aSTIdentifier->Def::to_return : GenerateError::ErrorMsg("Unknown variable name");
 
-	printDebug2("Outside aSTArrayFieldDeclaration");
+	//printDebug2("Outside aSTArrayFieldDeclaration");
 
 }
 
@@ -559,9 +565,19 @@ void VisitorIR::visit(ASTField_Declaration* aSTField_Declaration){
 
 	aSTField_Declaration->type=langType;
 
+	for (list<ASTDeclarations*>::iterator it=aSTField_Declaration->Declarations->begin(); 
+		it!=aSTField_Declaration->Declarations->end(); ++it){
+
+		(*it)->type=langType->type;
+		(*it)->evaluate(this);
+		if ((*it)->to_return){
+			V=(*it)->to_return;
+		}
+	}	
+	
 	aSTField_Declaration->ASTExpression::to_return=V;
 
-	printDebug2("Outside ASTField_Declaration");
+	//printDebug2("Outside ASTField_Declaration");
 
 }
 
@@ -574,6 +590,6 @@ void VisitorIR::visit(Declaration* declaration){
 	ASTMF_Declaration * dec = declaration->getDeclaration();
 	dec->evaluate(this);
 	declaration->to_return=dec->to_return;
-	printDebug2("Outside Declaration");
+	//printDebug2("Outside Declaration");
 
 }

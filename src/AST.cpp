@@ -32,7 +32,6 @@ void ASTMain::evaluate(Visitor* visitor){
 }
 
 void ASTField_Declaration::evaluate(Visitor* visitor){
-	cout<<"HERE\n";
 	visitor->visit(this);
 };
 
