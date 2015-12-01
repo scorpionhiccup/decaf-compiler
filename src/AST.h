@@ -505,7 +505,7 @@ public:
 	}
 };
 
-class Bool: public ExpressionRight{
+class Bool: public ExpressionRight, public Expression{
 	int value;
 public:
 	Bool(int value1) {

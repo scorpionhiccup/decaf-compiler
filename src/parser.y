@@ -321,7 +321,7 @@ Expression_Right:
 		else
 			fprintf(bison_fp, "false\n");
 		$$=new list<ExpressionRight *>();
-		$$->push_back(new Integer($1));
+		$$->push_back(new Bool($1));
 	} 
 	|   T_INT{
 		fprintf(bison_fp, "INT ENCOUNTERED=");

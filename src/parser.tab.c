@@ -1874,7 +1874,7 @@ yyreduce:
 		else
 			fprintf(bison_fp, "false\n");
 		(yyval._ExpressionRights)=new list<ExpressionRight *>();
-		(yyval._ExpressionRights)->push_back(new Integer((yyvsp[0].number)));
+		(yyval._ExpressionRights)->push_back(new Bool((yyvsp[0].number)));
 	}
 #line 1880 "parser.tab.c" /* yacc.c:1646  */
     break;
