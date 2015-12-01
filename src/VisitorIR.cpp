@@ -219,7 +219,7 @@ void VisitorIR::visit(Bool* bool_obj){
 	
 	printDebug2("Inside Bool");
 
-	bool_obj->to_return=V;
+	bool_obj->Expression::to_return=V;
 
 	//printDebug2("Outside Bool");
 
