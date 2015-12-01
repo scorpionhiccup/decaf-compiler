@@ -77,6 +77,10 @@ void ASTExpression::evaluate(Visitor* visitor){
 	visitor->visit(this);		
 };
 
+void ASTParam_Declaration::evaluate(Visitor* visitor){
+	visitor->visit(this);		
+};
+
 void RUnaryExpr::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }

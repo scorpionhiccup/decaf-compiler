@@ -60,7 +60,7 @@ public:
 	virtual void visit(ReturnValue * returnValue);	
 	virtual void visit(ASTBreak * aSTBreak);
 	virtual void visit(ASTContinue * aSTContinue);
-	
+		
 	Visitor() { 
 	}
 

@@ -32,7 +32,8 @@ public:
 void VisitorIR::generateCode(ASTProgram *aSTProgram){
 	fflush(stdout);
 	vector<Type*> argTypes;
-	FunctionType *ftype = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
+	FunctionType *ftype = FunctionType::get(
+		Type::getVoidTy(getGlobalContext()), argTypes, false);
 	mainFunction = Function::Create(ftype, GlobalValue::InternalLinkage, "Class Program", this->module);
 	BasicBlock *bblock = BasicBlock::Create(getGlobalContext(), "entry", mainFunction, 0);
 
@@ -159,7 +160,8 @@ void VisitorIR::visit(ASTIdentifier* aSTIdentifier){
 	string id=aSTIdentifier->getId();
 
 	if (in_field){
-		AllocaInst *alloc = new AllocaInst(Type::getInt64Ty(getGlobalContext()), id, this->currentBlock());
+		AllocaInst *alloc = new AllocaInst(
+			Type::getInt64Ty(getGlobalContext()), id, this->currentBlock());
 		aSTIdentifier->Def::to_return=this->locals()[id]=alloc;
 		return;
 	}
@@ -215,7 +217,7 @@ void VisitorIR::visit(Expression* expr){
 }
 
 void VisitorIR::visit(Bool* bool_obj){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	Value * V = ConstantInt::get(getGlobalContext(), APInt(32, 0));
 	
 	printDebug2("Inside Bool");
 
@@ -226,10 +228,13 @@ void VisitorIR::visit(Bool* bool_obj){
 }
 
 void VisitorIR::visit(Integer* integer){
-	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
+	int value = integer->getValue();
+
+	Value * V = ConstantInt::get(getGlobalContext(), 
+		APInt(32, value));
 	
 	string msg="Inside Integer ";
-	msg.append(to_string(integer->getValue()));
+	msg.append(to_string(value));
 	printDebug2(msg);
 
 	integer->ExpressionRight::to_return=V;
@@ -254,6 +259,8 @@ void VisitorIR::visit(ExpressionRight* expressionRight){
 	Value * V = ConstantInt::get(getGlobalContext(), APInt(32,0));
 
 	printDebug2("Inside ExpressionRight");
+
+	expressionRight->evaluate(this);
 
 	expressionRight->to_return=V;
 
@@ -408,7 +415,7 @@ void VisitorIR::visit(AssignmentStatement* assignmentStatement){
 		return;
 	}
 
-	if (assignmentStatement->expressionRight->size()>1){
+	if (assignmentStatement->expressionRight->size()){
 		ExpressionRight * expr = assignmentStatement->expressionRight->back();
 
 		expr->evaluate(this);
@@ -591,5 +598,13 @@ void VisitorIR::visit(Declaration* declaration){
 	dec->evaluate(this);
 	declaration->to_return=dec->to_return;
 	//printDebug2("Outside Declaration");
+}
+
+void VisitorIR::visit(ASTParam_Declaration * aSTParam_Declaration){
+	LangType * langType = aSTParam_Declaration->getType();
+
+	langType->evaluate(this);
+
+	aSTParam_Declaration->type=langType->to_return;
 
 }

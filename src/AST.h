@@ -9,12 +9,10 @@
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/PassManager.h>
 #include <llvm/IR/Instructions.h>
-#include <llvm/IR/CallingConv.h>
 #include <llvm/Bitcode/ReaderWriter.h>
 #include <llvm/Analysis/Verifier.h>
 #include <llvm/Assembly/PrintModulePass.h>
 #include <llvm/IR/IRBuilder.h>
-//#include <llvm/ModuleProvider.h>
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/Support/raw_ostream.h>
@@ -91,12 +89,16 @@ public:
 class ASTParam_Declaration: public ASTnode{
 	LangType *LangType1;
 public:
+	Value * type;
 	Def *Def1;
 	ASTParam_Declaration(LangType *LangType1,Def *Def1){
 		this->LangType1=LangType1;
 		this->Def1=Def1;
 	}
-
+	virtual void evaluate(Visitor* visitor);
+	LangType * getType(){
+		return this->LangType1;
+	}
 };
 /*
 	Field_Declaration: Type Declarations
@@ -529,7 +531,6 @@ public:
 		return integer;
 	}
 	virtual void evaluate(Visitor* visitor);
-
 };
 
 

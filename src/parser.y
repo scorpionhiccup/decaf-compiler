@@ -149,11 +149,11 @@ Block: LBRACE Field_Declarations Statements RBRACE {
 }
 
 Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
-	$$=$3;
-	$$->push_back($1);
-} | {
-	$$=new list<ASTField_Declaration*>();
-}
+		$$=$3;
+		$$->push_back($1);
+	} | {
+		$$=new list<ASTField_Declaration*>();
+	}
 
 
 Field_Declaration: Type Declarations {
@@ -163,22 +163,21 @@ Field_Declaration: Type Declarations {
 Declarations: Def TCOMMA Declarations { 
 		$$=$3;
 		$$->push_back(new ASTDeclarations($1));
-	}
-	| Def{
+	} | Def{
 		$$=new list<ASTDeclarations*>();
 		$$->push_back(new ASTDeclarations($1));
 	}
 
 Param_Declarations: Param_Declaration TCOMMA Param_Declarations{
-	$$=$3;
-	$$->push_back($1);
-} | {
-	$$=new list<ASTParam_Declaration*>();
-}
+		$$=$3;
+		$$->push_back($1);
+	} | {
+		$$=new list<ASTParam_Declaration*>();
+	}
 
 Param_Declaration: Type Def {
-	$$ = new ASTParam_Declaration($1, $2);	
-}
+		$$ = new ASTParam_Declaration($1, $2);	
+	}
 
 Def: IDENTIFIER TLSQUARE InExpression TRSQUARE {
 		fprintf(bison_fp, "ID=%s SIZE=%d\n", $1, $3);

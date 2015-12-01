@@ -57,6 +57,7 @@ public:
 	virtual void visit(Declaration * declaration);
 	virtual void visit(ASTMF_Declaration * aSTMF_Declaration);
 	virtual void visit(BinaryExpr* binaryExpr);
+	virtual void visit(ASTParam_Declaration * aSTParam_Declaration);
 	
 	Module *module;
 	VisitorIR() { 

@@ -4,11 +4,9 @@ class Program
 		int A, B;
 		boolean C;
 		boolean D[10];
-		int E;
-		int F;
-		int G;
+		int E, F, G;
 
-		A = 5 + 1 + 3;
+		A = 5 + 1 * 3;
 		C=true;
 		D[0]=true;
 		E = 23;
