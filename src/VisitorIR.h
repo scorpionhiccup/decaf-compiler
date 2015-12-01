@@ -34,64 +34,69 @@ class VisitorIR: public Visitor{
 	std::stack<CodeGenBlock *> blocks;
 	Function *mainFunction;
 public:
-	void visit(Args* args);
-	void visit(ASTProgram* aSTProgram);
-	void visit(ASTLocation* aSTLocation);
-	void visit(ASTIdentifier* aSTIdentifier);
-	void visit(ASTMethod_Declaration* aSTMethod_Declaration);	
-	void visit(ASTField_Declaration* aSTField_Declaration);
-	void visit(ASTArrayIdentifier* aSTArrayIdentifier);
-	void visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
-	void visit(Def* def);
-	void visit(ASTDeclarations* aSTDeclarations);
-	void visit(CalloutStatement* calloutStatement);
-	void visit(AssignmentStatement* assignmentStatement);
-	void visit(ASTMain* aSTMain);
-	void visit(RBinaryExpr* rBinaryExpr);
-	void visit(RUnaryExpr* rUnaryExpr);
-	void visit(ExpressionRight* expressionRight);
-	void visit(ASTnode* aSTnode);
-	void visit(Integer* integer);
-	void visit(Bool* bool_obj);
-	void visit(Expression* expr);
-	void visit(Declaration * declaration);
-	void visit(ASTMF_Declaration * aSTMF_Declaration);
-	void visit(BinaryExpr* binaryExpr);
+	virtual void visit(Args* args);
+	virtual void visit(ASTProgram* aSTProgram);
+	virtual void visit(ASTLocation* aSTLocation);
+	virtual void visit(ASTIdentifier* aSTIdentifier);
+	virtual void visit(ASTMethod_Declaration* aSTMethod_Declaration);	
+	virtual void visit(ASTField_Declaration* aSTField_Declaration);
+	virtual void visit(ASTArrayIdentifier* aSTArrayIdentifier);
+	virtual void visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration);
+	virtual void visit(Def* def);
+	virtual void visit(ASTDeclarations* aSTDeclarations);
+	virtual void visit(CalloutStatement* calloutStatement);
+	virtual void visit(AssignmentStatement* assignmentStatement);
+	virtual void visit(ASTMain* aSTMain);
+	virtual void visit(RBinaryExpr* rBinaryExpr);
+	virtual void visit(RUnaryExpr* rUnaryExpr);
+	virtual void visit(ExpressionRight* expressionRight);
+	virtual void visit(ASTnode* aSTnode);
+	virtual void visit(Integer* integer);
+	virtual void visit(Bool* bool_obj);
+	virtual void visit(Expression* expr);
+	virtual void visit(Declaration * declaration);
+	virtual void visit(ASTMF_Declaration * aSTMF_Declaration);
+	virtual void visit(BinaryExpr* binaryExpr);
 	
 	Module *module;
 	VisitorIR() { 
 		module = new Module("main", getGlobalContext()); 
 	}
 
-	void visit(IntType* intType){
+	virtual void visit(IntType* intType){
 		intType->type=Type::getInt64Ty(getGlobalContext());
+		cout<<"caasfht\n";
+		return;
 	};
 	
-	void visit(BooleanType* booleanType){
+	virtual void visit(BooleanType* booleanType){
+		cout<<"Inside BooleanType\n";
 		booleanType->type=Type::getInt1Ty(getGlobalContext());
 	};
 
-	void visit(LangType* langType){
+	virtual void visit(LangType* langType){
+		cout<<"Inside LangType\n";
 		langType->type=Type::getVoidTy(getGlobalContext());
 	};
 
-	void visit(VoidType* voidType){
+	virtual void visit(VoidType* voidType){
+		cout<<"Inside VoidType\n";
 		voidType->type=Type::getVoidTy(getGlobalContext());
 	};
 
-	void visit(CharLiteral* charLiteral){
+	virtual void visit(CharLiteral* charLiteral){
 		charLiteral->type=ConstantDataArray::getString(getGlobalContext(),
 			charLiteral->getLiteral(),
 			false)->getType();
 	};
 
-	void visit(StringLiteral * stringLiteral){
+	virtual void visit(StringLiteral * stringLiteral){
 		stringLiteral->type = ConstantDataArray::getString(getGlobalContext(),
 			stringLiteral->getLiteral(),
 			false)->getType();
 	};
 
-	void visit(ListExpressionRight* listExpressionRight){
+	virtual void visit(ListExpressionRight* listExpressionRight){
 		listExpressionRight->type = Type::getInt64Ty(getGlobalContext());
 	};
 

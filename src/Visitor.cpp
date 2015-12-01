@@ -51,7 +51,7 @@ void Visitor::visit(ASTProgram* aSTProgram){
 }
 
 void Visitor::visit(ASTMain* aSTMain){
-
+	fflush(stdout);
 	fprintf(XML_fp, "<field_declarations count=\"%lu\">\n", (*aSTMain->FieldDeclarations_).size());
 
 	for (list<ASTField_Declaration*>::reverse_iterator it=aSTMain->FieldDeclarations_->rbegin(); 

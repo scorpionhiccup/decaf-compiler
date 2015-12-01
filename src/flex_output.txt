@@ -19,9 +19,12 @@ ID: A
 INT: 5
 INT: 1
 INT: 3
+ID: D
+INT: 0
+INT: 1
 ID: E
 INT: 23
+ID: G
+INT: 1
 ID: F
 INT: 6
-ID: G
-BOOLEAN: true
