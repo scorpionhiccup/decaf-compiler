@@ -63,22 +63,22 @@ public:
 		module = new Module("main", getGlobalContext()); 
 	}
 
-	virtual void visit(IntType* intType){
+	void visit(IntType* intType){
 		intType->type=Type::getInt64Ty(getGlobalContext());
-		cout<<"caasfht\n";
 		return;
 	};
 	
-	virtual void visit(BooleanType* booleanType){
+	void visit(BooleanType* booleanType){
 		booleanType->type=Type::getInt1Ty(getGlobalContext());
 	};
 
-	virtual void visit(LangType* langType){
+	void visit(LangType* langType){
+		cout<<"Inside LangType\n";
 		langType->type=Type::getVoidTy(getGlobalContext());
 	};
 
-	virtual void visit(VoidType* voidType){
-		cout<<"fsf";
+	void visit(VoidType* voidType){
+		cout<<"Inside VoidType\n";
 		voidType->type=Type::getVoidTy(getGlobalContext());
 	};
 

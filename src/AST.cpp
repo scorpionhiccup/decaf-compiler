@@ -32,6 +32,7 @@ void ASTMain::evaluate(Visitor* visitor){
 }
 
 void ASTField_Declaration::evaluate(Visitor* visitor){
+	cout<<"HERE\n";
 	visitor->visit(this);
 };
 
@@ -152,5 +153,6 @@ void ListExpressionRight::evaluate(Visitor * visitor){
 }
 
 void LangType::evaluate(Visitor * visitor){
+	cout<<"Inside LangType\n";
 	visitor->visit(this);
 }
