@@ -111,7 +111,7 @@ int param=0;
 
 %left AND OR
 %left TEQUAL NOT_EQUAL TEQ
-%left TLE GE TGREAT TLESS
+%left TLE GE TGREAT TLESS 
 %left TPLUS TMINUS  
 %left TMUL TDIV MOD
 %left NOT
@@ -145,10 +145,12 @@ Declaration: Field_Declaration SEMI_COLON {
 	}
 
 Method_Declaration: Type IDENTIFIER TLROUND Param_Declarations TRROUND Block { 
+	cout<<"method\n";
 	$$=new ASTMethod_Declaration($1, $2, $6, $4);
 }
 
 Block: LBRACE Field_Declarations Statements RBRACE {
+	cout<<"block\n";
 	ASTMain * ast_main = new ASTMain($2, $3);
 	$$=ast_main;
 }
@@ -209,6 +211,12 @@ InExpression:
 	} 
 
 BinaryExpr:
+	Expression TGREAT Expression{
+		$$=new BinaryExpr(">", $1, $3);	
+	} |
+	Expression TLESS Expression{
+		$$=new BinaryExpr("<", $1, $3);	
+	} | 
 	Expression TLE Expression{
 		$$=new BinaryExpr("<=", $1, $3);	
 	} |
@@ -278,6 +286,12 @@ RUnary_Expr:
 	}	
 
 RBinaryExpr:
+	Expression_Right TGREAT Expression_Right{
+		$$=new RBinaryExpr(">", $1, $3);	
+	} | 
+	Expression_Right TLESS Expression_Right{
+		$$=new RBinaryExpr("<", $1, $3);	
+	} | 
 	Expression_Right TLE Expression_Right{
 		$$=new RBinaryExpr("<=", $1, $3);	
 	} | Expression_Right GE Expression_Right{
@@ -354,6 +368,7 @@ Statements: Statement SEMI_COLON Statements{
 		$$=$3;
 		$$->push_back($1);	
 	} | {
+		cout<<"stmt\n";
 		$$=new list<ASTStatement*>();
 	}
 
@@ -366,14 +381,17 @@ Statement: Location TEQUAL Expression_Right {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
 	}   TCOMMA Callout_Argss TRROUND {
 		$$=new CalloutStatement($3, $6);
-	} | IF TLROUND Expression_Right TRROUND Block {
-		$$=new ASTIF($3,$5);
-	} | IF TLROUND Expression_Right TRROUND Block ELSE Block{
+	} | IF TLROUND Expression_Right TRROUND Block  ELSE Block{
+	    cout<<"ifelse\n";
 	  	$$=new ASTIFELSE($3,$5,$7);
+	}
+	  | IF TLROUND Expression_Right TRROUND Block {
+		cout<<"if\n";	
+		$$=new ASTIF($3,$5);
 	} | FOR IDENTIFIER TEQUAL Expression_Right TCOMMA Expression_Right Block{
       	$$=new ASTFor($2,$4,$6,$7);
-    } | RETURN Return_Value {
-      	$$= new ASTReturn($2);
+    } |  RETURN Return_Value {
+       	$$= new ASTReturn($2);
     } | BREAK {
       	$$=new ASTBreak();
     } | CONTINUE {
@@ -383,6 +401,7 @@ Statement: Location TEQUAL Expression_Right {
     }
 
 Return_Value: Argss{
+		cout<<"return smthing\n";
 		$$=$1;
 	} | {
 		$$=new NoReturn();

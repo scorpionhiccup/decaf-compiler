@@ -43,6 +43,7 @@ ALPHANUMERICAL       	[a-zA-Z0-9_]
 "for"					{return FOR;}
 "break"					{return BREAK;}	
 "continue"				{return CONTINUE;}
+"return"				{return RETURN;}
 "<="					{return TLE;}
 ">="					{return GE;}
 "=="					{return TEQ;}

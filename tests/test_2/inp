@@ -1,7 +1,24 @@
 class Program {
-int a;
+void her(int a,int b){
+	return;
+}
 int main(int a,int b){
-	int c;
-	int d;
+	int a;
+	int b;
+	if (1) {
+		a=2;
+	}
+	else {
+	 b=2;
+	};
+	a=a+b;
+	for a=2,a<b {
+		a=3;
+		break;
+		continue;
+
+	};
+	her(a,b);
+	return 0;
 }
 }
