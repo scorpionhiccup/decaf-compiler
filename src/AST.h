@@ -92,15 +92,17 @@ class ASTParam_Declaration: public ASTnode{
 public:
 	Type * type;
 	Def *Def1;
-	ASTParam_Declaration(LangType *LangType1,Def *Def1){
+	ASTParam_Declaration(LangType *LangType1, Def *Def1){
 		this->LangType1=LangType1;
 		this->Def1=Def1;
 	}
-	virtual void evaluate(Visitor* visitor);
+	virtual void evaluate(Visitor* visitor, bool go_into);
 	LangType * getType(){
 		return this->LangType1;
 	}
 };
+
+
 class ASTField_Declarations: public ASTMF_Declaration{
 public:
 	list<ASTField_Declaration*> *ASTField_Declaration1;
@@ -173,7 +175,7 @@ public:
 	list<ASTParam_Declaration*>* ASTParam_Declaration1;	
 	ASTMain* Block;
 	virtual void evaluate(Visitor* visitor);
-	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER,ASTMain* Block,list<ASTParam_Declaration*>* ASTParam_Declaration1) {
+	ASTMethod_Declaration(LangType *LangType1, string IDENTIFIER, ASTMain* Block,list<ASTParam_Declaration*>* ASTParam_Declaration1) {
 		this->LangType1=LangType1;
 		this->IDENTIFIER=IDENTIFIER;
 		this->Block=Block;
@@ -278,7 +280,7 @@ class ASTIF : public ASTStatement {
 public:
 	list<ExpressionRight*> *ExpressionRight1;
 	ASTMain *Block1;
-	ASTIF(list<ExpressionRight*> *ExpressionRight1,ASTMain *Block1) {
+	ASTIF(list<ExpressionRight*> *ExpressionRight1, ASTMain *Block1) {
 		this->ExpressionRight1=ExpressionRight1;
 		this->Block1=Block1;
 	}
@@ -288,7 +290,7 @@ class ASTIFELSE : public ASTStatement {
 public:
 	list<ExpressionRight*> *ExpressionRight1;
 	ASTMain *Block1, *Block2;	
-	ASTIFELSE(list<ExpressionRight*> *ExpressionRight1,ASTMain *Block1,ASTMain *Block2){
+	ASTIFELSE(list<ExpressionRight*> *ExpressionRight1, ASTMain *Block1, ASTMain *Block2){
 		this->ExpressionRight1=ExpressionRight1;
 		this->Block1=Block1;
 		this->Block2=Block2;
@@ -311,8 +313,8 @@ class ASTReturn : public ASTStatement {
 public:
 	ReturnValue* ReturnValue1;
 	ASTReturn(ReturnValue* ReturnValue1){
-			this->ReturnValue1=ReturnValue1;
-		}
+		this->ReturnValue1=ReturnValue1;
+	}
 	
 };
 class ASTFor: public ASTStatement{
@@ -320,14 +322,15 @@ public:
 	string IDENTIFIER;
 	list<ExpressionRight*>* ExpressionRight1, *ExpressionRight2;
 	ASTMain *Block;
-	ASTFor(string IDENTIFIER,list<ExpressionRight*>* ExpressionRight1,list<ExpressionRight*>* ExpressionRight2,
+	ASTFor(string IDENTIFIER, list<ExpressionRight*>* ExpressionRight1, 
+		list<ExpressionRight*>* ExpressionRight2,
 	ASTMain *Block) {
 		this->IDENTIFIER=IDENTIFIER;
 		this->ExpressionRight1=ExpressionRight1;
 		this->ExpressionRight2=ExpressionRight2;
 		this->Block=Block;
 	}
-
+	virtual void evaluate(Visitor* visitor);
 };
 class NoReturn: public ReturnValue{
 public:

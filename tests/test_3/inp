@@ -1,3 +1,9 @@
-class Program {
-int a[10];
+class Program
+{
+	void main(int a, int b){
+		int A, B;
+
+		A = 5 + 1 * 3;
+		C = true;
+	}
 }

@@ -75,8 +75,9 @@ void ASTExpression::evaluate(Visitor* visitor){
 	visitor->visit(this);		
 };
 
-void ASTParam_Declaration::evaluate(Visitor* visitor){
-	visitor->visit(this);		
+void ASTParam_Declaration::evaluate(Visitor* visitor, bool go_into){
+	cout<<"Inside ASTParam_Declaration\n";	
+	visitor->visit(this, go_into);		
 };
 
 void RUnaryExpr::evaluate(Visitor* visitor){
@@ -104,6 +105,7 @@ void BinaryExpr::evaluate(Visitor* visitor){
 }
 
 void Def::evaluate(Visitor* visitor){
+	cout<<"Inside Def\n";
 	visitor->visit(this);	
 }
 
@@ -141,21 +143,14 @@ void ASTMF_Declaration::evaluate(Visitor * visitor){
 }
 
 void BooleanType::evaluate(Visitor * visitor){
-	cout<<"Inside BooleanType\n";
-	fflush(stdout);
 	visitor->visit(this);
 }
 
 void VoidType::evaluate(Visitor * visitor){
-	cout<<"Inside VoidType\n";
-	fflush(stdout);
 	visitor->visit(this);
 }
 
 void IntType::evaluate(Visitor * visitor){
-	cout<<"Inside IntType\n";
-	fflush(stdout);
-	//cout<<"cht\n";
 	visitor->visit(this);
 }
 
@@ -164,7 +159,9 @@ void ListExpressionRight::evaluate(Visitor * visitor){
 }
 
 void LangType::evaluate(Visitor * visitor){
-	cout<<"Inside LangType\n";
-	fflush(stdout);
+	visitor->visit(this);
+}
+
+void ASTFor::evaluate(Visitor * visitor){
 	visitor->visit(this);
 }

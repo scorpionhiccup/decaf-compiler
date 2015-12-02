@@ -61,8 +61,10 @@ public:
 	virtual void visit(ASTDeclaration * declaration);
 	virtual void visit(ASTMF_Declaration * aSTMF_Declaration);
 	virtual void visit(BinaryExpr* binaryExpr);
-	virtual void visit(ASTParam_Declaration * aSTParam_Declaration);
-	
+	virtual void visit(ASTParam_Declaration * aSTParam_Declaration, bool go_into);
+	virtual void visit(ASTFor * aSTFor);
+	virtual void visit(ASTStatement * aSTStatement);
+
 	Module *module;
 	VisitorIR() { 
 		module = new Module("main", getGlobalContext()); 

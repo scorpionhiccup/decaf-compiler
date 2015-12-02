@@ -82,7 +82,7 @@ void Visitor::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 	aSTMethod_Declaration->Block->evaluate(this);
 }
 
-void Visitor::visit(ASTParam_Declaration * aSTParam_Declaration){
+void Visitor::visit(ASTParam_Declaration * aSTParam_Declaration, bool go_into){
 	aSTParam_Declaration->Def1->evaluate(this);
 }
 
@@ -114,6 +114,8 @@ void Visitor::visit(ASTIFELSE * aSTIFELSE){
 }
 
 void Visitor::visit(ASTFor * aSTFor){
+	printDebug("sfkglsbnfklnnlksngkl\n");
+
 	aSTFor->Block->evaluate(this);
 
 	for (list<ExpressionRight *>::iterator it=aSTFor->ExpressionRight1->begin();
@@ -197,8 +199,9 @@ void Visitor::visit(ASTDeclarations* aSTDeclarations){
 	def->evaluate(this);
 }
 
-void Visitor::visit(Def* def){
+void Visitor::visit(Def * def){
 	fprintf(XML_fp, "<def>\n");
+	def->evaluate(this);
 }
 
 void Visitor::visit(ASTnode* aSTnode){
@@ -384,4 +387,8 @@ void Visitor::visit(VoidType * voidType){
 
 void Visitor::visit(IntType * voidType){
 	printDebug("Inside IntType");
+}
+
+void Visitor::visit(ASTStatement * aSTStatement){
+	printDebug("Inside ASTStatement");	
 }

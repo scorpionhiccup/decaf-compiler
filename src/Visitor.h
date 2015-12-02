@@ -51,7 +51,7 @@ public:
 	virtual void visit(CharLiteral* charLiteral);
 	virtual void visit(StringLiteral* stringLiteral);
 	virtual void visit(ASTDeclaration * declaration);
-	virtual void visit(ASTParam_Declaration * aSTParam_Declaration);
+	virtual void visit(ASTParam_Declaration * aSTParam_Declaration, bool go_into);
 	virtual void visit(MethodCallStatement * methodCallStatement);
 	virtual void visit(ASTIF * aSTIF);
 	virtual void visit(ASTIFELSE * aSTIFELSE);
@@ -64,7 +64,7 @@ public:
 	virtual void visit(IntType* intType);
 	virtual void visit(BooleanType* booleanType);
 	virtual void visit(VoidType* voidType);
-
+	virtual void visit(ASTStatement * aSTStatement);
 
 	Visitor() { 
 	}

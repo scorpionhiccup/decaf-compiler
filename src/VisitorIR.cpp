@@ -3,9 +3,38 @@
 #include "Visitor.h"
 #include "AST.h"
 #include "VisitorIR.h"
+#include <llvm/IR/Module.h>
+#include <llvm/IR/Function.h>
+#include <llvm/PassManager.h>
+#include <llvm/Analysis/Verifier.h>
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Type.h>
+#include <llvm/IR/DerivedTypes.h>
+#include <llvm/Support/TargetSelect.h>
+#include <llvm/ExecutionEngine/ExecutionEngine.h>
+#include <llvm/ExecutionEngine/GenericValue.h>
+#include <llvm/ExecutionEngine/JIT.h>
+#include <llvm/Analysis/Passes.h>
+#include <llvm/ADT/ArrayRef.h>
+#include <llvm/Transforms/Scalar.h>
+#include <llvm/IR/DataLayout.h>
+
+#include <llvm/IR/LegacyPassManager.h>
+#include <llvm/IR/Instructions.h>
+#include <llvm/IR/CallingConv.h>
+#include <llvm/Bitcode/ReaderWriter.h>
+#include <llvm/Analysis/Verifier.h>
+#include <llvm/Assembly/PrintModulePass.h>
+
+#include <llvm/ExecutionEngine/GenericValue.h>
+#include <llvm/Support/raw_ostream.h>
+#include <llvm/ADT/STLExtras.h>
+
+
 
 static IRBuilder<> Builder(getGlobalContext());
-bool in_field=true, is_debug=true, is_error=false;
+bool is_debug=true, is_error=false;
 
 extern int version;
 
@@ -95,13 +124,13 @@ void VisitorIR::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 	printDebug2("Inside ASTMethod_Declaration");
 
 	vector<Type*> argTypes;
-	
-	/*for (list<ASTParam_Declaration *>::reverse_iterator it=aSTMethod_Declaration->ASTParam_Declaration1->rbegin(); 
+
+	for (list<ASTParam_Declaration *>::reverse_iterator it=aSTMethod_Declaration->ASTParam_Declaration1->rbegin(); 
 		it!=aSTMethod_Declaration->ASTParam_Declaration1->rend(); ++it){
-		(*it)->evaluate(this);
-		Type * type = (*it)->type;
-		argTypes.push_back(type);
-	}*/
+		(*it)->evaluate(this, false);
+		/*Type * type = (*it)->type;
+		argTypes.push_back(type);*/
+	}
 
 	LangType * langType = aSTMethod_Declaration->getLangType();
 	
@@ -136,6 +165,12 @@ void VisitorIR::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 	//Block * block =
 
 	aSTMethod_Declaration->Block->evaluate(this);
+	
+	for (list<ASTParam_Declaration *>::reverse_iterator it=aSTMethod_Declaration->ASTParam_Declaration1->rbegin(); 
+		it!=aSTMethod_Declaration->ASTParam_Declaration1->rend(); ++it){
+		(*it)->evaluate(this, true);
+	}
+
 
 	/*for (list<Args *>::reverse_iterator it=calloutStatement->Argss->rbegin(); 
 		it!=calloutStatement->Argss->rend(); ++it){
@@ -176,6 +211,12 @@ void VisitorIR::visit(ASTIdentifier* aSTIdentifier){
 	string id=aSTIdentifier->getId();
 
 	if (this->getCurrentCodeGenBlock()->in_field){
+		if (this->locals().find(id) != this->locals().end()){
+			is_error=true;
+			aSTIdentifier->Def::to_return=GenerateError::ErrorMsg("Same Variable with name " + aSTIdentifier->getId() + "declared more than twice");
+			return;
+		}
+
 		AllocaInst *alloc = new AllocaInst(
 			aSTIdentifier->type, id, this->currentBlock());
 		aSTIdentifier->Def::to_return=this->locals()[id]=alloc;
@@ -571,7 +612,8 @@ void VisitorIR::visit(ASTArrayFieldDeclaration* aSTArrayFieldDeclaration){
 
 	aSTIdentifier->evaluate(this);
 
-	aSTArrayFieldDeclaration->to_return= aSTIdentifier->Def::to_return ? aSTIdentifier->Def::to_return : GenerateError::ErrorMsg("Unknown variable name " + aSTIdentifier->getId());
+	aSTArrayFieldDeclaration->to_return = aSTIdentifier->Def::to_return ? 
+		aSTIdentifier->Def::to_return : GenerateError::ErrorMsg("Unknown variable name " + aSTIdentifier->getId());
 
 	//printDebug2("Outside aSTArrayFieldDeclaration");
 
@@ -626,7 +668,8 @@ void VisitorIR::visit(ASTField_Declaration* aSTField_Declaration){
 }
 
 void VisitorIR::visit(Def* def){
-
+	printDebug2("Inside Def");
+	def->evaluate(this);
 }
 
 void VisitorIR::visit(ASTDeclaration* declaration){
@@ -638,11 +681,84 @@ void VisitorIR::visit(ASTDeclaration* declaration){
 
 }
 
-void VisitorIR::visit(ASTParam_Declaration * aSTParam_Declaration){
+void VisitorIR::visit(ASTParam_Declaration * aSTParam_Declaration, bool go_into){
+	printDebug2("Inside ASTParam_Declaration");
+
 	LangType * langType = aSTParam_Declaration->getType();
 
 	langType->evaluate(this);
 
-	//aSTParam_Declaration->type=dynamic_cast<Type *>(langType->to_return);
+	if (go_into){
+		bool temp=this->getCurrentCodeGenBlock()->in_field;
+		this->getCurrentCodeGenBlock()->in_field=true;
 
+		aSTParam_Declaration->Def1->type = langType->type;
+		aSTParam_Declaration->Def1->evaluate(this);
+		this->getCurrentCodeGenBlock()->in_field=temp;
+	}
+	
+	aSTParam_Declaration->type = langType->type;
+
+	//aSTParam_Declaration->type=dynamic_cast<Type *>(langType->to_return);
+	printDebug2("Outside ASTParam_Declaration");
+
+}
+
+void VisitorIR::visit(ASTFor * aSTFor){
+	printDebug2("Inside ASTForjebngjksdb");
+
+	Value * InitExpr;
+
+	for (list<ExpressionRight*>::reverse_iterator it=aSTFor->ExpressionRight1->rbegin();
+		it!=aSTFor->ExpressionRight1->rend(); ++it){
+		(*it)->evaluate(this);
+		InitExpr = (*it)->to_return;
+	}
+
+	Function *TheFunction = Builder.GetInsertBlock()->getParent();
+
+	BasicBlock *PreheaderBB = Builder.GetInsertBlock();
+
+	BasicBlock *LoopBB = BasicBlock::Create(getGlobalContext(), 
+		"loop", TheFunction);
+
+	Builder.CreateBr(LoopBB);
+
+    Builder.SetInsertPoint(LoopBB);
+
+
+    Value * EndExpr;
+
+	for (list<ExpressionRight*>::reverse_iterator it=aSTFor->ExpressionRight2->rbegin();
+		it!=aSTFor->ExpressionRight2->rend(); ++it){
+		(*it)->evaluate(this);
+		EndExpr = (*it)->to_return;
+	}
+
+	/*EndExpr = Builder.CreateFCmpONE(EndExpr, 
+			ConstantFP::get(getGlobalContext(), APFloat(0.0)),
+			"loop-condition");*/
+
+    /*llvm::AllocaInst *Alloca = Builder2.CreateAlloca(
+    	llvm::Type::getInt32Ty(llvm::getGlobalContext()), 
+    	0, aSTFor->IDENTIFIER);
+
+    Builder.CreateStore(InitExpr, Alloca);
+
+    BasicBlock *PreheaderBB = Builder.GetInsertBlock();
+    BasicBlock *LoopBB = BasicBlock::Create(getGlobalContext(), 
+    	"loop", TheFunction);
+
+    PHINode *Variable = Builder.CreatePHI(
+    	Type::getInt32Ty(getGlobalContext()), 
+    	2, aSTFor->IDENTIFIER);
+
+    Variable->addIncoming(InitExpr, PreheaderBB);*/
+
+       
+	printDebug2("Outside ASTFor");
+}
+
+void VisitorIR::visit(ASTStatement * aSTStatement){
+	printDebug2("Inside ASTStatement");	
 }
