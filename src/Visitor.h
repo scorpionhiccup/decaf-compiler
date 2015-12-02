@@ -50,7 +50,7 @@ public:
 	virtual void visit(BinaryExpr* expr);
 	virtual void visit(CharLiteral* charLiteral);
 	virtual void visit(StringLiteral* stringLiteral);
-	virtual void visit(Declaration * declaration);
+	virtual void visit(ASTDeclaration * declaration);
 	virtual void visit(ASTParam_Declaration * aSTParam_Declaration);
 	virtual void visit(MethodCallStatement * methodCallStatement);
 	virtual void visit(ASTIF * aSTIF);

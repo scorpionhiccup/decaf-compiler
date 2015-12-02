@@ -47,47 +47,48 @@ extern int yydebug;
   {
     T_INT = 258,
     STRING_LITERAL = 259,
-    IDENTIFIER = 260,
-    PROG_ID = 261,
-    CHAR_LITERAL = 262,
-    BOOLEAN = 263,
-    CALLOUT = 264,
-    TEQUAL = 265,
-    INT = 266,
-    TPLUS = 267,
-    TMINUS = 268,
-    TMUL = 269,
-    TDIV = 270,
-    NOT = 271,
-    MOD = 272,
-    RBRACE = 273,
-    LBRACE = 274,
-    T_NEWLINE = 275,
-    T_QUIT = 276,
-    START = 277,
-    TLE = 278,
-    GE = 279,
-    AND = 280,
-    TEQ = 281,
-    OR = 282,
-    TLROUND = 283,
-    TRROUND = 284,
-    TLSQUARE = 285,
-    TRSQUARE = 286,
-    FALSE = 287,
-    TRUE = 288,
-    VOID = 289,
-    IF = 290,
-    ELSE = 291,
-    FOR = 292,
-    RETURN = 293,
-    CONTINUE = 294,
-    BREAK = 295,
-    TLESS = 296,
-    TGREAT = 297,
-    SEMI_COLON = 298,
-    TCOMMA = 299,
-    NOT_EQUAL = 300
+    TAD = 260,
+    IDENTIFIER = 261,
+    PROG_ID = 262,
+    CHAR_LITERAL = 263,
+    BOOLEAN = 264,
+    CALLOUT = 265,
+    TEQUAL = 266,
+    INT = 267,
+    TPLUS = 268,
+    TMINUS = 269,
+    TMUL = 270,
+    TDIV = 271,
+    NOT = 272,
+    MOD = 273,
+    RBRACE = 274,
+    LBRACE = 275,
+    T_NEWLINE = 276,
+    T_QUIT = 277,
+    START = 278,
+    TLE = 279,
+    GE = 280,
+    AND = 281,
+    TEQ = 282,
+    OR = 283,
+    TLROUND = 284,
+    TRROUND = 285,
+    TLSQUARE = 286,
+    TRSQUARE = 287,
+    FALSE = 288,
+    TRUE = 289,
+    VOID = 290,
+    IF = 291,
+    ELSE = 292,
+    FOR = 293,
+    RETURN = 294,
+    CONTINUE = 295,
+    BREAK = 296,
+    TLESS = 297,
+    TGREAT = 298,
+    SEMI_COLON = 299,
+    TCOMMA = 300,
+    NOT_EQUAL = 301
   };
 #endif
 
@@ -96,7 +97,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 25 "parser.y" /* yacc.c:1909  */
+#line 27 "parser.y" /* yacc.c:1909  */
 
 	int number;
 	int bval;
@@ -110,12 +111,12 @@ union YYSTYPE
 	ASTMethod_Declaration *_ASTMethod_Declaration;
 	ASTParam_Declaration *_ASTParam_Declaration;
 
-	Declaration *_Declaration;
+	ASTDeclaration *_Declaration;
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
 
-	std::list<Declaration *>*_Declarations;
+	std::list<ASTDeclaration *>*_Declarations;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 
 	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
@@ -136,7 +137,7 @@ union YYSTYPE
 	std::string *_string;
 	ReturnValue *_ReturnValue;
 
-#line 140 "parser.tab.h" /* yacc.c:1909  */
+#line 141 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

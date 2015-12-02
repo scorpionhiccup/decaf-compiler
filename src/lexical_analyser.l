@@ -58,6 +58,7 @@ ALPHANUMERICAL       	[a-zA-Z0-9_]
 "!"						{return NOT;}
 ">"						{return TGREAT;}
 "<"						{return TLESS;}
+"@"					    {return TAD;}
 {DIGIT}+				{fprintf(yyout,"INT: %s\n", yytext);yylval.number = atoi(yytext); return T_INT; }
 \'(\\.|[^'])*\'		   	{fprintf(yyout,"CHARACTER: %s\n", yytext); strcpy(yylval.string, yytext); return CHAR_LITERAL;}
 \"(\\.|[^"])*\"		    {fprintf(yyout,"STRING: %s\n", yytext); strcpy(yylval.string, yytext); return STRING_LITERAL;}

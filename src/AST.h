@@ -29,7 +29,7 @@ class ASTDeclarations;
 class ASTMain;
 class ASTField_Declaration;
 class ASTMethod_Declaration;
-class Declaration;
+class ASTDeclaration;
 class Def;
 
 extern FILE* XML_fp;
@@ -66,12 +66,12 @@ public:
 class ASTProgram: public ASTnode{
 private:
 public:
-	list<Declaration*> *Declarations;
+	list<ASTDeclaration*> *ASTDeclarations;
 	virtual void evaluate(Visitor* visitor);
 
-	ASTProgram(list<Declaration*> *Declarations)
+	ASTProgram(list<ASTDeclaration*> *ASTDeclarations)
 	{
-		this->Declarations=Declarations;
+		this->ASTDeclarations=ASTDeclarations;
 	}
 	std::string getId();	
 
@@ -98,6 +98,13 @@ public:
 	}
 
 };
+class ASTField_Declarations: public ASTMF_Declaration{
+public:
+	list<ASTField_Declaration*> *ASTField_Declaration1;
+	ASTField_Declarations(list<ASTField_Declaration*> *ASTField_Declaration1){
+		this->ASTField_Declaration1=ASTField_Declaration1;
+	}
+};
 /*
 	Field_Declaration: Type Declarations
 */
@@ -116,10 +123,10 @@ public:
 	}
 };
 
-class Declaration: public ASTnode{
+class ASTDeclaration: public ASTnode{
 	ASTMF_Declaration * ASTMF_Declaration1;
 public:
-	Declaration(ASTMF_Declaration* ASTMF_Declaration1){
+	ASTDeclaration(ASTMF_Declaration * ASTMF_Declaration1){
 		this->ASTMF_Declaration1=ASTMF_Declaration1;
 	}
 	virtual void evaluate(Visitor* visitor);

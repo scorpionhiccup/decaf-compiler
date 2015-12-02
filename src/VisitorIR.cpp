@@ -60,8 +60,8 @@ void VisitorIR::visit(ASTProgram* aSTProgram){
 
 	printDebug2("Inside ASTProgram ");	
 	
-	for (list<Declaration*>::reverse_iterator it=aSTProgram->Declarations->rbegin();
-		it!=aSTProgram->Declarations->rend(); ++it){
+	for (list<ASTDeclaration*>::reverse_iterator it=aSTProgram->ASTDeclarations->rbegin();
+		it!=aSTProgram->ASTDeclarations->rend(); ++it){
 		(*it)->evaluate(this);
 	}
 
@@ -585,11 +585,11 @@ void VisitorIR::visit(Def* def){
 
 }
 
-void VisitorIR::visit(Declaration* declaration){
-	printDebug2("Inside Declaration");
+void VisitorIR::visit(ASTDeclaration* declaration){
+	printDebug2("Inside ASTDeclaration");
 	ASTMF_Declaration * dec = declaration->getDeclaration();
 	dec->evaluate(this);
 	declaration->to_return=dec->to_return;
-	//printDebug2("Outside Declaration");
+	//printDebug2("Outside ASTDeclaration");
 
 }

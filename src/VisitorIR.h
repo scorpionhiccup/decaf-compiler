@@ -54,7 +54,7 @@ public:
 	virtual void visit(Integer* integer);
 	virtual void visit(Bool* bool_obj);
 	virtual void visit(Expression* expr);
-	virtual void visit(Declaration * declaration);
+	virtual void visit(ASTDeclaration * declaration);
 	virtual void visit(ASTMF_Declaration * aSTMF_Declaration);
 	virtual void visit(BinaryExpr* binaryExpr);
 	

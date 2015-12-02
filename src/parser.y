@@ -9,6 +9,7 @@ using namespace std;
 
 extern int yylex(), yylineno;
 extern int yyparse();
+extern int yydebug=1;
 extern FILE* yyin, *yyout;
 FILE *XML_fp, *bison_fp, *LLVM_fp;
 
@@ -19,6 +20,7 @@ enum VERSION{DEBUG, RELEASE};
 int version=DEBUG;
 
 int unary=0;
+int param=0;
 %}
 
 
@@ -35,12 +37,12 @@ int unary=0;
 	ASTMethod_Declaration *_ASTMethod_Declaration;
 	ASTParam_Declaration *_ASTParam_Declaration;
 
-	Declaration *_Declaration;
+	ASTDeclaration *_Declaration;
 	CalloutArgs * _Callout_Args;
 	Args* _Argss;
 	Def* _Def;
 
-	std::list<Declaration *>*_Declarations;
+	std::list<ASTDeclaration *>*_Declarations;
 	std::list<ASTField_Declaration *> *_ASTField_Declarations;
 
 	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
@@ -63,7 +65,7 @@ int unary=0;
 }
 
 %token<number> T_INT
-%token<string> STRING_LITERAL IDENTIFIER PROG_ID 
+%token<string> STRING_LITERAL TAD IDENTIFIER PROG_ID 
 %token<string> CHAR_LITERAL
 %token<number> BOOLEAN
 
@@ -71,7 +73,7 @@ int unary=0;
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
 %token<string> TLROUND TRROUND TLSQUARE TRSQUARE 
-%token FALSE TRUE  VOID IF ELSE FOR RETURN CONTINUE BREAK
+%token FALSE TRUE  VOID IF ELSE FOR RETURN CONTINUE BREAK 
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
 //%type<number> Expression 
@@ -111,6 +113,7 @@ int unary=0;
 %left TPLUS TMINUS  
 %left TMUL TDIV MOD
 %left NOT
+%left LBRACE RBRACE
 %left TLROUND TRROUND 
 %nonassoc TLSQUARE SEMI_COLON
 
@@ -119,24 +122,24 @@ int unary=0;
 Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		ASTProgram *ast_prog = new ASTProgram($4);
 		Visitor * visitor=new Visitor();
-		ast_prog->evaluate(visitor);
+		//ast_prog->evaluate(visitor);
 		
 		VisitorIR * visitorIR = new VisitorIR();
 		visitorIR->generateCode(ast_prog);
 	} | 
 
-Declaration_list: Declaration_list Declaration{
-		$$=$1;
-		$$->push_back($2);
+Declaration_list: Declaration Declaration_list{
+		$$=$2;
+		$$->push_back($1);
 	} | Declaration {
-		$$=new list<Declaration*>();
+		$$=new list<ASTDeclaration*>();
 		$$->push_back($1);
 	}
 
-Declaration: Field_Declaration {
-		$$=new Declaration($1);
+Declaration: Field_Declaration SEMI_COLON {
+		$$=new ASTDeclaration($1);
 	} | Method_Declaration  {
-		$$=new Declaration($1);
+		$$=new ASTDeclaration($1);
 	}
 
 Method_Declaration: Type IDENTIFIER TLROUND Param_Declarations TRROUND Block { 
@@ -148,15 +151,24 @@ Block: LBRACE Field_Declarations Statements RBRACE {
 	$$=ast_main;
 }
 
-Field_Declarations: Field_Declaration SEMI_COLON Field_Declarations{
-	$$=$3;
+Field_Declarations:  Field_Declaration{
+	cout<<"fifa1\n";
+	fflush(stdout);
+} SEMI_COLON  Field_Declarations {
+	cout<<"pop1\n";
+	fflush(stdout);
+	$$=$4;
 	$$->push_back($1);
-} | {
+} |   {
+	cout<<"hthtt";
+	fflush(stdout);
 	$$=new list<ASTField_Declaration*>();
 }
 
 
 Field_Declaration: Type Declarations {
+	cout<<"fifa2\n";
+	fflush(stdout);
 	$$ = new ASTField_Declaration($1, $2);	
 }
 
@@ -164,13 +176,16 @@ Declarations: Def TCOMMA Declarations {
 		$$=$3;
 		$$->push_back(new ASTDeclarations($1));
 	}
-	| Def{
+	| Def {
 		$$=new list<ASTDeclarations*>();
 		$$->push_back(new ASTDeclarations($1));
 	}
 
 Param_Declarations: Param_Declaration TCOMMA Param_Declarations{
 	$$=$3;
+	$$->push_back($1);
+} | Param_Declaration {
+	$$=new list<ASTParam_Declaration*>();
 	$$->push_back($1);
 } | {
 	$$=new list<ASTParam_Declaration*>();
