@@ -1,4 +1,4 @@
 <program>
-<declarations count="1">
+<declarations count="2">
 </field_declarations>
 </program>

@@ -38,10 +38,10 @@ public:
 
 void Visitor::visit(ASTProgram* aSTProgram){
 	fprintf(XML_fp, "<program>\n");
-	fprintf(XML_fp, "<declarations count=\"%lu\">\n", (aSTProgram->Declarations)->size());
+	fprintf(XML_fp, "<declarations count=\"%lu\">\n", (aSTProgram->ASTDeclarations)->size());
 
-	for (list<Declaration*>::reverse_iterator it=aSTProgram->Declarations->rbegin(); 
-		it!=aSTProgram->Declarations->rend(); ++it){
+	for (list<ASTDeclaration*>::reverse_iterator it=aSTProgram->ASTDeclarations->rbegin(); 
+		it!=aSTProgram->ASTDeclarations->rend(); ++it){
 		(*it)->evaluate(this);
 	}
 
@@ -366,8 +366,8 @@ void Visitor::visit(BinaryExpr* expr){
 	fprintf(XML_fp, "</binary_expression>\n");
 }
 
-void Visitor::visit(Declaration * declaration){
-	printDebug("Inside Declaration");
+void Visitor::visit(ASTDeclaration * declaration){
+	printDebug("Inside ASTDeclaration");
 }
 
 void Visitor::visit(LangType * langType){

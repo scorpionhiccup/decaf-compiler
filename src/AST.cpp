@@ -132,7 +132,7 @@ void ASTMethod_Declaration::evaluate(Visitor* visitor){
 	visitor->visit(this);
 }
 
-void Declaration::evaluate(Visitor* visitor){
+void ASTDeclaration::evaluate(Visitor* visitor){
 	 visitor->visit(this);
 }
 

@@ -61,11 +61,15 @@ void VisitorIR::visit(ASTProgram* aSTProgram){
 
 	printDebug2("Inside ASTProgram ");	
 	
-	for (list<ASTDeclaration*>::iterator it=aSTProgram->ASTDeclarations->begin();
-		it!=aSTProgram->ASTDeclarations->end(); ++it){
+<<<<<<< HEAD
+	for (list<Declaration*>::iterator it=aSTProgram->Declarations->begin();
+		it!=aSTProgram->Declarations->end(); ++it){
+=======
+	for (list<ASTDeclaration*>::reverse_iterator it=aSTProgram->ASTDeclarations->rbegin();
+		it!=aSTProgram->ASTDeclarations->rend(); ++it){
+>>>>>>> origin/FinalAST
 		(*it)->evaluate(this);
 	}
-
 
 	//printDebug2("Outside ASTProgram");
 	aSTProgram->to_return=V;
@@ -93,6 +97,8 @@ void VisitorIR::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 
 	//TODO: Add Callout Arguements from AST Class.
 	printDebug2("Inside ASTMethod_Declaration");
+
+	//aSTMethod_Declaration->Block->evaluate(this);
 
 	vector<Type*> argTypes;
 	
@@ -634,8 +640,8 @@ void VisitorIR::visit(ASTDeclaration* declaration){
 	ASTMF_Declaration * dec = declaration->getDeclaration();
 	dec->evaluate(this);
 	declaration->to_return=dec->to_return;
-	//printDebug2("Outside ASTDeclaration");
-
+<<<<<<< HEAD
+	//printDebug2("Outside Declaration");
 }
 
 void VisitorIR::visit(ASTParam_Declaration * aSTParam_Declaration){
@@ -644,5 +650,8 @@ void VisitorIR::visit(ASTParam_Declaration * aSTParam_Declaration){
 	langType->evaluate(this);
 
 	//aSTParam_Declaration->type=dynamic_cast<Type *>(langType->to_return);
+=======
+	//printDebug2("Outside ASTDeclaration");
+>>>>>>> origin/FinalAST
 
 }

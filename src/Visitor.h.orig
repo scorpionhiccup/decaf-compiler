@@ -48,9 +48,13 @@ public:
 	virtual void visit(Bool* bool_obj);
 	virtual void visit(Expression* expr);
 	virtual void visit(BinaryExpr* expr);
+<<<<<<< HEAD
+	virtual void visit(Declaration * declaration);
+=======
 	virtual void visit(CharLiteral* charLiteral);
 	virtual void visit(StringLiteral* stringLiteral);
 	virtual void visit(ASTDeclaration * declaration);
+>>>>>>> origin/FinalAST
 	virtual void visit(ASTParam_Declaration * aSTParam_Declaration);
 	virtual void visit(MethodCallStatement * methodCallStatement);
 	virtual void visit(ASTIF * aSTIF);
@@ -64,6 +68,8 @@ public:
 	virtual void visit(IntType* intType);
 	virtual void visit(BooleanType* booleanType);
 	virtual void visit(VoidType* voidType);
+	virtual void visit(CharLiteral* charLiteral);
+	virtual void visit(StringLiteral * stringLiteral);
 
 
 	Visitor() { 

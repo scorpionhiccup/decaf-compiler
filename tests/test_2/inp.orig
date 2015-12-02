@@ -1,7 +1,11 @@
 class Program {
+<<<<<<< HEAD
+	int a;
+=======
 int a;
 int main(int a,int b){
 	int c;
 	int d;
 }
+>>>>>>> origin/FinalAST
 }
