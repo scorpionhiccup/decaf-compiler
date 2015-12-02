@@ -89,7 +89,7 @@ public:
 class ASTParam_Declaration: public ASTnode{
 	LangType *LangType1;
 public:
-	Value * type;
+	Type * type;
 	Def *Def1;
 	ASTParam_Declaration(LangType *LangType1,Def *Def1){
 		this->LangType1=LangType1;
@@ -158,8 +158,9 @@ public:
 };
 
 class ASTMethod_Declaration: public ASTMF_Declaration{
-public:
 	LangType *LangType1;
+public:
+	Type * type;
 	string IDENTIFIER;
 	list<ASTParam_Declaration*>* ASTParam_Declaration1;	
 	ASTMain* Block;
@@ -357,16 +358,18 @@ public:
 */
 
 class ASTArrayIdentifier: public ASTLocation{
-	ASTIdentifier* aSTIdentifier;
 	std::list<Expression*>* expression;
 public:
+	ASTIdentifier* aSTIdentifier;
 	ASTArrayIdentifier(ASTIdentifier* aSTIdentifier, std::list<Expression*>* expression){
 		this->aSTIdentifier=aSTIdentifier;
 		this->expression=expression;
 	}
+	
 	Type * getType(){
 		return this->aSTIdentifier->type;
 	}
+	
 	virtual void evaluate(Visitor* visitor);
 
 	
@@ -377,6 +380,10 @@ public:
 	std::list<Expression*>* getExpression(){
 		return this->expression;
 	};
+
+	ASTIdentifier * getIdentifier(){
+		return this->aSTIdentifier;
+	}
 };
 
 /*

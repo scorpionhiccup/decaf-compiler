@@ -27,6 +27,10 @@ class CodeGenBlock {
 public:
 	BasicBlock *block;
 	std::map<std::string, Value*> locals;
+	bool in_field;
+	CodeGenBlock(): in_field(true){
+
+	}
 };
 
 
@@ -104,6 +108,8 @@ public:
 	std::map<std::string, Value*>& locals();
 	
 	BasicBlock *currentBlock();
+	
+	CodeGenBlock * getCurrentCodeGenBlock();
 	
 	void pushBlock(BasicBlock *block);
 

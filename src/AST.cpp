@@ -40,12 +40,10 @@ void ASTDeclarations::evaluate(Visitor* visitor){
 };
 
 void ASTIdentifier::evaluate(Visitor* visitor){
-	cout<<"HERE2\n";
 	visitor->visit(this);
 };
 
 void ASTArrayIdentifier::evaluate(Visitor* visitor){
-	cout<<"HERE3\n";
 	visitor->visit(this);
 };
 
@@ -110,7 +108,6 @@ void Def::evaluate(Visitor* visitor){
 }
 
 void ASTLocation::evaluate(Visitor* visitor){
-	cout<<"HERE\n";
 	visitor->visit(this);	
 }
 

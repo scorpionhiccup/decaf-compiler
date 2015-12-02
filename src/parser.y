@@ -7,6 +7,7 @@ class Visitor;
 #include "VisitorIR.h"
 using namespace std;
 
+extern int yydebug=1;	
 extern int yylex(), yylineno;
 extern int yyparse();
 extern FILE* yyin, *yyout;
@@ -102,9 +103,6 @@ int unary=0;
 %type<_BinaryExpr> BinaryExpr
 %type<_ReturnValue> Return_Value
 
-
-//%type<_string> STRING_LITERAL
-
 %left AND OR
 %left TEQUAL NOT_EQUAL TEQ
 %left TLE GE TGREAT TLESS
@@ -116,13 +114,15 @@ int unary=0;
 
 %start Program 
 %%
-Program: START PROG_ID LBRACE Declaration_list RBRACE {
+Program: START PROG_ID LBRACE Declaration_list {
+	} RBRACE {
 		ASTProgram *ast_prog = new ASTProgram($4);
 		Visitor * visitor=new Visitor();
 		ast_prog->evaluate(visitor);
 		
 		VisitorIR * visitorIR = new VisitorIR();
 		visitorIR->generateCode(ast_prog);
+
 	} | 
 
 Declaration_list: Declaration_list Declaration{
