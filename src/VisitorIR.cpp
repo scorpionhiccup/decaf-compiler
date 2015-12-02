@@ -104,12 +104,18 @@ void VisitorIR::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 		argTypes.push_back(type);
 	}*/
 
-	LangType* langType = aSTMethod_Declaration->getLangType();
+	LangType * langType = aSTMethod_Declaration->getLangType();
+	
+	printDebug2("<--------------------------------------------------------------------");
+	
 	langType->evaluate(this);
+
+	printDebug2("-------------------------------------------------------------------->");	
+	
 	Type * type = langType->type;
 	
 	FunctionType *ftype = FunctionType::get(
-		Type::getVoidTy(getGlobalContext()), argTypes, false);
+		type, argTypes, false);
 
 	Function *function = Function::Create(ftype, 
 		GlobalValue::InternalLinkage,
@@ -119,6 +125,11 @@ void VisitorIR::visit(ASTMethod_Declaration* aSTMethod_Declaration){
 	BasicBlock *bblock = BasicBlock::Create(
 		getGlobalContext(), "entry", function, 0);
 	
+	/*
+		BasicBlock *bblock = BasicBlock::Create(
+			getGlobalContext(), aSTMethod_Declaration->IDENTIFIER, function, 0);
+	*/
+
 	Builder.SetInsertPoint(bblock);
 	this->pushBlock(bblock);
 
@@ -167,7 +178,7 @@ void VisitorIR::visit(ASTIdentifier* aSTIdentifier){
 
 	if (this->getCurrentCodeGenBlock()->in_field){
 		AllocaInst *alloc = new AllocaInst(
-			Type::getInt64Ty(getGlobalContext()), id, this->currentBlock());
+			aSTIdentifier->type, id, this->currentBlock());
 		aSTIdentifier->Def::to_return=this->locals()[id]=alloc;
 		return;
 	}
@@ -193,8 +204,12 @@ void VisitorIR::visit(ASTArrayIdentifier* aSTArrayIdentifier){
 
 	string id=aSTArrayIdentifier->getId();
 
-	AllocaInst *alloc = new AllocaInst(Type::getInt64Ty(
-		getGlobalContext()), 
+	ASTIdentifier * aSTIdentifier = aSTArrayIdentifier->getIdentifier();
+
+	aSTIdentifier->evaluate(this);
+
+	AllocaInst *alloc = new AllocaInst(
+		Type::getInt64Ty(getGlobalContext()),
 		id, this->currentBlock());
 
 	V=this->locals()[id]=alloc;
@@ -204,10 +219,6 @@ void VisitorIR::visit(ASTArrayIdentifier* aSTArrayIdentifier){
 		(*it)->evaluate(this);
 		(*it)->to_return;
 	}
-
-	ASTIdentifier * aSTIdentifier = aSTArrayIdentifier->getIdentifier();
-
-	aSTIdentifier->evaluate(this);
 
 	aSTIdentifier->Def::to_return = 
 		V ? V : GenerateError::ErrorMsg("Unknown variable name " + aSTIdentifier->getId());
@@ -632,6 +643,6 @@ void VisitorIR::visit(ASTParam_Declaration * aSTParam_Declaration){
 
 	langType->evaluate(this);
 
-	aSTParam_Declaration->type=dynamic_cast<Type *>(langType->to_return);
+	//aSTParam_Declaration->type=dynamic_cast<Type *>(langType->to_return);
 
 }

@@ -69,8 +69,8 @@ public:
 	}
 
 	virtual void visit(IntType* intType){
+		cout<<"Inside IntType\n";
 		intType->type=Type::getInt64Ty(getGlobalContext());
-		cout<<"caasfht\n";
 		return;
 	};
 	
@@ -81,7 +81,8 @@ public:
 
 	virtual void visit(LangType* langType){
 		cout<<"Inside LangType\n";
-		langType->type=Type::getVoidTy(getGlobalContext());
+		langType->evaluate(this);
+		//langType->type=Type::getVoidTy(getGlobalContext());
 	};
 
 	virtual void visit(VoidType* voidType){
@@ -90,12 +91,14 @@ public:
 	};
 
 	virtual void visit(CharLiteral* charLiteral){
+		cout<<"Inside CharLiteral\n";
 		charLiteral->type=ConstantDataArray::getString(getGlobalContext(),
 			charLiteral->getLiteral(),
 			false)->getType();
 	};
 
 	virtual void visit(StringLiteral * stringLiteral){
+		cout<<"Inside StringLiteral\n";
 		stringLiteral->type = ConstantDataArray::getString(getGlobalContext(),
 			stringLiteral->getLiteral(),
 			false)->getType();
@@ -110,7 +113,7 @@ public:
 	BasicBlock *currentBlock();
 	
 	CodeGenBlock * getCurrentCodeGenBlock();
-	
+
 	void pushBlock(BasicBlock *block);
 
 	void popBlock();

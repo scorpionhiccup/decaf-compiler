@@ -116,10 +116,15 @@ void ASTArrayFieldDeclaration::evaluate(Visitor* visitor){
 }
 
 void CharLiteral::evaluate(Visitor* visitor){
+	cout<<"Inside CharLiteral\n";
+	fflush(stdout);
+
 	visitor->visit(this);	
 }
 
 void StringLiteral::evaluate(Visitor* visitor){
+	cout<<"Inside StringLiteral\n";
+	fflush(stdout);
 	visitor->visit(this);	
 }
 
@@ -136,14 +141,20 @@ void ASTMF_Declaration::evaluate(Visitor * visitor){
 }
 
 void BooleanType::evaluate(Visitor * visitor){
+	cout<<"Inside BooleanType\n";
+	fflush(stdout);
 	visitor->visit(this);
 }
 
 void VoidType::evaluate(Visitor * visitor){
+	cout<<"Inside VoidType\n";
+	fflush(stdout);
 	visitor->visit(this);
 }
 
 void IntType::evaluate(Visitor * visitor){
+	cout<<"Inside IntType\n";
+	fflush(stdout);
 	//cout<<"cht\n";
 	visitor->visit(this);
 }
@@ -154,5 +165,6 @@ void ListExpressionRight::evaluate(Visitor * visitor){
 
 void LangType::evaluate(Visitor * visitor){
 	cout<<"Inside LangType\n";
+	fflush(stdout);
 	visitor->visit(this);
 }

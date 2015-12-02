@@ -102,6 +102,8 @@ union YYSTYPE
 	int bval;
 	char character;
 	char string[100];
+	std::string *_string;
+	
 	ASTMain *ast_main;
 	ASTStatement *_aSTStatement;
 	ASTIdentifier *identifier;
@@ -115,15 +117,6 @@ union YYSTYPE
 	Args* _Argss;
 	Def* _Def;
 
-	std::list<Declaration *>*_Declarations;
-	std::list<ASTField_Declaration *> *_ASTField_Declarations;
-
-	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
-	std::list<Args*> *_Callout_Argss; 
-	std::list<ASTStatement*>* _aSTStatements;
-	std::list<ExpressionRight *> *_ExpressionRights;
-	std::list<ASTDeclarations *> *Declarations_;
-    std::list<Expression *> *_Expressions;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
@@ -133,10 +126,19 @@ union YYSTYPE
 	ASTDeclarations * _ASTDeclarations;
 	ASTLocation* _ASTLocation;
 	LangType *type;
-	std::string *_string;
 	ReturnValue *_ReturnValue;
 
-#line 140 "parser.tab.h" /* yacc.c:1909  */
+	std::list<Declaration *>*_Declarations;
+	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
+	std::list<Args*> *_Callout_Argss; 
+	std::list<ASTStatement*>* _aSTStatements;
+	std::list<ExpressionRight *> *_ExpressionRights;
+	std::list<ASTDeclarations *> *Declarations_;
+    std::list<Expression *> *_Expressions;
+	
+
+#line 142 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

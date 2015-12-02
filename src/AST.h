@@ -45,10 +45,11 @@ public:
 
 class LangType: public ASTnode{
 public:
+	
 	LangType(){
-
 	}
-	virtual void evaluate(Visitor* visitor);
+
+	void evaluate(Visitor * visitor);
 	Type * type;
 };
 

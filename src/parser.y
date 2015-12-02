@@ -28,6 +28,8 @@ int unary=0;
 	int bval;
 	char character;
 	char string[100];
+	std::string *_string;
+	
 	ASTMain *ast_main;
 	ASTStatement *_aSTStatement;
 	ASTIdentifier *identifier;
@@ -41,15 +43,6 @@ int unary=0;
 	Args* _Argss;
 	Def* _Def;
 
-	std::list<Declaration *>*_Declarations;
-	std::list<ASTField_Declaration *> *_ASTField_Declarations;
-
-	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
-	std::list<Args*> *_Callout_Argss; 
-	std::list<ASTStatement*>* _aSTStatements;
-	std::list<ExpressionRight *> *_ExpressionRights;
-	std::list<ASTDeclarations *> *Declarations_;
-    std::list<Expression *> *_Expressions;
 	RUnaryExpr* _RUnaryExpr;
 	ExpressionRight* _ExpressionRight;
 	RBinaryExpr* _RBinaryExpr;
@@ -59,8 +52,17 @@ int unary=0;
 	ASTDeclarations * _ASTDeclarations;
 	ASTLocation* _ASTLocation;
 	LangType *type;
-	std::string *_string;
 	ReturnValue *_ReturnValue;
+
+	std::list<Declaration *>*_Declarations;
+	std::list<ASTField_Declaration *> *_ASTField_Declarations;
+	std::list<ASTParam_Declaration *> *_ASTParam_Declarations;
+	std::list<Args*> *_Callout_Argss; 
+	std::list<ASTStatement*>* _aSTStatements;
+	std::list<ExpressionRight *> *_ExpressionRights;
+	std::list<ASTDeclarations *> *Declarations_;
+    std::list<Expression *> *_Expressions;
+	
 }
 
 %token<number> T_INT
@@ -72,10 +74,9 @@ int unary=0;
 %token TEQUAL INT TPLUS TMINUS TMUL TDIV NOT MOD RBRACE LBRACE 
 %token T_NEWLINE T_QUIT START TLE GE AND TEQ OR 
 %token<string> TLROUND TRROUND TLSQUARE TRSQUARE 
-%token FALSE TRUE  VOID IF ELSE FOR RETURN CONTINUE BREAK
+%token FALSE TRUE VOID IF ELSE FOR RETURN CONTINUE BREAK
 %token TLESS TGREAT SEMI_COLON TCOMMA NOT_EQUAL
 
-//%type<number> Expression 
 %type<number>InExpression Bool
 %type<type> Type
 %type<Declarations_> Declarations
@@ -114,8 +115,7 @@ int unary=0;
 
 %start Program 
 %%
-Program: START PROG_ID LBRACE Declaration_list {
-	} RBRACE {
+Program: START PROG_ID LBRACE Declaration_list RBRACE {
 		ASTProgram *ast_prog = new ASTProgram($4);
 		Visitor * visitor=new Visitor();
 		ast_prog->evaluate(visitor);
@@ -133,9 +133,9 @@ Declaration_list: Declaration_list Declaration{
 		$$->push_back($1);
 	}
 
-Declaration: Field_Declaration {
+Declaration: Field_Declaration SEMI_COLON {
 		$$=new Declaration($1);
-	} | Method_Declaration  {
+	} | Method_Declaration {
 		$$=new Declaration($1);
 	}
 
@@ -336,53 +336,50 @@ Expression_Right:
 
 	} 
 
-Bool: TRUE {$$=1;}| FALSE{$$=0;}
+Bool: TRUE {
+		$$=1;
+	} | FALSE{
+		$$=0;
+	}
 
 Statements: Statement SEMI_COLON Statements{
-	$$=$3;
-	$$->push_back($1);	
-} | {
-	$$=new list<ASTStatement*>();
-}
+		$$=$3;
+		$$->push_back($1);	
+	} | {
+		$$=new list<ASTStatement*>();
+	}
 
 Statement: Location TEQUAL Expression_Right {
 		fprintf(bison_fp, "ASSIGNMENT OPERATION ENCOUNTERED\n");
 		$$=new AssignmentStatement($1, $3);
-	}
-	  | IDENTIFIER TLROUND Callout_Argss TRROUND{
+	} | IDENTIFIER TLROUND Callout_Argss TRROUND{
 	  	$$=new MethodCallStatement($1,$3);
-	  }
-	  | CALLOUT TLROUND STRING_LITERAL  {
+	} | CALLOUT TLROUND STRING_LITERAL  {
 		fprintf(bison_fp, "CALLOUT TO %s ENCOUNTERED\n", $3);	
 	}   TCOMMA Callout_Argss TRROUND {
 		$$=new CalloutStatement($3, $6);
 	} | IF TLROUND Expression_Right TRROUND Block {
 		$$=new ASTIF($3,$5);
-	}
-	  | IF TLROUND Expression_Right TRROUND Block ELSE Block{
+	} | IF TLROUND Expression_Right TRROUND Block ELSE Block{
 	  	$$=new ASTIFELSE($3,$5,$7);
-	  }
-      | FOR IDENTIFIER TEQUAL Expression_Right TCOMMA Expression_Right Block{
+	} | FOR IDENTIFIER TEQUAL Expression_Right TCOMMA Expression_Right Block{
       	$$=new ASTFor($2,$4,$6,$7);
-      }
-      | RETURN Return_Value {
+    } | RETURN Return_Value {
       	$$= new ASTReturn($2);
-      }
-      | BREAK {
+    } | BREAK {
       	$$=new ASTBreak();
-      }
-      | CONTINUE {
+    } | CONTINUE {
       	$$=new ASTContinue();
-      }
-      | Block {
+    } | Block {
       	$$=$1;
-      }
+    }
 
 Return_Value: Argss{
-	$$=$1;
-} | {
-	$$=new NoReturn();
-}
+		$$=$1;
+	} | {
+		$$=new NoReturn();
+	}
+
 Callout_Argss: Argss{
 		$$=new list<Args*>();
 		$$->push_back($1);

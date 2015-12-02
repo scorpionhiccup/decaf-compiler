@@ -369,3 +369,19 @@ void Visitor::visit(BinaryExpr* expr){
 void Visitor::visit(Declaration * declaration){
 	printDebug("Inside Declaration");
 }
+
+void Visitor::visit(LangType * langType){
+	printDebug("Inside LangType");
+}
+
+void Visitor::visit(BooleanType * booleanType){
+	printDebug("Inside BooleanType");
+}
+
+void Visitor::visit(VoidType * voidType){
+	printDebug("Inside VoidType");
+}
+
+void Visitor::visit(IntType * voidType){
+	printDebug("Inside IntType");
+}
